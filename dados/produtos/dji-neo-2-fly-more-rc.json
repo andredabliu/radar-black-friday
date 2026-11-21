@@ -1,6 +1,7 @@
 {
-  "atualizado": "2026-11-21T13:20:00-03:00",
+  "atualizado": "2026-11-21T13:58:00-03:00",
   "categoria": "Drone",
+  "curto": "DJI Neo 2 + RC-N3",
   "historico": [
     {
       "data": "2026-11-21",
@@ -9,13 +10,13 @@
       "precos": {
         "Amazon (DJI071)": 3229.9,
         "Amazon (combo RC-N3)": 3324.9,
-        "Fast Shop": 3923.01,
-        "Loja DJI oficial": 3990,
         "Detonashop": 3999.14,
-        "KaBuM!": 4269.9,
-        "Tecno Drones": 4850,
+        "Drone Place": 4590,
+        "Fast Shop": 3923.01,
         "FlyPro": 4360.5,
-        "Drone Place": 4590
+        "KaBuM!": 4269.9,
+        "Loja DJI oficial": 3990,
+        "Tecno Drones": 4850
       }
     }
   ],
@@ -27,7 +28,7 @@
     {
       "disponivel": true,
       "loja": "Amazon (DJI071)",
-      "obs": "Vendedor LBAK · 10 em estoque · RC-N3 incluso",
+      "obs": "Vendedor LBAK · 10 em estoque · RC-N3 incluso · página bloqueada às 13h58; preço conferido às 13h20",
       "parcelas": "12x R$ 283,38 sem juros",
       "preco": 3399.9,
       "preco_pix": 3229.9,
@@ -37,7 +38,7 @@
     {
       "disponivel": true,
       "loja": "Amazon (combo RC-N3)",
-      "obs": "Vendedor LBAK · 4 em estoque · pode ser importado",
+      "obs": "Vendedor LBAK · 4 em estoque · pode ser importado · página bloqueada às 13h58; preço conferido às 13h20",
       "parcelas": "12x R$ 291,75 sem juros",
       "preco": 3499.9,
       "preco_pix": 3324.9,
@@ -67,7 +68,7 @@
     {
       "disponivel": true,
       "loja": "Detonashop",
-      "obs": "Anatel · pronta entrega",
+      "obs": "Anatel · pronta entrega · página bloqueada às 13h58; preço conferido às 13h20",
       "parcelas": "12x R$ 370,29 sem juros",
       "preco": 4443.49,
       "preco_pix": 3999.14,
@@ -97,7 +98,7 @@
     {
       "disponivel": true,
       "loja": "FlyPro",
-      "obs": "Anatel · valor menor no depósito",
+      "obs": "Anatel · valor menor no depósito · envio em 5 dias úteis",
       "parcelas": "12x R$ 382,50 sem juros",
       "preco": 4590,
       "preco_pix": 4360.5,
@@ -146,6 +147,5 @@
     "Até 10 km de transmissão com RC-N3 + transceptor",
     "Obstáculos omnidirecional, ActiveTrack, gestos e voz",
     "49 GB internos · combo: 3 baterias, hub, RC-N3, transceptor"
-  ],
-  "curto": "DJI Neo 2 + RC-N3"
+  ]
 }
