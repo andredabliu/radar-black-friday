@@ -129,7 +129,10 @@ button{font:inherit;color:inherit}
 .alerts{display:flex;flex-direction:column;gap:10px}
 .alert{display:flex;gap:10px;align-items:flex-start;font-size:14px;line-height:20px}
 .alert .pill{margin-top:0}
-.rp{margin-top:6px}
+.rp{margin-top:6px;display:flex;flex-wrap:wrap;gap:6px}
+.pill.rec{background:transparent;color:var(--accent);box-shadow:inset 0 0 0 1px var(--accent)}
+.recline{margin-top:12px;padding-top:12px;border-top:1px solid var(--raised);font-size:14px}
+.recline .sub{margin-top:4px}
 .where .pill{margin-left:6px;vertical-align:1px}
 .alert-empty{color:var(--muted);font-size:13px}
 .ref{margin-top:16px;padding-top:14px;border-top:1px solid var(--raised);display:flex;flex-direction:column;gap:8px}
@@ -878,6 +881,8 @@ const stamp = iso => { if (!iso) return "—"; const d = new Date(iso); if (isNa
   return same ? `hoje, ${t}` : `${d.toLocaleDateString("pt-BR", {day:"2-digit", month:"2-digit"})}, ${t}`; };
 
 let viagens = [], vmeta = null;
+let offerSort = "rec", tripSort = "rec";
+try { offerSort = localStorage.getItem("rbf-osort") || "rec"; tripSort = localStorage.getItem("rbf-tsort") || "rec"; } catch (e) {}
 let loaded = false, products = [], meta = null, lojas = {}, lojasAt = null, db = null, chartPick = null;
 const PUBLIC_URL = "https://andredabliu.github.io/radar-black-friday/";
 
@@ -915,6 +920,23 @@ function repPill(loja, short = false) { const r = rep(loja);
   if (r.ra_nota == null) return `<span class="pill" title="${esc(r.cuidado || "")}">RA ${esc(r.ra_selo || "sem índice")}</span>`;
   const n = r.ra_nota.toLocaleString("pt-BR", {minimumFractionDigits: 1, maximumFractionDigits: 1});
   return `<span class="pill ${repKind(r)}" title="Reclame Aqui: ${esc(r.ra_selo || "")} ${n}${r.ra_periodo ? " (" + esc(r.ra_periodo) + ")" : ""}">RA ${n}${short ? "" : " · " + esc(r.ra_selo || "")}</span>`; }
+
+/* ---------- recomendação ---------- */
+// custo-benefício: preço efetivo com penalidade pela reputação da loja; só ofertas confirmadas e com estoque
+const PEN = {pos: 0, "": 0.03, warn: 0.05, neg: 0.08};
+const repOf = loja => { const r = rep(loja); return r && r.ra_nota != null ? repKind(r) : ""; };
+const score = o => eff(o) * (1 + (PEN[repOf(o.loja)] ?? 0.03));
+function recommend(p) {
+  const c = (p.ofertas || []).filter(usable); if (!c.length) return null;
+  const o = c.reduce((a, x) => score(x) < score(a) ? x : a); const cheap = best(p);
+  const r = rep(o.loja); const selo = r?.ra_selo ? `reputação ${r.ra_selo.toLowerCase()}` : "sem nota no Reclame Aqui";
+  let why;
+  if (cheap && cheap.o === o) why = repOf(o.loja) === "pos" ? `Menor preço e loja com ${selo}.` : `Menor preço, mas loja com ${selo}: compre com cartão.`;
+  else { const cr = rep(cheap.o.loja); why = `${brl(eff(o) - cheap.v)} a mais que ${cheap.o.loja}, mas loja com ${selo}${cr?.ra_selo ? ` (a mais barata tem ${cr.ra_selo.toLowerCase()})` : " (a mais barata não tem nota)"}.`; }
+  return {o, v: eff(o), why};
+}
+const recPill = (t = "Recomendada") => `<span class="pill rec">${t}</span>`;
+function sortBar(attr, cur, opts) { return `<div class="seg" role="group" aria-label="Ordenar">${opts.map(([k, t]) => `<button ${attr}="${k}" aria-pressed="${k === cur}">${t}</button>`).join("")}</div>`; }
 
 /* ---------- a régua: todas as lojas num eixo, o alvo marcado ---------- */
 function ruler(p, {h = 44, labels = true} = {}) {
@@ -996,7 +1018,7 @@ function overview() {
   const rows = list.map((p, i) => { const b = bests[i]; const n = (p.ofertas || []).length;
     return `<div class="row" data-go="${esc(p.id)}" role="link" tabindex="0" aria-label="Abrir ${esc(p.nome)}">
       <div class="c-thumb"><div class="thumb">${p.imagem ? `<img src="${esc(p.imagem)}" alt="" loading="lazy">` : `<span>${esc(p.marca || "")}</span>`}</div></div>
-      <div class="c-info"><p class="name">${esc(p.nome)}</p><div class="sub">${b ? `Melhor em ${esc(b.o.loja)}${b.o.preco_pix && b.v === b.o.preco_pix ? " no Pix" : ""} · ${n} lojas` : `${n} lojas · sem preço confirmado`}</div>${b ? `<div class="rp">${repPill(b.o.loja)}</div>` : ""}</div>
+      <div class="c-info"><p class="name">${esc(p.nome)}</p><div class="sub">${b ? `Melhor em ${esc(b.o.loja)}${b.o.preco_pix && b.v === b.o.preco_pix ? " no Pix" : ""} · ${n} lojas` : `${n} lojas · sem preço confirmado`}</div>${(() => { const rc = recommend(p); return rc ? `<div class="rp">${recPill(`Recomendada: ${esc(rc.o.loja)}${rc.o !== b?.o ? " · " + brl0(rc.v) : ""}`)} ${repPill(rc.o.loja, true)}</div>` : ""; })()}</div>
       <div class="c-ruler">${ruler(p)}</div>
       <div class="c-price n"><div class="price num">${b ? brl(b.v) : "—"}</div>${chgLine(p)}</div>
       <div class="c-goal n">${goalCell(p, b)}</div>
@@ -1052,6 +1074,16 @@ function insightPill(r) { const k = (r?.insight || "").toLowerCase(); const m = 
   return m ? `<span class="pill ${m[0]}" title="Avaliação do Google Flights${r.faixa ? ": normalmente " + esc(r.faixa) : ""}">${m[1]}</span>` : ""; }
 function vchg(v) { const h = vhist(v); if (h.length < 2) return `<div class="chg">1ª checagem</div>`; const c = h.at(-1).menor - h.at(-2).menor;
   return c === 0 ? `<div class="chg">igual a ontem</div>` : `<div class="chg ${c < 0 ? "good" : "bad"}">${signed(c)} vs ontem</div>`; }
+const nStops = r => { const m = String(r.paradas || "").match(/(\d+)\s*parada/); return /direto/i.test(r.paradas || "") ? 0 : m ? +m[1] : null; };
+const mins = r => { const m = String(r.duracao || "").match(/(\d+)h(\d+)?/); return m ? +m[1] * 60 + (+m[2] || 0) : null; };
+const okKid = r => nStops(r) != null && nStops(r) <= 1 && (mins(r) ?? 999) <= 600 && !/\+1/.test(r.chegada || "") && !/madrugada/i.test(r.obs || "");
+function recRoute(v) {
+  const c = (v.rotas || []).filter(r => rTotal(r) != null && r.erro == null); if (!c.length) return null;
+  const good = c.filter(okKid);
+  if (good.length) { const r = good.reduce((a, x) => rTotal(x) < rTotal(a) ? x : a); const b = vbest(v);
+    return {r, why: b && rTotal(r) > b.total ? `${brl(rTotal(r) - b.total)} a mais que a mais barata, mas com ${nStops(r) === 0 ? "voo direto" : "1 parada"} e ${r.duracao} de viagem, sem chegar de madrugada.` : `A mais barata e já boa com criança: ${nStops(r) === 0 ? "voo direto" : "1 parada"}, ${r.duracao}.`}; }
+  return {r: null, why: "Nenhuma cotação com até 1 parada e 10h de viagem: todas são cansativas para uma criança de 3 anos."};
+}
 function tripsView() {
   const list = [...viagens].sort((a, b) => (a.ordem ?? 99) - (b.ordem ?? 99));
   const withB = list.map(v => ({v, b: vbest(v)})).filter(x => x.b);
@@ -1060,7 +1092,7 @@ function tripsView() {
   const rows = list.map(v => { const b = vbest(v); const n = (v.rotas || []).filter(r => rTotal(r) != null).length; const pv = vAsP(v);
     return `<div class="row" data-trip="${esc(v.id)}" role="link" tabindex="0" aria-label="Abrir ${esc(v.destino)}">
       <div class="c-thumb"><div class="thumb code">${esc((v.aeroportos || "").split(/[ ,/]/)[0])}</div></div>
-      <div class="c-info"><p class="name">${esc(v.destino)}</p><div class="sub">${esc(v.pais || "")}${b ? ` · melhor saindo de ${esc(b.origem)}, ${JAN(b.janela)}` : ""} · ${n} cotações</div>${b ? `<div class="rp">${insightPill(b)}</div>` : ""}</div>
+      <div class="c-info"><p class="name">${esc(v.destino)}</p><div class="sub">${esc(v.pais || "")}${b ? ` · melhor saindo de ${esc(b.origem)}, ${JAN(b.janela)}` : ""} · ${n} cotações</div>${(() => { const rr = recRoute(v); return `<div class="rp">${rr?.r ? recPill(`Recomendado com criança: ${brl0(rTotal(rr.r))} · ${esc(rr.r.origem)}, ${JAN(rr.r.janela)}`) : `<span class="pill warn">sem opção boa com criança</span>`} ${b ? insightPill(b) : ""}</div>`; })()}</div>
       <div class="c-ruler">${ruler(pv)}</div>
       <div class="c-price n"><div class="price num">${b ? brl(b.total) : "—"}</div>${vchg(v)}</div>
       <div class="c-goal n">${typeof v.preco_alvo === "number" ? (b && b.total <= v.preco_alvo ? `<div class="goal"><span class="pill pos">No alvo</span></div><div class="sub num">alvo ${brl0(v.preco_alvo)}</div>` : `<div class="goal num">${brl0(v.preco_alvo)}</div><div class="sub num">${b ? "faltam " + brl(b.total - v.preco_alvo) : ""}</div>`) : `<div class="goal">—</div><div class="sub">sem alvo</div>`}</div>
@@ -1084,10 +1116,15 @@ function tripsView() {
 }
 function tripView(v) {
   const b = vbest(v); const h = vhist(v);
-  const rows = [...(v.rotas || [])].sort((x, y) => (rTotal(x) ?? 1e12) - (rTotal(y) ?? 1e12)).map(r => { const t = rTotal(r);
+  const rr = recRoute(v);
+  const tc = {rec: (x, y) => (okKid(y) - okKid(x)) || ((rTotal(x) ?? 1e12) - (rTotal(y) ?? 1e12)),
+    preco: (x, y) => (rTotal(x) ?? 1e12) - (rTotal(y) ?? 1e12),
+    duracao: (x, y) => (mins(x) ?? 1e6) - (mins(y) ?? 1e6),
+    origem: (x, y) => x.origem.localeCompare(y.origem) || x.janela.localeCompare(y.janela) || ((rTotal(x) ?? 1e12) - (rTotal(y) ?? 1e12))}[tripSort] || (() => 0);
+  const rows = [...(v.rotas || [])].sort(tc).map(r => { const t = rTotal(r); const isRec = rr?.r === r;
     return `<tr class="${b && t === b.total && r.origem === b.origem && r.janela === b.janela ? "best" : ""}">
-      <td class="store"><span class="l"><b>${esc(r.origem)} → ${esc(r.destino_aero || (v.aeroportos || "").split(/[ ,/]/)[0])}</b><span class="pill">${esc(r.fonte || "")}</span>${insightPill(r)}</span>
-        <div class="sub">${JAN(r.janela)} · ${esc([r.cia, r.saida && r.chegada ? `${r.saida}–${r.chegada}` : "", r.duracao, r.paradas].filter(Boolean).join(" · "))}${r.tipo ? " · " + esc(r.tipo) : ""}</div></td>
+      <td class="store"><span class="l"><b>${esc(r.origem)} → ${esc(r.destino_aero || (v.aeroportos || "").split(/[ ,/]/)[0])}</b>${isRec ? recPill("Recomendado") : ""}<span class="pill">${esc(r.fonte || "")}</span>${insightPill(r)}</span>
+        <div class="sub">${isRec ? `<span style="color:var(--text)">${esc(rr.why)}</span> · ` : ""}${JAN(r.janela)} · ${esc([r.cia, r.saida && r.chegada ? `${r.saida}–${r.chegada}` : "", r.duracao, r.paradas].filter(Boolean).join(" · "))}${r.tipo ? " · " + esc(r.tipo) : ""}</div></td>
       <td class="n">${t != null ? brl(t) : `<span class="chg">${esc(r.erro || "sem preço")}</span>`}</td><td class="n">${t != null ? brl(t / 3) : "—"}</td>
       <td class="n">${safe(r.link) ? `<a class="ghost" href="${esc(r.link)}" target="_blank" rel="noopener noreferrer">Abrir ↗</a>` : ""}</td></tr>`; }).join("");
   const gap = b && typeof v.preco_alvo === "number" ? b.total - v.preco_alvo : null;
@@ -1099,6 +1136,7 @@ function tripView(v) {
         <section class="card"><div class="answer"><div><div style="color:var(--muted);font-size:13px">Menor total hoje · 2 adultos + criança</div><div class="price big num">${b ? brl(b.total) : "—"}</div>
           <div class="where">${b ? `saindo de <b>${esc(b.origem)}</b>, ${JAN(b.janela)} ${insightPill(b)}` : ""}</div>${vchg(v)}</div>
           <div style="text-align:right"><div style="color:var(--muted);font-size:13px">Por pessoa</div><div class="price num">${b ? brl(b.total / 3) : "—"}</div></div></div>
+          ${rr ? `<div class="recline">${rr.r ? `${recPill("Recomendado")} <b>${esc(rr.r.origem)}, ${JAN(rr.r.janela)}</b> por <b class="num">${brl(rTotal(rr.r))}</b>` : `<span class="pill warn">sem opção boa com criança</span>`}<div class="sub">${esc(rr.why)}</div></div>` : ""}
           <div style="margin-top:18px">${ruler(vAsP(v))}</div>
           ${SAMPLE ? `<div class="target"><span class="msg">Alvo: <b class="num" style="color:var(--text)">${typeof v.preco_alvo === "number" ? brl0(v.preco_alvo) : "não definido"}</b>${gap != null ? (gap <= 0 ? " · já está no alvo" : ` · faltam ${brl(gap)}`) : ""}</span></div>` :
           `<div class="target"><label for="alvo">Seu alvo para os 3</label><input id="alvo" inputmode="decimal" autocomplete="off" value="${typeof v.preco_alvo === "number" ? v.preco_alvo.toLocaleString("pt-BR") : ""}" placeholder="ex. 7.000" aria-describedby="alvo-msg"><button class="ghost" id="save" type="button">Salvar</button><span class="msg ${gap != null && gap <= 0 ? "good" : ""}" id="alvo-msg">${gap == null ? "Avisamos quando chegar nesse valor." : gap <= 0 ? "Já está no alvo." : `Faltam ${brl(gap)} para o alvo.`}</span></div>`}
@@ -1108,7 +1146,8 @@ function tripView(v) {
       </div>
       <div class="stack">
         <section class="card"><div class="card-h"><h2>Menor total por dia</h2><span class="meta">${h.length} ${h.length === 1 ? "checagem" : "checagens"}</span></div><div class="chart" id="chart"></div></section>
-        <section class="card"><div class="card-h"><h2>Cotações</h2><span class="meta">total para 3 pessoas, ida e volta</span></div>
+        <section class="card"><div class="card-h"><h2>Cotações</h2>${sortBar("data-tsort", tripSort, [["rec", "Recomendação"], ["preco", "Menor total"], ["duracao", "Mais rápido"], ["origem", "Saída"]])}</div>
+          <p class="sub" style="margin:-6px 0 10px">Total para 3 pessoas, ida e volta · recomendado: mais barato com até 1 parada, até 10h e sem chegada de madrugada</p>
           <div class="tbl-wrap"><table><thead><tr><th>Trecho</th><th class="n">Total</th><th class="n">Por pessoa</th><th class="n"><span hidden>Link</span></th></tr></thead><tbody>${rows}</tbody></table></div></section>
       </div>
     </div>`;
@@ -1139,20 +1178,27 @@ function storesView() {
 /* ---------- produto ---------- */
 function productView(p) {
   const b = best(p);
-  const offers = [...(p.ofertas || [])].sort((x, y) => (usable(y) - usable(x)) || ((eff(x) ?? 1e12) - (eff(y) ?? 1e12)));
+  const rc = recommend(p);
+  const cmp = {
+    rec: (x, y) => (usable(y) - usable(x)) || ((usable(x) ? score(x) : eff(x) ?? 1e12) - (usable(y) ? score(y) : eff(y) ?? 1e12)),
+    preco: (x, y) => (eff(x) ?? 1e12) - (eff(y) ?? 1e12),
+    rep: (x, y) => ((rep(y.loja)?.ra_nota ?? -1) - (rep(x.loja)?.ra_nota ?? -1)) || ((eff(x) ?? 1e12) - (eff(y) ?? 1e12)),
+    loja: (x, y) => x.loja.localeCompare(y.loja, "pt-BR")}[offerSort] || ((x, y) => 0);
+  const offers = [...(p.ofertas || [])].sort(cmp);
   const h = hist(p);
   const low = h.length ? Math.min(...h.map(x => x.menor)) : null;
   const gap = b && hasGoal(p) ? b.v - p.preco_alvo : null;
   const rows = offers.map(o => { const prev = prevStore(p, o.loja), v = eff(o); const ch = prev != null && v != null ? v - prev : null;
     const tags = (o.verificado === false ? `<span class="pill warn">não confirmado</span>` : "") + (o.disponivel === false ? `<span class="pill neg">esgotado</span>` : "");
+    const isRec = rc && o === rc.o;
     return `<tr class="${b && o === b.o ? "best" : ""}">
-      <td class="store"><span class="l"><b>${esc(o.loja)}</b>${repPill(o.loja, true)}${tags}</span><div class="sub">${esc([o.parcelas, o.obs].filter(Boolean).join(" · "))}</div></td>
+      <td class="store"><span class="l"><b>${esc(o.loja)}</b>${isRec ? recPill() : ""}${repPill(o.loja, true)}${tags}</span><div class="sub">${isRec ? `<span style="color:var(--text)">${esc(rc.why)}</span> · ` : ""}${esc([o.parcelas, o.obs].filter(Boolean).join(" · "))}</div></td>
       <td class="n">${brl(o.preco)}</td><td class="n">${o.preco_pix ? brl(o.preco_pix) : "—"}</td>
       <td class="n">${ch == null ? `<span class="chg">—</span>` : ch === 0 ? `<span class="chg">igual</span>` : `<span class="chg ${ch < 0 ? "good" : "bad"}">${signed(ch)}</span>`}</td>
       <td class="n">${safe(o.url) ? `<a class="ghost" href="${esc(o.url)}" target="_blank" rel="noopener noreferrer">Abrir ↗</a>` : ""}</td></tr>`; }).join("");
   $("#view").innerHTML = `
     <div class="title"><div><a class="back" href="#">← Lista de desejos</a><h1>${esc(p.nome)}</h1><p>${esc(p.resumo || "")}</p></div>
-      ${b && safe(b.o.url) ? `<a class="primary" href="${esc(b.o.url)}" target="_blank" rel="noopener noreferrer">Comprar na ${esc(b.o.loja)} ↗</a>` : ""}</div>
+      ${rc && safe(rc.o.url) ? `<a class="primary" href="${esc(rc.o.url)}" target="_blank" rel="noopener noreferrer">Comprar na ${esc(rc.o.loja)} ↗</a>` : ""}</div>
     <div class="pv">
       <div class="stack">
         <div class="photo">${p.imagem ? `<img src="${esc(p.imagem)}" alt="${esc(p.nome)}">` : ""}</div>
@@ -1161,7 +1207,8 @@ function productView(p) {
       <div class="stack">
         <section class="card">
           <div class="answer"><div><div class="k" style="color:var(--muted);font-size:13px">Menor preço hoje</div><div class="price big num">${b ? brl(b.v) : "—"}</div>
-            <div class="where">${b ? `em <b>${esc(b.o.loja)}</b>${b.o.preco_pix && b.v === b.o.preco_pix ? " no Pix" : ""} ${repPill(b.o.loja)}` : "nenhuma loja com preço confirmado"}</div>${chgLine(p)}</div>
+            <div class="where">${b ? `em <b>${esc(b.o.loja)}</b>${b.o.preco_pix && b.v === b.o.preco_pix ? " no Pix" : ""} ${repPill(b.o.loja)}` : "nenhuma loja com preço confirmado"}</div>${chgLine(p)}
+            ${rc ? `<div class="recline">${recPill()} <b>${esc(rc.o.loja)}</b> por <b class="num">${brl(rc.v)}</b><div class="sub">${esc(rc.why)}</div></div>` : ""}</div>
             <div style="text-align:right"><div class="k" style="color:var(--muted);font-size:13px">Menor já visto</div><div class="price num">${brl(low)}</div><div class="sub">desde ${day(h[0]?.data)}</div></div></div>
           <div style="margin-top:18px">${ruler(p, {h: 44})}</div>
           ${SAMPLE ? `<div class="target"><span class="msg">Alvo: <b class="num" style="color:var(--text)">${hasGoal(p) ? brl0(p.preco_alvo) : "não definido"}</b>${gap != null ? (gap <= 0 ? " · já está no alvo" : ` · faltam ${brl(gap)}`) : ""}</span></div>` : `<div class="target"><label for="alvo">Seu preço-alvo</label><input id="alvo" inputmode="decimal" autocomplete="off" value="${hasGoal(p) ? p.preco_alvo.toLocaleString("pt-BR") : ""}" placeholder="ex. 2.300" aria-describedby="alvo-msg">
@@ -1169,7 +1216,8 @@ function productView(p) {
             <span class="msg ${gap != null && gap <= 0 ? "good" : ""}" id="alvo-msg">${gap == null ? "Avisamos quando alguma loja chegar nesse valor." : gap <= 0 ? "Já está no alvo." : `Faltam ${brl(gap)} para o alvo.`}</span></div>`}
         </section>
         <section class="card"><div class="card-h"><h2>Menor preço por dia</h2><span class="meta">${h.length} ${h.length === 1 ? "checagem" : "checagens"}</span></div><div class="chart" id="chart"></div></section>
-        <section class="card"><div class="card-h"><h2>Preço em cada loja</h2><span class="meta">Pix quando a loja informa · variação vs a checagem anterior</span></div>
+        <section class="card"><div class="card-h"><h2>Preço em cada loja</h2>${sortBar("data-osort", offerSort, [["rec", "Recomendação"], ["preco", "Menor preço"], ["rep", "Reputação"], ["loja", "Loja"]])}</div>
+          <p class="sub" style="margin:-6px 0 10px">Pix quando a loja informa · variação vs a checagem anterior · a recomendada pesa preço e reputação no Reclame Aqui</p>
           <div class="tbl-wrap"><table><thead><tr><th>Loja</th><th class="n">Preço</th><th class="n">Pix</th><th class="n">Vs ontem</th><th class="n"><span hidden>Link</span></th></tr></thead><tbody>${rows}</tbody></table></div></section>
       </div>
     </div>`;
@@ -1204,6 +1252,8 @@ function render() {
 
 document.addEventListener("click", e => {
   if (e.target.closest("[data-stop]")) return;
+  const os = e.target.closest("[data-osort]"); if (os) { offerSort = os.dataset.osort; try { localStorage.setItem("rbf-osort", offerSort); } catch (x) {} render(); return; }
+  const ts = e.target.closest("[data-tsort]"); if (ts) { tripSort = ts.dataset.tsort; try { localStorage.setItem("rbf-tsort", tripSort); } catch (x) {} render(); return; }
   const pk = e.target.closest("[data-pick]"); if (pk) { chartPick = pk.dataset.pick; overview(); return; }
   const r = e.target.closest("[data-go]"); if (r) { location.hash = "p-" + r.dataset.go; return; }
   const tr = e.target.closest("[data-trip]"); if (tr) { location.hash = "v-" + tr.dataset.trip; return; }
