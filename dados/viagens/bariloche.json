@@ -1,0 +1,130 @@
+{
+ "ordem": 3,
+ "destino": "Bariloche",
+ "curto": "Bariloche",
+ "pais": "Argentina",
+ "aeroportos": "BRC",
+ "setembro": "Fim da temporada de neve: no começo do mês ainda há neve no Cerro Catedral, que costuma fechar em meados de setembro. Frio de −2 a 12 °C.",
+ "crianca": "Brasileiros entram com RG (emitido há menos de 10 anos) ou passaporte; leve a certidão de nascimento da criança e, se viajar sem um dos pais, autorização com firma reconhecida. Exige roupa térmica, luvas e botas. Todos os voos têm 2 conexões (15 h ou mais): pesado com criança de 3 anos.",
+ "rotas": [
+  {
+   "origem": "FLN",
+   "janela": "A",
+   "cia": "LATAM + Aerolíneas",
+   "saida": "05:00",
+   "chegada": "20:00",
+   "duracao": "15h",
+   "paradas": "2 paradas",
+   "tipo": "mais barata",
+   "fonte": "lastminute (convertido do euro)",
+   "link": "https://pt.lastminute.com/msr/route/searching.do?departureAirport=FLN&arrivalAirport=BRC&outboundDay=04&outboundMonthYear=092027&returnDay=11&returnMonthYear=092027&adults=2&childs=1&infants=0&COBRANDED=LMNPT_LLMPROJECTPT&currency=EUR&url=search3.do&roundtrip=true&fareType=&acntb=flight&utm_term=FLNBRC&utm_campaign=results&utm_medium=meta_search&utm_source=LMNPT_LLMPROJECTPT",
+   "obs": null,
+   "total": 13853.87,
+   "ida": "2027-09-04",
+   "volta": "2027-09-11"
+  },
+  {
+   "origem": "FLN",
+   "janela": "B",
+   "cia": "LATAM + Aerolíneas",
+   "saida": "05:00",
+   "chegada": "20:00",
+   "duracao": "15h",
+   "paradas": "2 paradas",
+   "tipo": "mais barata",
+   "fonte": "lastminute (convertido do euro)",
+   "link": "https://pt.lastminute.com/msr/route/searching.do?departureAirport=FLN&arrivalAirport=BRC&outboundDay=18&outboundMonthYear=092027&returnDay=25&returnMonthYear=092027&adults=2&childs=1&infants=0&COBRANDED=LMNPT_LLMPROJECTPT&currency=EUR&url=search3.do&roundtrip=true&fareType=&acntb=flight&utm_term=FLNBRC&utm_campaign=results&utm_medium=meta_search&utm_source=LMNPT_LLMPROJECTPT",
+   "obs": null,
+   "total": 11800.95,
+   "ida": "2027-09-18",
+   "volta": "2027-09-25"
+  },
+  {
+   "origem": "NVT",
+   "janela": "A",
+   "cia": "LATAM + Aerolíneas",
+   "saida": "05:30",
+   "chegada": "21:00",
+   "duracao": "15h30",
+   "paradas": "2 paradas",
+   "tipo": "mais barata",
+   "fonte": "lastminute (convertido do euro)",
+   "link": "https://pt.lastminute.com/msr/route/searching.do?departureAirport=NVT&arrivalAirport=BRC&outboundDay=04&outboundMonthYear=092027&returnDay=11&returnMonthYear=092027&adults=2&childs=1&infants=0&COBRANDED=LMNPT_LLMPROJECTPT&currency=EUR&url=search3.do&roundtrip=true&fareType=&acntb=flight&utm_term=NVTBRC&utm_campaign=results&utm_medium=meta_search&utm_source=LMNPT_LLMPROJECTPT",
+   "obs": null,
+   "total": 12196.87,
+   "ida": "2027-09-04",
+   "volta": "2027-09-11"
+  },
+  {
+   "origem": "NVT",
+   "janela": "B",
+   "cia": "LATAM + Aerolíneas",
+   "saida": "19:30",
+   "chegada": "15:00+1",
+   "duracao": "19h30",
+   "paradas": "2 paradas",
+   "tipo": "mais barata",
+   "fonte": "lastminute (convertido do euro)",
+   "link": "https://pt.lastminute.com/msr/route/searching.do?departureAirport=NVT&arrivalAirport=BRC&outboundDay=18&outboundMonthYear=092027&returnDay=25&returnMonthYear=092027&adults=2&childs=1&infants=0&COBRANDED=LMNPT_LLMPROJECTPT&currency=EUR&url=search3.do&roundtrip=true&fareType=&acntb=flight&utm_term=NVTBRC&utm_campaign=results&utm_medium=meta_search&utm_source=LMNPT_LLMPROJECTPT",
+   "obs": "noite em trânsito",
+   "total": 12522.73,
+   "ida": "2027-09-18",
+   "volta": "2027-09-25"
+  },
+  {
+   "origem": "FLN",
+   "janela": "A",
+   "ida": "2027-09-04",
+   "volta": "2027-09-11",
+   "total": 10021.0,
+   "tipo": "mais barata",
+   "insight": "typical",
+   "fonte": "Google Flights",
+   "link": "https://www.google.com/travel/flights?q=Flights%20from%20FLN%20to%20BRC%20on%202027-09-04%20returning%202027-09-11%20for%202%20adults%20and%201%20child&curr=BRL&hl=pt-BR&gl=BR"
+  },
+  {
+   "origem": "FLN",
+   "janela": "B",
+   "ida": "2027-09-18",
+   "volta": "2027-09-25",
+   "total": 10589.0,
+   "tipo": "mais barata",
+   "insight": "typical",
+   "fonte": "Google Flights",
+   "link": "https://www.google.com/travel/flights?q=Flights%20from%20FLN%20to%20BRC%20on%202027-09-18%20returning%202027-09-25%20for%202%20adults%20and%201%20child&curr=BRL&hl=pt-BR&gl=BR"
+  },
+  {
+   "origem": "NVT",
+   "janela": "A",
+   "ida": "2027-09-04",
+   "volta": "2027-09-11",
+   "total": 10371.0,
+   "tipo": "mais barata",
+   "insight": "typical",
+   "fonte": "Google Flights",
+   "link": "https://www.google.com/travel/flights?q=Flights%20from%20NVT%20to%20BRC%20on%202027-09-04%20returning%202027-09-11%20for%202%20adults%20and%201%20child&curr=BRL&hl=pt-BR&gl=BR"
+  },
+  {
+   "origem": "NVT",
+   "janela": "B",
+   "ida": "2027-09-18",
+   "volta": "2027-09-25",
+   "total": 10371.0,
+   "tipo": "mais barata",
+   "insight": "typical",
+   "fonte": "Google Flights",
+   "link": "https://www.google.com/travel/flights?q=Flights%20from%20NVT%20to%20BRC%20on%202027-09-18%20returning%202027-09-25%20for%202%20adults%20and%201%20child&curr=BRL&hl=pt-BR&gl=BR"
+  }
+ ],
+ "historico": [
+  {
+   "data": "2026-11-21",
+   "menor": 10021.0,
+   "origem": "FLN",
+   "janela": "A",
+   "fonte": "Google Flights"
+  }
+ ],
+ "preco_alvo": null,
+ "atualizado": "2026-11-21T15:30:00-03:00"
+}

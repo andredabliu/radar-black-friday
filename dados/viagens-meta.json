@@ -1,0 +1,20 @@
+{
+ "passageiros": "2 adultos + 1 criança de 3 anos",
+ "janelas": {
+  "A": {
+   "ida": "2027-09-04",
+   "volta": "2027-09-11"
+  },
+  "B": {
+   "ida": "2027-09-18",
+   "volta": "2027-09-25"
+  }
+ },
+ "origens": [
+  "FLN",
+  "NVT"
+ ],
+ "cotacao_eur_brl": 6.5172,
+ "cotacao_fonte": "AwesomeAPI, fechamento de 20/11/2026",
+ "atualizado": "2026-11-21T15:30:00-03:00"
+}
