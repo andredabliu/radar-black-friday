@@ -1,0 +1,1235 @@
+<!doctype html><html lang="pt-BR"><head><meta charset=utf-8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><meta name="robots" content="noindex"></head><body style="margin:0"><title>Radar Black Friday</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Style: true-black flat (deliberately single dark theme: it is the Black Friday).
+   Shell: ruled T-frame. Sidebar 220 + 1px rule; canvas gutter 29px each side.
+   Overview grid at 1440: canvas 1440-221-58 = 1161; lower row 2fr/1fr with one 14px gap: 765.3 + 14 + 381.7 = 1161. */
+:root{
+  color-scheme:dark;
+  --ground:#000000; --surface:#111111; --raised:#2a2a2a; --border:#1a1a1a; --rule:#1c1c1c; --control:#444444;
+  --text:#ffffff; --muted:#b4b4b4; --faint:#949494; --nav:#bbbbbb;
+  --accent:#ff6b2c;            /* a cor da etiqueta de preço: só em dados */
+  --positive:#3fc07a; --negative:#e5566f; --warning:#e5a93b;
+  --pill-positive-bg:#172a1d; --pill-positive-ink:#3fc07a;
+  --pill-negative-bg:#2c1a20; --pill-negative-ink:#e5566f;
+  --pill-warning-bg:#2b2414; --pill-warning-ink:#e5a93b;
+  --pill-neutral-bg:#222222; --pill-neutral-ink:#ffffff;
+  --chart-1:#ff6b2c; --chart-2:#e6e6e6; --chart-muted:#6b6b6b; --chart-track:#2a2a2a;
+  --grid:#2b2b2b; --axis-ink:#949494; --ink:#ffffff; --chart-span:.12;
+  --tile:#ffffff;              /* fundo das fotos de produto, que vêm em branco */
+  --radius-card:20px; --radius-inner:12px; --radius-control:999px;
+  --sidebar:220px; --gap:14px; --pad:22px; --gutter:29px; --control-height:36px;
+  --font:"Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --fs-title:20px; --fs-section:16px; --fs-kpi:24px; --fs-lead:32px; --fs-body:14px; --fs-small:12px;
+}
+*{box-sizing:border-box}
+html,body{background:var(--ground);color:var(--text)}
+body{font-family:var(--font);font-size:var(--fs-body);line-height:20px;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--ground)}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit}
+.num{font-variant-numeric:tabular-nums}
+:focus-visible{outline:2px solid var(--text);outline-offset:2px;border-radius:6px}
+
+/* shell */
+.app{display:grid;grid-template-columns:var(--sidebar) 1fr;min-height:100vh}
+.side{border-right:1px solid var(--rule);padding:0 0 24px;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;padding-left:env(safe-area-inset-left,0px)}
+.brand{height:64px;display:flex;align-items:center;gap:10px;padding:0 20px;border-bottom:1px solid var(--rule);font-weight:600;font-size:15px}
+.brand svg{flex:none}
+.nav{display:flex;flex-direction:column;padding:16px 10px 0;gap:0}
+.nav .group{font-size:12px;color:var(--faint);padding:22px 10px 8px}
+.nav a{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:34px;padding:7px 10px;border-radius:8px;color:var(--nav);transition:color .15s}
+.nav a:hover{color:var(--text)}
+.nav a[aria-current="page"]{color:var(--text)}
+.nav a .r{font-size:12px;color:var(--faint);flex:none}
+.nav a .l{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.side .foot{margin-top:auto;padding:0 10px;display:flex;flex-direction:column}
+.main{min-width:0;display:flex;flex-direction:column}
+.top{height:64px;border-bottom:1px solid var(--rule);display:flex;align-items:stretch;position:sticky;top:env(safe-area-inset-top,0px);background:var(--ground);z-index:5;padding-right:env(safe-area-inset-right,0px)}
+.crumb{flex:1;min-width:0;display:flex;align-items:center;gap:8px;padding:0 var(--gutter);color:var(--muted);white-space:nowrap;overflow:hidden}
+.crumb b{color:var(--text);font-weight:500;overflow:hidden;text-overflow:ellipsis}
+.crumb .sep{color:var(--control)}
+.bf{display:flex;align-items:center;gap:12px;padding:0 var(--gutter);border-left:1px solid var(--rule);white-space:nowrap}
+.bf .d{font-size:var(--fs-kpi);font-weight:500;line-height:1}
+.bf .t{font-size:12px;color:var(--muted);line-height:16px}
+.menu-btn{display:none}
+.bf .ts{display:none;font-size:12px;color:var(--muted)}
+.canvas{padding:28px var(--gutter) 56px;display:flex;flex-direction:column;gap:var(--gap)}
+
+/* title row */
+.title{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-bottom:10px}
+.title h1{font-size:var(--fs-title);font-weight:600;margin:0;line-height:28px}
+.title p{margin:4px 0 0;color:var(--muted);max-width:70ch}
+.title p b{color:var(--text);font-weight:500}
+.stamp{font-size:12px;color:var(--faint);white-space:nowrap}
+.back{color:var(--muted);font-size:13px;display:inline-flex;gap:6px;margin-bottom:6px}
+.back:hover{color:var(--text)}
+
+.card{background:var(--surface);border-radius:var(--radius-card);padding:var(--pad);min-width:0}
+.card-h{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.card-h h2{font-size:var(--fs-section);font-weight:500;margin:0}
+.card-h .meta{font-size:12px;color:var(--faint)}
+
+/* KPI strip: one container split by rules */
+.kpis{display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;padding:0}
+.kpis > div{padding:20px var(--pad);border-left:1px solid var(--raised);min-width:0}
+.kpis > div:first-child{border-left:0}
+.kpis .k{font-size:13px;color:var(--muted)}
+.kpis .v{font-size:var(--fs-kpi);font-weight:500;margin-top:6px;line-height:30px}
+.kpis .v.lead{font-size:var(--fs-lead);line-height:38px}
+.kpis .v small{font-size:14px;color:var(--faint);font-weight:400}
+.kpis .s{font-size:12px;color:var(--faint);margin-top:4px}
+
+/* watchlist */
+.wl{padding:8px var(--pad)}
+.wl-head,.row{display:grid;grid-template-columns:72px minmax(0,1.6fr) minmax(170px,1.2fr) 120px 130px 128px;gap:18px;align-items:center}
+.wl-head{font-size:12px;color:var(--faint);padding:12px 0 10px;border-bottom:1px solid var(--raised)}
+.wl-head .n,.row .n{text-align:right}
+.row{padding:14px 0;border-bottom:1px solid var(--rule);cursor:pointer;position:relative}
+.row:last-child{border-bottom:0}
+.row:hover .name{text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--control)}
+.thumb{width:72px;height:72px;border-radius:var(--radius-inner);background:var(--tile);display:grid;place-items:center;overflow:hidden;flex:none}
+.thumb img{width:100%;height:100%;object-fit:contain;padding:6px}
+.thumb.code{background:var(--raised);color:var(--text);font-weight:600;font-size:15px;letter-spacing:.02em}
+.thumb span{color:#555;font-weight:600;font-size:12px}
+.name{font-weight:500;font-size:15px;line-height:20px;margin:0}
+.sub{font-size:12px;color:var(--faint);margin-top:3px;line-height:16px}
+.price{font-size:18px;font-weight:500;line-height:24px}
+.price.big{font-size:36px;line-height:40px;letter-spacing:-.01em}
+.chg{font-size:12px;line-height:16px;margin-top:2px;color:var(--faint)}
+.chg.good{color:var(--positive)} .chg.bad{color:var(--negative)}
+.goal{font-size:14px}
+.goal .sub{margin-top:2px}
+.act{justify-self:end}
+.ghost{display:inline-flex;align-items:center;gap:6px;height:var(--control-height);padding:0 14px;border-radius:var(--radius-control);border:1px solid var(--control);font-size:13px;white-space:nowrap;transition:border-color .15s,background .15s}
+.ghost:hover{border-color:var(--muted)}
+.ghost:active{background:var(--raised)}
+.primary{display:inline-flex;align-items:center;gap:8px;height:var(--control-height);padding:0 18px;border-radius:var(--radius-control);background:var(--text);color:#000;font-weight:500;font-size:14px;white-space:nowrap;border:0;cursor:pointer;transition:opacity .15s}
+.primary:hover{opacity:.88}
+.primary:active{opacity:.75}
+.pill{display:inline-flex;align-items:center;height:20px;padding:0 8px;border-radius:999px;font-size:11px;font-weight:500;white-space:nowrap;flex:none;background:var(--pill-neutral-bg);color:var(--pill-neutral-ink)}
+.pill.pos{background:var(--pill-positive-bg);color:var(--pill-positive-ink)}
+.pill.warn{background:var(--pill-warning-bg);color:var(--pill-warning-ink)}
+.pill.neg{background:var(--pill-negative-bg);color:var(--pill-negative-ink)}
+
+/* signature: a régua de preços (todas as lojas num eixo, com o alvo) */
+.ruler{width:100%;height:44px;display:block;overflow:visible}
+.ruler text{font-family:var(--font);font-size:11px;fill:var(--faint);font-variant-numeric:tabular-nums}
+
+.lower{display:grid;grid-template-columns:2fr 1fr;gap:var(--gap);align-items:start}
+.seg{display:inline-flex;max-width:100%;overflow-x:auto;scrollbar-width:none;gap:4px;background:var(--ground);border-radius:999px;padding:3px}
+.seg button{border:0;background:transparent;color:var(--nav);height:30px;padding:0 12px;border-radius:999px;cursor:pointer;font-size:13px;white-space:nowrap}
+.seg button:hover{color:var(--text)}
+.seg button[aria-pressed="true"]{background:var(--raised);color:var(--text)}
+.chart{min-height:0}
+.chart-note{border:1px dashed var(--control);border-radius:12px;padding:18px;color:var(--muted);font-size:13px;line-height:20px}
+.chart-note b{color:var(--text);font-weight:500}
+.alerts{display:flex;flex-direction:column;gap:10px}
+.alert{display:flex;gap:10px;align-items:flex-start;font-size:14px;line-height:20px}
+.alert .pill{margin-top:0}
+.rp{margin-top:6px}
+.where .pill{margin-left:6px;vertical-align:1px}
+.alert-empty{color:var(--muted);font-size:13px}
+.ref{margin-top:16px;padding-top:14px;border-top:1px solid var(--raised);display:flex;flex-direction:column;gap:8px}
+.ref h3{font-size:13px;font-weight:500;color:var(--muted);margin:0}
+.kv{display:flex;justify-content:space-between;gap:12px;font-size:13px}
+.kv span:first-child{color:var(--muted);min-width:0}
+
+/* product view */
+.pv{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:var(--gap);align-items:start}
+.photo{background:var(--tile);border-radius:var(--radius-card);aspect-ratio:1/1;display:grid;place-items:center;overflow:hidden;max-width:100%}
+.photo img{width:100%;height:100%;object-fit:contain;padding:28px}
+.specs{margin:0;padding:0;list-style:none;display:flex;flex-direction:column}
+.specs li{padding:9px 0;border-bottom:1px solid var(--rule);font-size:14px}
+.specs li:last-child{border-bottom:0}
+.stack{display:flex;flex-direction:column;gap:var(--gap);min-width:0}
+.answer{display:flex;flex-wrap:wrap;gap:16px 28px;align-items:flex-end;justify-content:space-between}
+.answer .where{color:var(--muted);margin-top:6px}
+.answer .where b{color:var(--text);font-weight:500}
+.target{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:18px;padding-top:16px;border-top:1px solid var(--raised)}
+.target label{font-size:13px;color:var(--muted)}
+.target input{width:132px;height:var(--control-height);border-radius:var(--radius-control);border:1px solid var(--control);background:var(--ground);color:var(--text);padding:0 14px;font:inherit;font-variant-numeric:tabular-nums}
+.target input:focus-visible{outline:2px solid var(--text);outline-offset:1px}
+.target .msg{font-size:13px;color:var(--muted)}
+.target .msg.good{color:var(--positive)}
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{font-size:12px;font-weight:400;color:var(--faint);text-align:left;padding:0 10px 10px;white-space:nowrap}
+td{padding:12px 10px;border-top:1px solid var(--rule);vertical-align:top}
+th:first-child,td:first-child{padding-left:0} th:last-child,td:last-child{padding-right:0}
+td.n,th.n{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+tr.best td.store b{color:var(--accent)}
+td.store b{font-weight:500}
+td.store .sub{max-width:46ch;font-size:13px;line-height:18px}
+td .l{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap}
+.note{color:var(--muted);font-size:13px;line-height:20px;margin-top:14px}
+.state{padding:32px;color:var(--muted);text-align:center;border:1px dashed var(--control);border-radius:var(--radius-card)}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(8px);background:var(--text);color:#000;border-radius:999px;padding:8px 16px;font-size:13px;opacity:0;transition:opacity .2s,transform .2s;pointer-events:none;z-index:20}
+.toast.on{opacity:1;transform:translateX(-50%)}
+.chart svg text{font-family:var(--font)}
+
+/* tablet */
+@media (max-width:1100px){
+  .wl-head,.row{grid-template-columns:64px minmax(0,1.5fr) 120px 130px 112px}
+  .wl-head .c-ruler,.row .c-ruler{display:none}
+  .thumb{width:64px;height:64px}
+  .lower{grid-template-columns:1fr}
+  .pv{grid-template-columns:1fr}
+  .photo{aspect-ratio:16/10}
+  .pv > .stack:first-child{order:2}
+}
+/* phone: o menu lateral vira uma folha */
+@media (max-width:860px){
+  .app{grid-template-columns:1fr}
+  .side{position:fixed;inset:0;z-index:30;background:var(--ground);height:auto;border-right:0;display:none;padding-top:env(safe-area-inset-top,0px)}
+  .side.open{display:flex}
+  .menu-btn{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;margin-left:max(6px,env(safe-area-inset-left,0px));border:0;background:transparent;cursor:pointer;flex:none;align-self:center}
+  .side .close{display:inline-flex}
+  .top{height:56px}
+  .crumb{padding-left:4px}
+  .bf{padding:0 max(16px,env(safe-area-inset-right,0px)) 0 14px}
+  .bf .t{display:none}
+  .bf .ts{display:inline}
+  .bf{gap:8px}
+  .canvas{padding:20px max(16px,env(safe-area-inset-right,0px)) 48px max(16px,env(safe-area-inset-left,0px))}
+  .kpis{grid-template-columns:1fr 1fr}
+  .kpis > div{border-left:0;border-top:1px solid var(--raised)}
+  .kpis > div:nth-child(-n+2){border-top:0}
+  .kpis > div:nth-child(2n){border-left:1px solid var(--raised)}
+  .kpis > div{padding:16px}
+  .wl{padding:4px 16px}
+  .wl-head{display:none}
+  .row{grid-template-columns:64px minmax(0,1fr) auto;grid-template-areas:"t i p" "t g g" "t r r";gap:6px 14px}
+  .row .c-thumb{grid-area:t;align-self:start}
+  .row .c-info{grid-area:i}
+  .row .c-price{grid-area:p}
+  .row .c-goal{grid-area:g;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+  .row .c-goal .sub{margin:0}
+  .row .act{display:none}
+  .row .c-ruler{display:block;grid-area:r;padding-top:4px}
+  .price.big{font-size:32px;line-height:36px}
+  .card{padding:18px 16px}
+  td.store .sub{max-width:28ch}
+}
+.side .close{display:none;position:absolute;right:max(10px,env(safe-area-inset-right,0px));top:calc(10px + env(safe-area-inset-top,0px));width:44px;height:44px;border:0;background:transparent;cursor:pointer;align-items:center;justify-content:center}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="app">
+  <aside class="side" id="side" aria-label="Navegação">
+    <div class="brand">
+      <svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><path d="M2 4.5A2.5 2.5 0 0 1 4.5 2h7.3c.7 0 1.3.3 1.8.7l6.7 6.7a2.5 2.5 0 0 1 0 3.5l-7.1 7.1a2.5 2.5 0 0 1-3.5 0L2.7 13.4A2.5 2.5 0 0 1 2 11.6z" fill="#ff6b2c"/><circle cx="7" cy="7" r="1.9" fill="#000"/></svg>
+      Radar BF
+    </div>
+    <button class="close" id="close" aria-label="Fechar menu"><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M4 4l10 10M14 4L4 14" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+    <nav class="nav" id="nav"></nav>
+    <div class="foot nav" id="foot"></div>
+  </aside>
+  <div class="main">
+    <header class="top">
+      <button class="menu-btn" id="menu" aria-label="Abrir menu" aria-controls="side" aria-expanded="false"><svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M3 6h14M3 10h14M3 14h14" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+      <div class="crumb" id="crumb"><b>Lista de desejos</b></div>
+      <div class="bf"><span class="d num" id="days">—</span><span class="t">dias até a Black Friday<br>sexta, 27 de novembro</span><span class="ts">dias até a BF</span></div>
+    </header>
+    <main class="canvas" id="view">
+      <div class="title"><div><h1>Lista de desejos</h1><p>Carregando os preços…</p></div></div>
+    </main>
+  </div>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>// tasteskill / charts.js — small, dependency-free charts for app screens, drawn in SVG from your data.
+// They follow references/app-screens.md: one question per chart, one series that matters, 3–5 quiet
+// horizontal gridlines, round ticks that top out above the largest value, 2px straight lines with no
+// markers, square bars, no gradients, a bare tooltip, tabular figures. Colours come from CSS variables:
+//   --chart-1 … --chart-4 (series), --chart-muted (other series), --chart-mark (a marked period; ink by default),
+//   --chart-span (the opacity of a shaded span: about .06 on light, .12 on dark), --chart-track (a time strip's track),
+//   --grid, --axis-ink, --ink, --surface, --raised, --rule, --negative
+// Usage (after this file loads):
+//   Charts.line(el, { labels: ['1 Oct', …], series: [{ name: 'Requests', values: [...] }], format: Charts.fmt.compact })
+//   Charts.bars(el, { labels, values, highlight: 6, format })        one bar (or [indices]) may carry the accent; dim: [indices]
+//   Charts.diverging(el, { labels, up, down, above: 'Sold', below: 'Bought', mark: [3, 9], markLabel: 'Car charged' })
+//   Charts.ring(el, { value: 0.72, label: '72%', sub: 'of capacity' }) a progress ring with its total inside
+//   Charts.barList(el, [{ label: 'Berlin', value: 412 }, …], { format, thin })  a ranked list where the row is the bar
+//   Charts.plan(el, [{ label: 'Groceries', planned: 600, spent: 412, committed: 60 }, …], { scale: 'row' | 'plan' })  planned against spent
+//   Charts.bullet(el, [{ label: 'Bonds', value: 0.31, target: 0.25 }, …])   share against a target
+//   Charts.timeline(el, rows, kinds, { days, today, weekends })      who is away when, each kind of booking its own mark
+//   Charts.matrix(el, rows, { cols, comfort: 2, today })             slack against a minimum, team by day
+//   Charts.timeStrip(el, rows, { open: '08:00', close: '15:00', compareLabel: 'Last Sunday' })  when, within the day
+// line, bars and diverging take annotations: [{ at: index, label: 'Deploy a3f09c1', short: 'a3f09c1' }] or spans
+// [{ from, to, label: 'Cloud' }]. Their labels sit in rows above the plot, measured once the fonts have loaded, and no
+// leader line crosses another label; the rows are reserved only when a label exists. reference: { value, label }, its
+// label set where no series passes.
+// line takes step: true for a balance that only changes on given days; today: index (the forecast after it is dashed)
+// with todayLabel: 'Now 20:34' (set clear of the line); endLabel: true (the last value at the line's end); max: caps a
+// flat series with one spike (the peak is labelled); yTicks: fixed ticks for a bounded quantity (0–100%); tickFormat:
+// axis labels apart from the tooltip format; xAt: the indices to label. Without xAt the x labels keep one step.
+// diverging, timeline, matrix and timeStrip return { svg, legend }, and line returns { legend } for two series or more:
+// the legend is drawn from the same style objects as the marks, so a swatch is always the mark scaled down. Put it in
+// the card's header, or pass legend: element (or a selector) to have it filled.
+// Numbers follow the page's language (<html lang>). Every chart gets role="img" and an aria-label that states what it shows.
+(() => {
+  const NS = 'http://www.w3.org/2000/svg', MINUS = '\u2212', ROW = 14, LANE = (rows) => 8 + rows * ROW + (rows ? 4 : 0);
+  const css = (el, name, fb) => getComputedStyle(el).getPropertyValue(name).trim() || fb;
+  const cssNum = (el, name, fb) => { const v = parseFloat(css(el, name, '')); return Number.isFinite(v) ? v : fb; };
+  const svg = (tag, attrs = {}, parent) => { const n = document.createElementNS(NS, tag); for (const [k, v] of Object.entries(attrs)) if (v != null) n.setAttribute(k, v); if (parent) parent.appendChild(n); return n; };
+  const text = (parent, str, attrs) => { const t = svg('text', attrs, parent); t.textContent = str; return t; };
+  const titled = (parent, str) => { svg('title', {}, parent).textContent = str; return parent; };
+  // numbers follow the page's language (<html lang>), so separators match the rest of the screen
+  const nf = (o) => new Intl.NumberFormat(document.documentElement.lang || 'en', o);
+  // every text value that reaches innerHTML goes through esc: a label from a database is text, never markup
+  const esc = (v) => String(v).replace(/[&<>"']/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+  const fmt = {
+    int: (v) => nf({ maximumFractionDigits: 0 }).format(v),
+    dec: (d) => (v) => nf({ minimumFractionDigits: d, maximumFractionDigits: d }).format(v),
+    pct: (d = 1) => (v) => nf({ style: 'percent', minimumFractionDigits: d, maximumFractionDigits: d }).format(v),
+    money: (cur = 'EUR', d = 0) => (v) => nf({ style: 'currency', currency: cur, minimumFractionDigits: d, maximumFractionDigits: d }).format(v),
+    compact: (v) => nf({ notation: 'compact', maximumFractionDigits: 1 }).format(v),
+    ms: (v) => `${nf({ maximumFractionDigits: 0 }).format(v)} ms`,
+    // a sign on every change, with a true minus: fmt.signed() → '+2', '0', '−1'; fmt.signed(fmt.dec(1)) → '+0.4'
+    signed: (f = (v) => nf({ maximumFractionDigits: 0 }).format(v)) => (v) => (v > 0 ? '+' : v < 0 ? MINUS : '') + f(Math.abs(v)),
+    // minutes since midnight as a 24-hour time: 680 → '11:20'
+    clock: (m) => `${String(Math.floor(m / 60) % 24).padStart(2, '0')}:${String(Math.round(m % 60)).padStart(2, '0')}`, // taste-skill-ignore: a clock, not a counter
+  };
+  const minutes = (t) => (t == null || t === '' ? null : typeof t === 'number' ? t : (([hh, mm]) => hh * 60 + (mm || 0))(String(t).split(':').map(Number)));
+  // Round ticks (steps of 1, 2, 2.5 or 5 × 10^n) whose top sits above the largest value.
+  function ticks(min, max, count = 4) {
+    if (max === min) max = min + 1;
+    const raw = (max - min) / count, mag = 10 ** Math.floor(Math.log10(raw));
+    const step = [1, 2, 2.5, 5, 10].map((m) => m * mag).find((s) => s >= raw) || 10 * mag;
+    const lo = Math.floor(min / step) * step; let hi = Math.ceil(max / step) * step; if (hi <= max) hi += step;
+    const out = []; for (let v = lo; v <= hi + step / 2; v += step) out.push(+v.toFixed(10));
+    return out;
+  }
+  // x labels keep one step all the way: every k-th label, with k chosen so the labels fit the width, and a step that
+  // lands on the last label when one gives enough labels. Never a forced end label that breaks the step. Clock labels
+  // ('08:30') step in whole hours (or halves and quarters) from a round time, so a half-hourly axis reads 06:00, 09:00.
+  function xPicks(labels, span, at) {
+    const n = labels.length;
+    if (at) return at.filter((i) => i >= 0 && i < n);
+    if (n <= 1) return n ? [0] : [];
+    const longest = Math.max(...labels.map((l) => String(l).length));
+    const cap = Math.max(2, Math.min(8, Math.floor(span / (longest * 7 + 18))));
+    if (n <= cap) return [...Array(n).keys()];
+    const mins = labels.every((l) => /^\d{1,2}:\d{2}$/.test(String(l))) ? labels.map(minutes) : null;
+    const d = mins ? mins[1] - mins[0] : 0;
+    let first = null, land = null;
+    for (let k = 1; k < n; k++) {
+      const stepM = k * d, clock = mins && d > 0;
+      if (clock && (stepM >= 60 ? ![1, 2, 3, 4, 6, 12].includes(stepM / 60) : 60 % stepM !== 0)) continue;
+      // start on a round time: a multiple of the step (09:00 for three hours), or a whole hour for shorter steps
+      let s = clock ? mins.findIndex((m) => m % Math.max(60, stepM) === 0) : 0;
+      if (s < 0) s = Math.max(0, mins.findIndex((m) => m % 60 === 0));
+      const count = Math.floor((n - 1 - s) / k) + 1;
+      if (count > cap) continue;
+      if (first == null) first = { k, s };
+      if ((n - 1 - s) % k === 0) { land = { k, s, count }; break; }
+    }
+    const pick = land && land.count >= Math.max(3, Math.ceil(cap * 0.6)) ? land : first || { k: n - 1, s: 0 };
+    const out = []; for (let i = pick.s; i < n; i += pick.k) out.push(i);
+    return out;
+  }
+  // colours: tokens resolved to rgb, so a mark can be mixed with the surface (a pale fill, a darker step)
+  const swatchProbe = document.createElement('span'); swatchProbe.style.display = 'none';
+  const rgb = (el, value) => {
+    el.appendChild(swatchProbe); swatchProbe.style.color = ''; swatchProbe.style.color = value;
+    const c = getComputedStyle(swatchProbe).color; swatchProbe.remove();
+    const m = c.match(/-?[\d.]+/g); if (!m || m.length < 3) return null;
+    return c.startsWith('color(') ? m.slice(0, 3).map((v) => Math.round(+v * 255)) : m.slice(0, 3).map(Number);
+  };
+  const mix = (el, a, b, t) => { const p = rgb(el, a), q = rgb(el, b); return p && q ? `rgb(${p.map((v, i) => Math.round(v * t + q[i] * (1 - t))).join(',')})` : a; };
+  // text width, measured in the chart's own face (falls back to an estimate when the chart is hidden)
+  const measure = (s, str, size = 11, weight = 400) => { const t = text(s, str, { x: -999, y: -999, 'font-size': size, 'font-weight': weight, visibility: 'hidden' }); let wd = 0; try { wd = t.getComputedTextLength(); } catch {} t.remove(); return wd > 0 ? wd : String(str).length * size * 0.56; };
+  const fit = (s, str, max, size, weight) => { str = String(str); if (measure(s, str, size, weight) <= max) return str; while (str.length > 1 && measure(s, str + '\u2026', size, weight) > max) str = str.slice(0, -1); return str.trimEnd() + '\u2026'; };
+  function frame(el, h) {
+    el.innerHTML = '';
+    const w = Math.max(240, el.clientWidth || 600);
+    const s = svg('svg', { viewBox: `0 0 ${w} ${h}`, width: '100%', height: h, role: 'img', style: 'display:block;overflow:visible;font-variant-numeric:tabular-nums' }, el);
+    return { s, w, h };
+  }
+  function tooltip(el) {
+    let t = el.querySelector('.chart-tip');
+    if (!t) { t = document.createElement('div'); t.className = 'chart-tip'; t.style.cssText = 'position:absolute;pointer-events:none;padding:6px 8px;font:inherit;font-size:12px;line-height:1.35;border-radius:6px;white-space:nowrap;opacity:0;transition:opacity 120ms ease;background:var(--surface,#fff);color:var(--ink,#111);border:1px solid var(--grid,#e5e7eb)'; if (getComputedStyle(el).position === 'static') el.style.position = 'relative'; el.appendChild(t); }
+    return t;
+  }
+  function axes(g, el, { w, h, padL, padB, yt, y, labels, x, band = false, at = null, tick, avoid = null }) {
+    const grid = css(el, '--grid', '#e8e8e8'), ink = css(el, '--axis-ink', '#6b6b6b'), s = g.ownerSVGElement;
+    for (const v of yt) {
+      const yy = y(v);
+      svg('line', { x1: padL, x2: w, y1: yy, y2: yy, stroke: grid, 'stroke-width': 1, 'shape-rendering': 'crispEdges' }, g);
+      text(g, tick(v), { x: padL - 8, y: yy + 4, 'text-anchor': 'end', 'font-size': 12, fill: ink });
+    }
+    const n = labels.length;
+    for (const i of xPicks(labels, w - padL, at)) {
+      const lab = String(labels[i]), tw = measure(s, lab, 12), xx = x(i);
+      // the first and last labels are pulled inside the plot; none runs past either edge
+      let left = band ? xx - tw / 2 : i === 0 ? xx : i === n - 1 ? xx - tw : xx - tw / 2;
+      left = Math.max(band ? 0 : padL, Math.min(w - tw, left));
+      if (avoid && left < avoid[1] + 8 && left + tw > avoid[0] - 8) continue;
+      text(g, lab, { x: left, y: h - padB + 18, 'font-size': 12, fill: ink });
+    }
+  }
+  // Annotation labels sit in rows above the plot, never on the data. A label sits beside the top of its own leader
+  // line, right of it or left of it, in one of three rows. A place is free when no other label in that row overlaps
+  // it, no leader line passes through it, and its own leader passes through no label below it. The layout is searched
+  // (close markers often need the first label on the left so the next leader runs clear): full labels first, then
+  // short forms (`short`), and only then is a label dropped to its marker's tooltip, with a note in the console.
+  function lane(s, items, w, maxRows = 3) {
+    const gap = 6, rank = (it) => (it.fixed != null ? 0 : it.span ? 1 : 2);
+    // fixed captions first, then spans, then markers from left to right
+    const order = [...items].sort((a, b) => rank(a) - rank(b) || (a.x ?? a.x0) - (b.x ?? b.x0));
+    const opts = order.map((it) => {
+      const out = [];
+      for (const str of [it.label, it.short].filter(Boolean)) {
+        const tw = measure(s, str, 11) + (it.glyph ? 9 : 0), mid = it.span ? (it.x0 + it.x1) / 2 : 0;
+        const cands = it.fixed != null ? [[it.fixed, it.fixed + tw]] : it.span ? [[mid - tw / 2, mid + tw / 2], [it.x0, it.x0 + tw], [it.x1 - tw, it.x1]] : [[it.x + 4, it.x + 4 + tw], [it.x - 4 - tw, it.x - 4]];
+        for (let row = 0; row < maxRows; row++) for (const [x0, x1] of cands) if (x0 >= 0 && x1 <= w) out.push({ ...it, text: str, isShort: str !== it.label, row, x0, x1 });
+      }
+      return out;
+    });
+    const free = (c, placed) => placed.every((p) => p.dropped || (!(p.row === c.row && c.x0 < p.x1 + gap && c.x1 > p.x0 - gap)
+      && !(p.leader != null && p.row >= c.row && p.leader > c.x0 - 3 && p.leader < c.x1 + 3)
+      && !(c.leader != null && p.row <= c.row && c.leader > p.x0 - 3 && c.leader < p.x1 + 3)));
+    let best = null, steps = 0;
+    const solve = (i, placed, allowShort, allowDrop) => {
+      if (++steps > 20000) return false;
+      if (i === order.length) { best = placed.slice(); return true; }
+      for (const c of opts[i]) { if ((c.isShort && !allowShort) || !free(c, placed)) continue; placed.push(c); if (solve(i + 1, placed, allowShort, allowDrop)) return true; placed.pop(); }
+      if (allowDrop) { placed.push({ ...order[i], dropped: true }); if (solve(i + 1, placed, allowShort, allowDrop)) return true; placed.pop(); }
+      return false;
+    };
+    for (const [sh, dr] of [[false, false], [true, false], [true, true]]) { steps = 0; if (solve(0, [], sh, dr)) break; }
+    const placed = (best || []).filter((p) => !p.dropped), dropped = (best || order.map((it) => ({ ...it, dropped: true }))).filter((p) => p.dropped);
+    return { placed, dropped, rows: placed.length ? Math.max(...placed.map((p) => p.row)) + 1 : 0 };
+  }
+  function prepNotes(s, annotations = [], x, w, extra = []) {
+    const items = [];
+    for (const a of annotations || []) {
+      if (a.from != null) items.push({ span: true, x0: Math.min(x(a.from), x(a.to)), x1: Math.max(x(a.from), x(a.to)), label: a.label, short: a.short, colour: a.colour });
+      else if (a.at != null) items.push({ x: x(a.at), at: a.at, leader: x(a.at), label: a.label, short: a.short, colour: a.colour });
+    }
+    items.push(...extra);
+    return { items, ...lane(s, items.filter((it) => it.label), w) };
+  }
+  // shaded spans go under the data; marker lines and the label rows over it
+  function notesUnder(g, el, N, { padT, h, padB }) {
+    const ink = css(el, '--axis-ink', '#6b6b6b'), op = cssNum(el, '--chart-span', 0.07);
+    for (const it of N.items) if (it.span) svg('rect', { x: it.x0, y: padT, width: it.x1 - it.x0, height: h - padT - padB, fill: ink, opacity: op }, g);
+  }
+  function notesOver(g, el, N, { padT, h, padB }) {
+    const ink = css(el, '--axis-ink', '#6b6b6b');
+    // a marker line runs to the plot's foot, or stops above the bar it points at (it.end)
+    for (const it of N.items) if (it.leader != null && !it.drawn) svg('line', { x1: it.leader, x2: it.leader, y1: padT, y2: Math.max(padT, it.end ?? h - padB), stroke: ink, 'stroke-width': 1, opacity: 0.45, 'shape-rendering': 'crispEdges' }, g);
+    for (const p of N.placed) {
+      const base = padT - 9 - p.row * ROW;
+      if (p.leader != null) svg('line', { x1: p.leader, x2: p.leader, y1: base - 8, y2: padT, stroke: ink, 'stroke-width': 1, opacity: 0.45, 'shape-rendering': 'crispEdges' }, g);
+      if (p.glyph) svg('path', { d: p.glyph === 'up' ? `M${p.x0} ${base - 1}l3 -6l3 6z` : `M${p.x0} ${base - 7}l3 6l3 -6z`, fill: ink }, g);
+      text(g, p.text, { x: p.x0 + (p.glyph ? 9 : 0), y: base, 'font-size': 11, fill: p.colour || ink });
+    }
+    const el2 = g.ownerSVGElement.parentNode; el2._warned = el2._warned || new Set();
+    for (const d of N.dropped) {
+      if (d.leader != null) { const hit = svg('line', { x1: d.leader, x2: d.leader, y1: padT, y2: h - padB, stroke: 'transparent', 'stroke-width': 8 }, g); titled(hit, d.label, {}); }
+      if (!el2._warned.has(d.label)) { el2._warned.add(d.label); console.warn(`Charts: no room above the plot for "${d.label}". Give it a short form (short) or label fewer markers.`); }
+    }
+  }
+  // does a label box touch a drawn line? polylines are [[x, y], …]; a box is { x0, x1, y0, y1 }
+  function hits(b, lines) {
+    for (const pts of lines) for (let k = 1; k < pts.length; k++) {
+      const a = pts[k - 1], c = pts[k]; if (!a || !c) continue;
+      if (a[0] === c[0]) { if (a[0] >= b.x0 - 3 && a[0] <= b.x1 + 3 && Math.max(a[1], c[1]) >= b.y0 - 3 && Math.min(a[1], c[1]) <= b.y1 + 3) return true; continue; }
+      const lo = Math.max(b.x0 - 3, Math.min(a[0], c[0])), hi = Math.min(b.x1 + 3, Math.max(a[0], c[0]));
+      for (let xx = lo; xx <= hi; xx += 2) { const yy = a[1] + ((xx - a[0]) / (c[0] - a[0])) * (c[1] - a[1]); if (yy >= b.y0 - 3 && yy <= b.y1 + 3) return true; }
+    }
+    return false;
+  }
+  const boxHits = (b, boxes) => boxes.some((r) => b.x0 < r.x1 + 3 && b.x1 > r.x0 - 3 && b.y0 < r.y1 + 3 && b.y1 > r.y0 - 3);
+  // a reference line (a budget, an SLO) with its label at an end where no series passes
+  function references(g, el, refs, { y, padL, w, lines = [], boxes = [] }) {
+    const ink = css(el, '--axis-ink', '#6b6b6b'), s = g.ownerSVGElement;
+    for (const r of [].concat(refs || [])) {
+      const yy = y(r.value);
+      svg('line', { x1: padL, x2: w, y1: yy, y2: yy, stroke: ink, 'stroke-width': 1, 'stroke-dasharray': '4 4', opacity: 0.7 }, g);
+      if (!r.label) continue;
+      const tw = measure(s, r.label, 11), right = r.at !== 'left';
+      const cand = [[right, -5], [right, 13], [!right, -5], [!right, 13]].map(([rt, dy]) => ({ x0: rt ? w - tw : padL + 4, x1: rt ? w : padL + 4 + tw, y0: yy + dy - 9, y1: yy + dy + 2, base: yy + dy }));
+      const b = cand.find((c) => !hits(c, lines) && !boxHits(c, boxes)) || cand[0];
+      text(g, r.label, { x: b.x0, y: b.base, 'font-size': 11, fill: ink });
+    }
+  }
+  // One style object per kind of mark draws both the mark and its legend swatch, so the two cannot drift apart.
+  function paintRect(parent, st, x, y, w, h, r = 0) {
+    let fill = st.fill || 'none';
+    if (st.hatch) {
+      const s = parent.ownerSVGElement || parent, id = 'h' + Math.random().toString(36).slice(2, 8);
+      const p = svg('pattern', { id, width: 5, height: 5, patternUnits: 'userSpaceOnUse', patternTransform: 'rotate(45)' }, svg('defs', {}, s));
+      svg('rect', { width: 5, height: 5, fill: st.fill }, p); svg('line', { x1: 0, y1: 0, x2: 0, y2: 5, stroke: st.hatch, 'stroke-width': 1.2 }, p);
+      fill = `url(#${id})`;
+    }
+    const inset = st.stroke ? (st.width || 1) / 2 : 0;
+    const n = svg('rect', { x: x + inset, y: y + inset, width: Math.max(0, w - inset * 2), height: Math.max(0, h - inset * 2), rx: r, fill, stroke: st.stroke, 'stroke-width': st.stroke ? st.width || 1 : null, 'stroke-dasharray': st.dash, opacity: st.opacity, 'shape-rendering': r ? null : 'crispEdges' }, parent);
+    if (st.edge) svg('rect', { x, y, width: 3, height: h, rx: Math.min(r, 1.5), fill: st.edge }, parent);
+    return n;
+  }
+  const legendCss = ':where(.chart-legend){list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;gap:4px 14px;font-size:12px;line-height:16px;color:var(--muted,#5f6368)}:where(.chart-legend li){display:inline-flex;align-items:center;gap:6px;white-space:nowrap}:where(.chart-legend svg){flex:none;overflow:visible}@media (max-width:480px){:where(.chart-legend){display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}}';
+  function legendEl(items, target) {
+    if (!document.getElementById('charts-legend-css')) { const st = document.createElement('style'); st.id = 'charts-legend-css'; st.textContent = legendCss; document.head.appendChild(st); }
+    const ul = document.createElement('ul'); ul.className = 'chart-legend';
+    for (const it of items) {
+      const li = document.createElement('li'), sw = svg('svg', { width: it.w || 14, height: 12, 'aria-hidden': 'true' });
+      it.draw(sw); li.append(sw, document.createTextNode(it.label)); ul.appendChild(li);
+    }
+    const t = typeof target === 'string' ? document.querySelector(target) : target;
+    if (t) t.replaceChildren(ul);
+    return ul;
+  }
+  const rectSwatch = (st, w = 14, h = 10, r = 2) => (sw) => paintRect(sw, st, 0, (12 - h) / 2, w, h, r);
+  // charts are laid out with measured text: draw again once the page's fonts have arrived
+  function settle(draw) { if (document.fonts) { document.fonts.ready.then(draw); document.fonts.addEventListener?.('loadingdone', draw, { once: true }); } }
+  const heightOf = (h) => (typeof h === 'function' ? h() : h);
+
+  function line(el, { labels, series, format = fmt.int, tickFormat = null, height = 220, fill = false, min, max, step = false, annotations, reference, today = null, todayLabel = 'Today', endLabel = false, yTicks = null, xAt = null, legend = null }) {
+    el._fmt = format;
+    const colourOf = (sr, k) => sr.colour || (k === 0 ? css(el, '--chart-1', '#2f6fdf') : css(el, `--chart-${k + 1}`, css(el, '--chart-muted', '#a3a3a3')));
+    const draw = () => {
+      const { s, w, h } = frame(el, heightOf(height));
+      const all = series.flatMap((x) => x.values.filter((v) => v != null)).concat([].concat(reference || []).map((r) => r.value));
+      // max caps the range (a flat series with one spike): values above it are clipped and their peak labelled
+      const top = max ?? Math.max(...all);
+      const yt = yTicks || ticks(min ?? Math.min(0, ...all), top, 4);
+      const tick = tickFormat || format;
+      const lastVal = series[0].values.filter((v) => v != null).at(-1);
+      const padL = 12 + Math.max(...yt.map((v) => measure(s, tick(v), 12))), padB = 26, padR = endLabel ? 10 + measure(s, format(lastVal), 12, 600) : 0;
+      const x = (i) => padL + (i * (w - padL - padR)) / Math.max(1, labels.length - 1);
+      // the peaks clipped by max are labelled in the rows above the plot, where the line leaves it
+      const peaks = [];
+      series.forEach((sr, k) => sr.values.forEach((v, i) => { if (v != null && v > yt.at(-1) && (i === 0 || sr.values[i - 1] == null || sr.values[i - 1] <= yt.at(-1))) { let j = i, peak = v; while (j < sr.values.length && sr.values[j] != null && sr.values[j] > yt.at(-1)) { peak = Math.max(peak, sr.values[j]); j++; } peaks.push({ x: x(i), label: format(peak) + ' at ' + labels[i], colour: colourOf(sr, k) }); } }));
+      const scale = (N) => { const padT = LANE(N.rows); return { padT, y: (v) => padT + (h - padT - padB) * (1 - (v - yt[0]) / (yt.at(-1) - yt[0])) }; };
+      const linesAt = (y) => series.map((sr) => { const out = []; sr.values.forEach((v, i) => { if (v == null) { out.push(null); return; } const p = [x(i), y(Math.min(v, yt.at(-1)))]; const prev = out.at(-1); if (step && prev) out.push([p[0], prev[1]]); out.push(p); }); return out; }).concat([].concat(reference || []).map((r) => [[padL, y(r.value)], [w, y(r.value)]]));
+      let N = prepNotes(s, annotations, x, w, peaks), { padT, y } = scale(N), todayBox = null;
+      // the today label goes inside the plot on whichever side of its line no series crosses; failing that, above
+      if (today != null && todayLabel) {
+        const cut = x(today), tw = measure(s, todayLabel, 11), lines = linesAt(y);
+        const cand = [[cut + 4, h - padB - 6], [cut - 4 - tw, h - padB - 6], [cut + 4, padT + 11], [cut - 4 - tw, padT + 11]].map(([x0, b]) => ({ x0, x1: x0 + tw, y0: b - 9, y1: b + 2, base: b }));
+        todayBox = cand.find((b) => b.x0 >= padL && b.x1 <= w && !hits(b, lines)) || null;
+        if (!todayBox) { N = prepNotes(s, annotations, x, w, [...peaks, { x: cut, leader: cut, drawn: true, label: todayLabel }]); ({ padT, y } = scale(N)); }
+      }
+      const g = svg('g', {}, s);
+      axes(g, el, { w, h, padL, padB, yt, y, labels, x, at: xAt, tick });
+      notesUnder(g, el, N, { padT, h, padB });
+      series.forEach((sr, k) => {
+        const col = colourOf(sr, k);
+        const pts = sr.values.map((v, i) => (v == null ? null : [x(i), y(Math.min(v, yt.at(-1)))]));
+        // step: a balance that only changes on given days holds its value until the next one
+        const d = pts.reduce((acc, p, i) => (p ? acc + (acc && pts[i - 1] ? (step ? `L${p[0].toFixed(1)} ${pts[i - 1][1].toFixed(1)}L` : 'L') : 'M') + p[0].toFixed(1) + ' ' + p[1].toFixed(1) : acc), '');
+        if (fill && k === 0) { const first = pts.find(Boolean), last = [...pts].reverse().find(Boolean); svg('path', { d: `${d}L${last[0]} ${y(yt[0])}L${first[0]} ${y(yt[0])}Z`, fill: col, opacity: 0.12 }, g); }
+        if (today == null) svg('path', { d, fill: 'none', stroke: col, 'stroke-width': 2, 'stroke-linejoin': 'round', 'stroke-linecap': 'round' }, g);
+        else {
+          // a forecast: the line after today is dashed, so a projection never reads as a fact
+          const cut = x(today), id = 'c' + k + Math.random().toString(36).slice(2, 8);
+          const defs = svg('defs', {}, g);
+          const a = svg('clipPath', { id: id + 'a' }, defs); svg('rect', { x: 0, y: 0, width: cut, height: h }, a);
+          const b = svg('clipPath', { id: id + 'b' }, defs); svg('rect', { x: cut, y: 0, width: w, height: h }, b);
+          svg('path', { d, fill: 'none', stroke: col, 'stroke-width': 2, 'stroke-linejoin': 'round', 'clip-path': 'url(#' + id + 'a)' }, g);
+          svg('path', { d, fill: 'none', stroke: col, 'stroke-width': 2, 'stroke-dasharray': '5 4', opacity: 0.8, 'clip-path': 'url(#' + id + 'b)' }, g);
+          if (k === 0) { svg('line', { x1: cut, x2: cut, y1: padT, y2: h - padB, stroke: css(el, '--axis-ink', '#6b6b6b'), 'stroke-width': 1, opacity: 0.4 }, g); if (todayBox) text(g, todayLabel, { x: todayBox.x0, y: todayBox.base, 'font-size': 11, fill: css(el, '--axis-ink', '#6b6b6b') }); }
+        }
+        if (endLabel && k === 0) { const li = sr.values.map((v, i) => (v == null ? -1 : i)).filter((i) => i >= 0).at(-1); text(g, format(sr.values[li]), { x: x(li) + 6, y: y(Math.min(sr.values[li], yt.at(-1))) + 4, 'font-size': 12, 'font-weight': 600, fill: css(el, '--ink', '#111') }); }
+      });
+      references(g, el, reference, { y, padL, w, lines: linesAt(y).slice(0, series.length) });
+      notesOver(g, el, N, { padT, h, padB });
+      // hover: a rule, a dot per series and a bare tooltip
+      const tip = tooltip(el), rule = svg('line', { y1: padT, y2: h - padB, stroke: css(el, '--axis-ink', '#6b6b6b'), 'stroke-width': 1, opacity: 0 }, g);
+      const dots = series.map((sr, k) => svg('circle', { r: 3.5, fill: css(el, '--surface', '#fff'), stroke: colourOf(sr, k), 'stroke-width': 2, opacity: 0 }, g));
+      const hit = svg('rect', { x: padL, y: padT, width: w - padL, height: h - padT - padB, fill: 'transparent' }, s);
+      const move = (ev) => { const r = s.getBoundingClientRect(); const px = ((ev.clientX - r.left) / r.width) * w; const i = Math.max(0, Math.min(labels.length - 1, Math.round(((px - padL) / (w - padL - padR)) * (labels.length - 1)))); rule.setAttribute('x1', x(i)); rule.setAttribute('x2', x(i)); rule.setAttribute('opacity', 0.35); series.forEach((sr, k) => { const v = sr.values[i]; dots[k].setAttribute('cx', x(i)); dots[k].setAttribute('cy', v == null ? -99 : y(Math.min(v, yt.at(-1)))); dots[k].setAttribute('opacity', v == null ? 0 : 1); }); tip.innerHTML = `<div style="opacity:.7">${esc(labels[i])}</div>` + series.map((sr) => `<div><b style="font-weight:600">${sr.values[i] == null ? '–' : esc(format(sr.values[i]))}</b> ${series.length > 1 ? esc(sr.name) : ''}</div>`).join(''); const left = Math.min((x(i) / w) * r.width + 12, r.width - tip.offsetWidth - 4); tip.style.left = `${Math.max(0, left)}px`; tip.style.top = '0px'; tip.style.opacity = 1; };
+      hit.addEventListener('pointermove', move); hit.addEventListener('pointerleave', () => { tip.style.opacity = 0; rule.setAttribute('opacity', 0); dots.forEach((d) => d.setAttribute('opacity', 0)); });
+      const last = series[0].values.filter((v) => v != null).at(-1);
+      s.setAttribute('aria-label', `${series.map((x) => x.name).join(', ')}, ${labels[0]} to ${labels.at(-1)}; latest ${last == null ? 'no data' : format(last)}`);
+    };
+    draw(); watch(el, draw); settle(draw);
+    const lg = series.length > 1 ? legendEl(series.map((sr, k) => ({ label: sr.name, w: 16, draw: (sw) => svg('line', { x1: 0, x2: 16, y1: 6, y2: 6, stroke: colourOf(sr, k), 'stroke-width': 2, 'stroke-dasharray': sr.dash ? '4 3' : null }, sw) })), legend) : null;
+    return { legend: lg };
+  }
+  function bars(el, { labels, values, format = fmt.int, tickFormat = null, height = 200, highlight = null, dim = [], colour, mutedColour, annotations, reference, xAt = null }) {
+    el._fmt = format;
+    const lit = (i) => highlight == null || (Array.isArray(highlight) ? highlight.includes(i) : highlight === i);
+    const draw = () => {
+      const { s, w, h } = frame(el, heightOf(height));
+      const yt = ticks(0, Math.max(...values, ...[].concat(reference || []).map((r) => r.value)), 4), tick = tickFormat || format;
+      const padL = 12 + Math.max(...yt.map((v) => measure(s, tick(v), 12))), padB = 26;
+      const band = (w - padL) / values.length, bw = Math.max(2, band * 0.62);
+      const x = (i) => padL + band * i + band / 2;
+      const N = prepNotes(s, annotations, x, w), padT = LANE(N.rows);
+      const y = (v) => padT + (h - padT - padB) * (1 - v / yt.at(-1));
+      const g = svg('g', {}, s);
+      axes(g, el, { w, h, padL, padB, yt, y, labels, x, band: true, at: xAt, tick });
+      notesUnder(g, el, N, { padT, h, padB });
+      for (const it of N.items) if (it.at != null && values[it.at] != null) it.end = y(values[it.at]) - 4;
+      const main = colour || css(el, '--chart-1', '#2f6fdf'), muted = mutedColour || css(el, '--chart-muted', '#c9c9c9');
+      values.forEach((v, i) => { const r = svg('rect', { x: x(i) - bw / 2, y: y(v), width: bw, height: Math.max(0, y(0) - y(v)), fill: lit(i) ? main : muted, opacity: dim.includes(i) ? 0.45 : null, 'shape-rendering': 'crispEdges' }, g); titled(r, `${labels[i]}: ${format(v)}`, {}); });
+      references(g, el, reference, { y, padL, w, boxes: values.map((v, i) => ({ x0: x(i) - bw / 2, x1: x(i) + bw / 2, y0: y(v), y1: y(0) })) });
+      notesOver(g, el, N, { padT, h, padB });
+      s.setAttribute('aria-label', `${labels.length} bars from ${labels[0]} to ${labels.at(-1)}; highest ${format(Math.max(...values))}`);
+    };
+    draw(); watch(el, draw); settle(draw);
+  }
+  // Two directions on one scale: what went out above the zero line and what came in below it (sold and bought,
+  // income and spend). The axis says which is which, with signed ticks and a caption on each side of zero.
+  // mark: [indices] draws those periods in a second tone with their own legend entry (the nights the car charged).
+  function diverging(el, { labels, up, down, values, above = 'Above', below = 'Below', mark = [], markLabel = null, markSide = 'below', partial = null, format = fmt.int, tickFormat = null, height = 200, annotations, reference, xAt = null, legend = null }) {
+    if (values) { up = values.map((v) => Math.max(0, v || 0)); down = values.map((v) => Math.max(0, -(v || 0))); }
+    up = up || labels.map(() => 0); down = down || labels.map(() => 0);
+    const st = { above: { fill: css(el, '--chart-1', '#2f6fdf') }, below: { fill: css(el, '--chart-muted', '#c9c9c9') }, mark: { fill: css(el, '--chart-mark', css(el, '--ink', '#111')) } };
+    const marked = (i, side) => mark.includes(i) && (markSide === 'both' || markSide === side);
+    const tick = (v) => (v > 0 ? '+' : v < 0 ? MINUS : '') + (tickFormat || format)(Math.abs(v));
+    const draw = () => {
+      const { s, w, h } = frame(el, heightOf(height));
+      const hiUp = Math.max(0, ...up), hiDown = Math.max(0, ...down);
+      const yt = ticks(-hiDown, hiUp || 1, 4); const stp = yt[1] - yt[0]; if (hiDown > 0 && yt[0] >= -hiDown) yt.unshift(+(yt[0] - stp).toFixed(10));
+      const padL = 12 + Math.max(...yt.map((v) => measure(s, tick(v), 12))), padB = 26;
+      const band = (w - padL) / labels.length, bw = Math.max(2, band * 0.62);
+      const x = (i) => padL + band * i + band / 2;
+      // the caption for the upper side opens the label rows above the plot; the lower one sits under the plot, at left
+      const N = prepNotes(s, annotations, x, w, [{ fixed: padL, glyph: 'up', label: above }]), padT = LANE(N.rows);
+      const y = (v) => padT + (h - padT - padB) * (1 - (v - yt[0]) / (yt.at(-1) - yt[0]));
+      const g = svg('g', {}, s), ink = css(el, '--axis-ink', '#6b6b6b');
+      const bwid = measure(s, below, 11) + 9;
+      axes(g, el, { w, h, padL, padB, yt, y, labels, x, band: true, at: xAt, tick, avoid: [padL, padL + bwid] });
+      svg('path', { d: `M${padL} ${h - padB + 11}l3 6l3 -6z`, fill: ink }, g); text(g, below, { x: padL + 9, y: h - padB + 18, 'font-size': 11, fill: ink });
+      notesUnder(g, el, N, { padT, h, padB });
+      for (const it of N.items) if (it.at != null) it.end = y(up[it.at] || 0) - 4;
+      labels.forEach((lab, i) => {
+        const o = partial === i ? 0.5 : null;
+        if (up[i] > 0) { const r = paintRect(g, { ...(marked(i, 'above') ? st.mark : st.above), opacity: o }, x(i) - bw / 2, y(up[i]), bw, Math.max(0, y(0) - y(up[i]) - 1)); titled(r, `${lab}: ${above} ${format(up[i])}`, {}); }
+        if (down[i] > 0) { const r = paintRect(g, { ...(marked(i, 'below') ? st.mark : st.below), opacity: o }, x(i) - bw / 2, y(0) + 1, bw, Math.max(0, y(-down[i]) - y(0) - 1)); titled(r, `${lab}: ${below} ${format(down[i])}`, {}); }
+      });
+      svg('line', { x1: padL, x2: w, y1: y(0), y2: y(0), stroke: ink, 'stroke-width': 1, opacity: 0.8, 'shape-rendering': 'crispEdges' }, g);
+      references(g, el, reference, { y, padL, w, boxes: labels.map((_, i) => ({ x0: x(i) - bw / 2, x1: x(i) + bw / 2, y0: y(up[i]), y1: y(-down[i]) })) });
+      notesOver(g, el, N, { padT, h, padB });
+      s.setAttribute('aria-label', `${above} above the line and ${below} below it, ${labels[0]} to ${labels.at(-1)}`);
+    };
+    draw(); watch(el, draw); settle(draw);
+    const items = [];
+    if (up.some((v) => v > 0)) items.push({ label: above, draw: rectSwatch(st.above) });
+    if (down.some((v) => v > 0)) items.push({ label: below, draw: rectSwatch(st.below) });
+    if (mark.length && markLabel) items.push({ label: markLabel, draw: rectSwatch(st.mark) });
+    return { get svg() { return el.querySelector(':scope > svg'); }, legend: legendEl(items, legend) };
+  }
+  function ring(el, { value, label, sub, size = 132, stroke = 8, colour }) {
+    el.innerHTML = '';
+    const r = (size - stroke) / 2, c = 2 * Math.PI * r, v = Math.max(0, Math.min(1, value));
+    const wrap = document.createElement('div'); wrap.style.cssText = `position:relative;width:${size}px;height:${size}px`;
+    const s = svg('svg', { viewBox: `0 0 ${size} ${size}`, width: size, height: size, role: 'img', 'aria-label': `${label}${sub ? ' ' + sub : ''}` }, wrap);
+    svg('circle', { cx: size / 2, cy: size / 2, r, fill: 'none', stroke: css(el, '--grid', '#e8e8e8'), 'stroke-width': stroke }, s);
+    svg('circle', { cx: size / 2, cy: size / 2, r, fill: 'none', stroke: colour || css(el, '--chart-1', '#2f6fdf'), 'stroke-width': stroke, 'stroke-dasharray': `${c * v} ${c}`, transform: `rotate(-90 ${size / 2} ${size / 2})` }, s);
+    const t = document.createElement('div'); t.style.cssText = 'position:absolute;inset:0;display:grid;place-content:center;text-align:center;font-variant-numeric:tabular-nums';
+    t.innerHTML = `<div style="font-size:${Math.round(size / 5.5)}px;font-weight:600;line-height:1">${esc(label)}</div>${sub ? `<div style="font-size:12px;opacity:.7;margin-top:4px">${esc(sub)}</div>` : ''}`;
+    wrap.appendChild(t); el.appendChild(wrap);
+  }
+  // A ranked list. By default the row's fill is the bar (a one-figure list); thin: true puts a 2px grey bar under each
+  // label instead, ink for the top item, for a ranked list of money in a narrow card.
+  function barList(el, rows, { format = fmt.int, colour, thin = false } = {}) {
+    el.innerHTML = '';
+    const max = Math.max(...rows.map((r) => r.value)) || 1;
+    const list = document.createElement('ol'); list.style.cssText = `list-style:none;margin:0;padding:0;display:grid;gap:${thin ? 10 : 2}px;font-variant-numeric:tabular-nums`;
+    const valueCol = Math.max(...rows.map((r) => String(format(r.value)).length)) + 1;
+    rows.forEach((r, k) => {
+      const li = document.createElement('li'); li.style.cssText = 'display:grid;grid-template-columns:minmax(0,1fr) ' + valueCol + 'ch;align-items:center;column-gap:12px';
+      const a = document.createElement('span'); a.textContent = r.label; a.style.cssText = 'position:relative;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis';
+      const b = document.createElement('span'); b.textContent = format(r.value); b.style.cssText = 'font-weight:500;text-align:right';
+      if (thin) {
+        const bar = document.createElement('span'); bar.style.cssText = `grid-column:1 / -1;height:2px;margin-top:4px;width:${(r.value / max) * 100}%;background:${k === 0 ? colour || 'var(--ink,#111)' : 'var(--chart-muted,#c9c9c9)'}`;
+        li.append(a, b, bar);
+      } else {
+        const track = document.createElement('span'); track.style.cssText = 'position:relative;padding:10px 12px;border-radius:6px;isolation:isolate;min-width:0';
+        const bar = document.createElement('span'); bar.style.cssText = `position:absolute;inset:0 auto 0 0;width:${(r.value / max) * 100}%;background:${colour || 'var(--bar-fill, color-mix(in srgb, var(--chart-1, #2f6fdf) 12%, transparent))'};border-radius:inherit;z-index:-1`;
+        track.append(bar, a); li.append(track, b);
+      }
+      list.appendChild(li);
+    });
+    el.appendChild(list);
+  }
+  // Planned against spent: the track is the plan, the fill what is spent, a lighter segment what is
+  // already committed (bills to come), and an overrun past the track's end in the negative colour.
+  // One row per category: label and figures on one line, the 8px track under them.
+  function plan(el, rows, { format = fmt.money('EUR', 0), scale = 'row', note = (r) => r.spent > r.planned ? `${format(r.spent - r.planned)} over` : `${format(r.planned - r.spent - (r.committed || 0))} left` } = {}) {
+    el.innerHTML = '';
+    const list = document.createElement('ul'); list.style.cssText = 'list-style:none;margin:0;padding:0;display:grid;gap:14px;font-variant-numeric:tabular-nums';
+    const max = Math.max(...rows.map((r) => Math.max(r.planned, r.spent + (r.committed || 0))));
+    for (const r of rows) {
+      const over = r.spent > r.planned;
+      const li = document.createElement('li');
+      const top = document.createElement('div'); top.style.cssText = 'display:flex;justify-content:space-between;gap:12px;margin-bottom:6px';
+      top.innerHTML = `<span>${esc(r.label)}</span><span><b style="font-weight:500">${esc(format(r.spent))}</b> <span style="color:var(--muted,#5f6368)">of ${esc(format(r.planned))} · </span><span style="color:${over ? 'var(--negative,#c4242a)' : 'var(--muted,#5f6368)'}">${esc(note(r))}</span></span>`;
+      // scale 'row': each track is full width and shows the share used (rows in a grid compare); 'plan': as long as its plan
+      const room = over ? 100 / (1 + Math.max(0.06, (r.spent - r.planned) / r.planned)) : 100;
+      const track = document.createElement('div'); track.style.cssText = 'position:relative;height:8px;border-radius:999px;background:var(--rule,#eceeef);overflow:visible;width:' + (scale === 'plan' ? (r.planned / max) * room : room) + '%';
+      const pct = (v) => (v / r.planned) * 100;
+      const spent = Math.min(r.spent, r.planned);
+      track.innerHTML = `<span style="position:absolute;inset:0 auto 0 0;width:${pct(spent)}%;border-radius:999px;background:var(--chart-1,#2f6fdf)"></span>`
+        + (r.committed ? `<span style="position:absolute;top:0;bottom:0;left:${pct(spent)}%;width:${Math.min(pct(r.committed), 100 - pct(spent))}%;background:var(--chart-1,#2f6fdf);opacity:.35"></span>` : '')
+        + (over ? `<span style="position:absolute;top:-3px;bottom:-3px;left:100%;width:1px;background:var(--text,#111)"></span><span style="position:absolute;top:0;bottom:0;left:calc(100% + 2px);width:max(12px, ${pct(r.spent - r.planned)}%);border-radius:0 999px 999px 0;background:var(--negative,#c4242a)"></span>` : '');
+      track.setAttribute('role', 'img'); track.setAttribute('aria-label', `${r.label}: ${format(r.spent)} of ${format(r.planned)}${r.committed ? `, ${format(r.committed)} committed` : ''}${over ? ', over plan' : ''}`);
+      li.append(top, track); list.appendChild(li);
+    }
+    el.appendChild(list);
+  }
+  // Share against a target: one row per part, the current share as a bar and a 1px tick at the target,
+  // so drift reads at a glance (never two stacked bars to compare).
+  function bullet(el, rows, { format = fmt.pct(1), max = Math.max(...rows.map((r) => Math.max(r.value, r.target))) * 1.15 } = {}) {
+    el.innerHTML = '';
+    const list = document.createElement('ul'); list.style.cssText = 'list-style:none;margin:0;padding:0;display:grid;gap:12px;font-variant-numeric:tabular-nums';
+    for (const r of rows) {
+      const drift = r.value - r.target;
+      const li = document.createElement('li'); li.style.cssText = 'display:grid;grid-template-columns:minmax(90px,30%) 1fr auto;align-items:center;gap:12px';
+      li.innerHTML = `<span>${esc(r.label)}</span><span style="position:relative;height:10px;background:var(--rule,#eceeef);border-radius:2px"><span style="position:absolute;inset:0 auto 0 0;width:${(r.value / max) * 100}%;background:var(--chart-1,#2f6fdf);border-radius:2px"></span><span style="position:absolute;top:-4px;bottom:-4px;left:${(r.target / max) * 100}%;width:2px;margin-left:-1px;background:var(--text,#111)"></span></span><span><b style="font-weight:500">${esc(format(r.value))}</b> <span style="color:${Math.abs(drift) >= (r.tolerance ?? 0.02) ? 'var(--negative,#c4242a)' : 'var(--muted,#5f6368)'}">${drift >= 0 ? '+' : '−'}${esc(format(Math.abs(drift)))} vs ${esc(format(r.target))}</span></span>`;
+      li.setAttribute('aria-label', `${r.label}: ${format(r.value)}, target ${format(r.target)}`);
+      list.appendChild(li);
+    }
+    el.appendChild(list);
+  }
+  // shared by the row charts (timeline, matrix, time strip): a label column with an optional grey subline.
+  // A subline needs a 40-44px row pitch; one-line labels sit on 32px.
+  function rowLabel(g, s, el, r, { y0, pitch, lw }) {
+    const ink = css(el, '--ink', '#111'), muted = css(el, '--axis-ink', '#6b6b6b');
+    if (r.sub) { text(g, fit(s, r.label, lw - 12, 14), { x: 0, y: y0 + pitch / 2 - 3, 'font-size': 14, fill: ink }); text(g, fit(s, r.sub, lw - 12, 12), { x: 0, y: y0 + pitch / 2 + 13, 'font-size': 12, fill: muted }); }
+    else text(g, fit(s, r.label, lw - 12, 14), { x: 0, y: y0 + pitch / 2 + 5, 'font-size': 14, fill: ink });
+  }
+  const dayText = (d) => (typeof d === 'object' && d ? d.label : String(d));
+  // day headers: the full label when every one fits its column, else the short form ('19'), else every k-th short
+  // label with today always shown and its neighbours left out, so no two headers ever touch
+  function dayHeads(g, s, el, days, { x0, cw, y, today }) {
+    const ink = css(el, '--ink', '#111'), muted = css(el, '--axis-ink', '#6b6b6b');
+    const full = days.map(dayText), short = days.map((d) => (typeof d === 'object' && d ? d.short || dayText(d) : dayText(d).split(' ').at(-1)));
+    const wide = (labs) => Math.max(...labs.map((t) => measure(s, t, 12))) + 6;
+    const labs = wide(full) <= cw ? full : short, k = Math.max(1, Math.ceil(wide(labs) / cw));
+    labs.forEach((t, i) => {
+      if (i !== today && (i % k || (today != null && k > 1 && Math.abs(i - today) < k))) return;
+      text(g, t, { x: x0 + i * cw + cw / 2, y, 'text-anchor': 'middle', 'font-size': 12, 'font-weight': i === today ? 600 : 400, fill: i === today ? ink : muted });
+    });
+  }
+  // The style of each kind of booking: a pale fill, a 1px diagonal hatch, a darker grey step, an outline, or the one
+  // chart hue for the screen's main data element. tone: 'negative' turns the edge and the label red (it needs a decision).
+  function kindStyle(el, k = {}) {
+    const ink = css(el, '--ink', '#111'), surface = css(el, '--surface', '#fff'), neg = css(el, '--negative', '#c4242a'), hue = k.colour || css(el, '--chart-1', '#2f6fdf');
+    const tone = k.tone === 'negative' ? { stroke: neg, width: 1.5 } : {};
+    const dash = k.dash ? { dash: '3 2' } : {};
+    if (k.mark === 'hatch') return { fill: mix(el, ink, surface, 0.04), hatch: mix(el, ink, surface, 0.32), ...tone, ...dash };
+    if (k.mark === 'step') return { fill: mix(el, ink, surface, 0.24), ...tone, ...dash };
+    if (k.mark === 'outline') return { fill: surface, stroke: mix(el, ink, surface, 0.55), width: 1, ...tone, ...dash };
+    if (k.mark === 'hue') return { fill: mix(el, hue, surface, 0.18), edge: hue, ...tone, ...dash };
+    return { fill: mix(el, ink, surface, 0.12), ...tone, ...dash };
+  }
+  // Who is away when: people (or rooms, vans) down the left, days across, a bar per booking told apart by its kind.
+  //   rows: [{ label: 'Lena Hoffmann', sub: 'Product design · Berlin', bars: [{ from: 3, to: 7, kind: 'holiday', label, note }] }]
+  //         and { group: 'Brand' } rows for a team subheader
+  //   kinds: { holiday: { label: 'Holiday', mark: 'fill' | 'hatch' | 'step' | 'outline' | 'hue', code: 'H', tone, dash } }
+  //   days: ['Mon 19', …] or [{ label: 'Mon 19', short: '19' }]; weekends: [indices]; today: index;
+  //   holidays: [{ day: index, label: 'All Saints’ Day (Lisbon)' }]; onSelect(bar, row) makes the bars buttons.
+  // A label that does not fit its bar becomes the kind's code inside it, then goes after the bar's end (never into the
+  // days before it), and is always in the bar's tooltip.
+  function timeline(el, rows, kinds = {}, { days = [], weekends = [], today = null, holidays = [], labelWidth = null, rowHeight = null, barHeight = 22, onSelect = null, legend = null, extras = true } = {}) {
+    const draw = () => {
+      const pitch = rowHeight || (rows.some((r) => r.sub) ? 44 : 32), head = 30, groupH = 30;
+      const height = head + rows.reduce((a, r) => a + (r.group ? groupH : pitch), 0) + 2;
+      const { s, w, h } = frame(el, height);
+      const lw = labelWidth || Math.round(Math.min(220, Math.max(w < 480 ? 96 : 120, w * 0.2)));
+      const cw = (w - lw) / Math.max(1, days.length), col = (i) => lw + i * cw;
+      const ink = css(el, '--ink', '#111'), muted = css(el, '--axis-ink', '#6b6b6b'), rule = css(el, '--rule', '#f0f0f0'), raised = css(el, '--raised', '#f4f5f6'), hue = css(el, '--chart-1', '#2f6fdf');
+      const g = svg('g', {}, s);
+      // weekends one tone step darker, faint day lines, the day header (today in ink)
+      for (const i of weekends) svg('rect', { x: col(i), y: head, width: cw, height: h - head, fill: raised }, g);
+      for (let i = 0; i <= days.length; i++) svg('line', { x1: col(i), x2: col(i), y1: head, y2: h, stroke: rule, 'stroke-width': 1, 'shape-rendering': 'crispEdges' }, g);
+      dayHeads(g, s, el, days, { x0: lw, cw, y: head - 10, today });
+      for (const hd of holidays) { const c = svg('circle', { cx: col(hd.day) + cw / 2, cy: head - 3, r: 2, fill: muted }, g); titled(c, hd.label, {}); }
+      if (today != null) svg('line', { x1: col(today) + cw / 2, x2: col(today) + cw / 2, y1: head, y2: h, stroke: hue, 'stroke-width': 1, 'shape-rendering': 'crispEdges' }, g);
+      let y0 = head;
+      for (const r of rows) {
+        if (r.group) { svg('line', { x1: 0, x2: w, y1: y0 + 0.5, y2: y0 + 0.5, stroke: rule, 'stroke-width': 1 }, g); text(g, r.group, { x: 0, y: y0 + 20, 'font-size': 12, 'font-weight': 500, fill: muted }); y0 += groupH; continue; }
+        rowLabel(g, s, el, r, { y0, pitch, lw });
+        const bs = (r.bars || []).filter((b) => b.to >= 0 && b.from < days.length).sort((a, b) => a.from - b.from);
+        bs.forEach((b, k) => {
+          const kind = kinds[b.kind] || {}, st = kindStyle(el, kind);
+          const x0 = col(Math.max(0, b.from)) + 2, x1 = col(Math.min(days.length - 1, b.to) + 1) - 2, by = y0 + (pitch - barHeight) / 2;
+          const grp = svg('g', onSelect ? { tabindex: 0, role: 'button', style: 'cursor:pointer' } : {}, g);
+          paintRect(grp, st, x0, by, x1 - x0, barHeight, 4);
+          const label = b.label ?? kind.label ?? '', code = b.code ?? kind.code, tw = measure(s, label, 12), labInk = kind.tone === 'negative' ? css(el, '--negative', '#c4242a') : ink;
+          const next = bs[k + 1] ? col(Math.max(0, bs[k + 1].from)) : w;
+          // over a hatch the label keeps a halo of the bar's own fill, so the lines never run through the words
+          const halo = st.hatch ? { stroke: st.fill, 'stroke-width': 4, 'stroke-linejoin': 'round', 'paint-order': 'stroke' } : {};
+          if (label && tw + 16 <= x1 - x0) text(grp, label, { x: x0 + 8 + (st.edge ? 2 : 0), y: by + barHeight / 2 + 4, 'font-size': 12, fill: labInk, ...halo });
+          else if (code && measure(s, code, 12) + 8 <= x1 - x0) text(grp, code, { x: (x0 + x1) / 2, y: by + barHeight / 2 + 4, 'text-anchor': 'middle', 'font-size': 12, fill: labInk, ...halo });
+          else if (label && x1 + 6 + tw <= Math.min(next - 6, w)) text(grp, label, { x: x1 + 6, y: by + barHeight / 2 + 4, 'font-size': 12, fill: kind.tone === 'negative' ? labInk : muted });
+          titled(grp, `${r.label}: ${label}${b.note ? ' \u00b7 ' + b.note : ''}`, {});
+          if (onSelect) { grp.addEventListener('click', () => onSelect(b, r)); grp.addEventListener('keydown', (e) => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); onSelect(b, r); } }); }
+        });
+        y0 += pitch;
+      }
+      s.setAttribute('aria-label', `${rows.filter((r) => !r.group).length} rows across ${days.length} days, ${dayText(days[0])} to ${dayText(days.at(-1))}`);
+    };
+    draw(); watch(el, draw); settle(draw);
+    const used = new Set(rows.flatMap((r) => (r.bars || []).map((b) => b.kind)));
+    const items = Object.entries(kinds).filter(([id]) => used.has(id)).map(([, k]) => ({ label: k.label, w: 22, draw: (sw) => { const st = kindStyle(el, k); paintRect(sw, st, 0, 0, 22, 12, 3); } }));
+    if (extras && today != null) items.push({ label: 'Today', w: 8, draw: (sw) => svg('line', { x1: 4, x2: 4, y1: 0, y2: 12, stroke: css(el, '--chart-1', '#2f6fdf'), 'stroke-width': 1.5 }, sw) });
+    return { get svg() { return el.querySelector(':scope > svg'); }, legend: legendEl(items, legend) };
+  }
+  // Is there enough cover? A team-by-day grid of slack against the minimum (+2, +1, 0, −1). Cells with room to spare
+  // stay plain, and one hue ramps toward the negative colour as the slack runs out; the headcount is in the tooltip.
+  //   rows: [{ label: 'Product design', sub: 'needs 7 of 10', values: [2, 1, 0, -1, null, …], titles: ['8 in', …] }]
+  //   cols: ['Mon 19', …]; comfort: the slack that needs no attention (2); null is a day with no cover to count (a dash)
+  function matrix(el, rows, { cols = [], comfort = 2, today = null, format = fmt.signed(), labelWidth = null, rowHeight = null, levels = ['Room to spare', 'Tight', 'At the minimum', 'Short'], legend = null } = {}) {
+    const level = (v) => (v >= comfort ? 0 : v > 0 ? 1 : v === 0 ? 2 : 3);
+    const styles = () => { const neg = css(el, '--negative', '#c4242a'), surface = css(el, '--surface', '#fff'), ink = css(el, '--ink', '#111'); return [{ fill: surface, ink: css(el, '--axis-ink', '#6b6b6b'), stroke: css(el, '--grid', '#e5e5e5') }, { fill: mix(el, neg, surface, 0.1), ink }, { fill: mix(el, neg, surface, 0.26), ink }, { fill: neg, ink: surface }]; };
+    const draw = () => {
+      const pitch = rowHeight || (rows.some((r) => r.sub) ? 44 : 32), head = 26;
+      const { s, w, h } = frame(el, head + rows.length * pitch);
+      const lw = labelWidth || Math.round(Math.min(220, Math.max(w < 480 ? 96 : 120, w * 0.22)));
+      const cw = (w - lw) / Math.max(1, cols.length), ST = styles(), muted = css(el, '--axis-ink', '#6b6b6b'), ink = css(el, '--ink', '#111');
+      const g = svg('g', {}, s);
+      dayHeads(g, s, el, cols, { x0: lw, cw, y: head - 10, today });
+      rows.forEach((r, k) => {
+        const y0 = head + k * pitch; rowLabel(g, s, el, r, { y0, pitch, lw });
+        const ch = Math.min(pitch - 6, 28), cy = y0 + (pitch - ch) / 2;
+        r.values.forEach((v, i) => {
+          const cx = lw + i * cw + 1;
+          if (v == null) { svg('rect', { x: cx + cw / 2 - 4, y: cy + ch / 2 - 1, width: 6, height: 2, fill: muted }, g); return; }
+          const st = ST[level(v)], cell = paintRect(g, { fill: st.fill }, cx, cy, cw - 2, ch, 3);
+          text(g, format(v), { x: cx + (cw - 2) / 2, y: cy + ch / 2 + 4, 'text-anchor': 'middle', 'font-size': 12, 'font-weight': level(v) === 3 ? 600 : 400, fill: st.ink });
+          titled(cell, `${r.label}, ${dayText(cols[i])}: ${r.titles?.[i] || format(v) + ' against the minimum'}`, {});
+        });
+      });
+      s.setAttribute('aria-label', `Cover against the minimum for ${rows.length} rows across ${cols.length} days`);
+    };
+    draw(); watch(el, draw); settle(draw);
+    const seen = new Set(rows.flatMap((r) => r.values.filter((v) => v != null).map(level)));
+    const ST = styles();
+    const items = [0, 1, 2, 3].filter((l) => seen.has(l)).map((l) => ({ label: levels[l], w: 14, draw: rectSwatch(l === 0 ? { fill: ST[0].fill, stroke: ST[0].stroke } : { fill: ST[l].fill }, 14, 12, 3) }));
+    return { get svg() { return el.querySelector(':scope > svg'); }, legend: legendEl(items, legend) };
+  }
+  // When, within the day: one row per item on a shared open–close axis. A 2px grey track, an ink dot at today's time and
+  // a hollow tick at the comparison day's, so "earlier than last Sunday" is drawn and not only written.
+  //   rows: [{ label: 'White sourdough', sub: 'Headingley', at: '11:20', compare: '12:05', value: '11:20', note: '3 h 40 m before close' }]
+  //   at or compare may be null (it did not sell out); step: minutes between axis labels (60).
+  function timeStrip(el, rows, { open = '08:00', close = '18:00', step = 60, todayLabel = 'Today', compareLabel = null, labelWidth = null, valueWidth = null, rowHeight = null, legend = null } = {}) {
+    const o = minutes(open), c = minutes(close);
+    const st = { today: { r: 4.5 }, compare: { w: 5, h: 12 } };
+    const dot = (parent, cx, cy) => svg('circle', { cx, cy, r: st.today.r, fill: css(el, '--ink', '#111') }, parent);
+    const tick = (parent, cx, cy) => svg('rect', { x: cx - st.compare.w / 2, y: cy - st.compare.h / 2, width: st.compare.w, height: st.compare.h, rx: 2.5, fill: css(el, '--surface', '#fff'), stroke: css(el, '--axis-ink', '#6b6b6b'), 'stroke-width': 1.5 }, parent);
+    const draw = () => {
+      const narrow = (el.clientWidth || 600) < 560, axisH = 24;
+      const pitch = rowHeight || (narrow ? 62 : rows.some((r) => r.sub || r.note) ? 44 : 32);
+      const { s, w, h } = frame(el, rows.length * pitch + axisH);
+      const lw = narrow ? 0 : labelWidth || Math.round(Math.min(200, Math.max(110, w * 0.26)));
+      const vw = narrow ? 0 : valueWidth ?? Math.min(w * 0.32, Math.max(0, ...rows.map((r) => Math.max(r.value ? measure(s, r.value, 13, 500) : 0, r.note ? measure(s, r.note, 12) : 0))) + (rows.some((r) => r.value || r.note) ? 16 : 0));
+      const x0 = narrow ? 18 : lw + 6, x1 = narrow ? w - 18 : w - vw - 6, tx = (m) => x0 + ((m - o) / Math.max(1, c - o)) * (x1 - x0);
+      const ink = css(el, '--ink', '#111'), muted = css(el, '--axis-ink', '#6b6b6b'), rule = css(el, '--rule', '#f0f0f0');
+      const track = css(el, '--chart-track', mix(el, ink, css(el, '--surface', '#fff'), 0.16));
+      const g = svg('g', {}, s), plotH = rows.length * pitch;
+      // the axis: one step from the opening, the labels thinned by the same rule as the charts
+      const marks = []; for (let m = Math.ceil(o / step) * step; m <= c; m += step) marks.push(m);
+      const picks = xPicks(marks.map(fmt.clock), x1 - x0);
+      for (const i of picks) { const xx = tx(marks[i]); if (!narrow) svg('line', { x1: xx, x2: xx, y1: 0, y2: plotH, stroke: rule, 'stroke-width': 1, 'shape-rendering': 'crispEdges' }, g); const lab = fmt.clock(marks[i]), tw = measure(s, lab, 12); text(g, lab, { x: Math.max(x0 - 2, Math.min(x1 + 6 - tw, xx - tw / 2)), y: plotH + 17, 'font-size': 12, fill: muted }); }
+      rows.forEach((r, k) => {
+        const y0 = k * pitch, cy = narrow ? y0 + pitch - 12 : y0 + pitch / 2;
+        if (narrow) {
+          const vwid = r.value ? measure(s, r.value, 13, 500) + 12 : 0;
+          text(g, fit(s, r.label, w - vwid, 14), { x: 0, y: y0 + 16, 'font-size': 14, fill: ink });
+          if (r.value) text(g, r.value, { x: w, y: y0 + 16, 'text-anchor': 'end', 'font-size': 13, 'font-weight': 500, fill: ink });
+          const second = [r.sub, r.note].filter(Boolean).join(' \u00b7 ');
+          if (second) text(g, fit(s, second, w, 12), { x: 0, y: y0 + 33, 'font-size': 12, fill: muted });
+        } else rowLabel(g, s, el, r, { y0, pitch, lw });
+        svg('line', { x1: x0, x2: x1, y1: cy, y2: cy, stroke: track, 'stroke-width': 2, 'stroke-linecap': 'round' }, g);
+        const cm = minutes(r.compare), am = minutes(r.at);
+        if (cm != null) titled(tick(g, tx(cm), cy), `${compareLabel || 'Comparison'}: ${fmt.clock(cm)}`, {});
+        if (am != null) titled(dot(g, tx(am), cy), `${todayLabel}: ${fmt.clock(am)}`, {});
+        if (narrow) return;
+        if (r.note) { if (r.value) text(g, r.value, { x: w, y: cy - 3, 'text-anchor': 'end', 'font-size': 13, 'font-weight': 500, fill: ink }); text(g, fit(s, r.note, vw - 8, 12), { x: w, y: r.value ? cy + 13 : cy + 4, 'text-anchor': 'end', 'font-size': 12, fill: muted }); }
+        else if (r.value) text(g, r.value, { x: w, y: cy + 5, 'text-anchor': 'end', 'font-size': 13, 'font-weight': 500, fill: ink });
+      });
+      s.setAttribute('aria-label', `${rows.length} rows between ${fmt.clock(o)} and ${fmt.clock(c)}`);
+    };
+    draw(); watch(el, draw); settle(draw);
+    const items = [];
+    if (rows.some((r) => minutes(r.at) != null)) items.push({ label: todayLabel, w: 10, draw: (sw) => dot(sw, 5, 6) });
+    if (compareLabel && rows.some((r) => minutes(r.compare) != null)) items.push({ label: compareLabel, w: 8, draw: (sw) => tick(sw, 4, 6) });
+    return { get svg() { return el.querySelector(':scope > svg'); }, legend: legendEl(items, legend) };
+  }
+  function watch(el, draw) { if (!('ResizeObserver' in window)) return; let w = el.clientWidth; new ResizeObserver(() => { if (Math.abs(el.clientWidth - w) > 4) { w = el.clientWidth; draw(); } }).observe(el); }
+  window.Charts = { line, bars, diverging, ring, barList, plan, bullet, timeline, matrix, timeStrip, ticks, fmt };
+})();
+</script>
+<script>
+document.documentElement.lang = "pt-BR";
+const BF = new Date("2026-11-27T00:00:00-03:00");
+const REPO = "https://github.com/andredabliu/radar-black-friday";
+const $ = (s, r = document) => r.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const safe = u => /^https:\/\//i.test(u || "") ? u : null;
+const brl = (v, d = 2) => v == null || isNaN(v) ? "—" : v.toLocaleString("pt-BR", {style:"currency", currency:"BRL", minimumFractionDigits:d, maximumFractionDigits:d});
+const brl0 = v => brl(v, 0);
+const MINUS = "−";
+const signed = v => (v > 0 ? "+" : v < 0 ? MINUS : "") + brl(Math.abs(v));
+const day = s => { const [y, m, d] = (s || "").split("-"); return d ? `${d}/${m}` : s; };
+const stamp = iso => { if (!iso) return "—"; const d = new Date(iso); if (isNaN(d)) return "—";
+  const today = new Date(); const same = d.toDateString() === today.toDateString();
+  const t = d.toLocaleTimeString("pt-BR", {hour:"2-digit", minute:"2-digit"});
+  return same ? `hoje, ${t}` : `${d.toLocaleDateString("pt-BR", {day:"2-digit", month:"2-digit"})}, ${t}`; };
+
+let viagens = [], vmeta = null;
+let loaded = false, products = [], meta = null, lojas = {}, lojasAt = null, db = null, chartPick = null;
+const PUBLIC_URL = "https://andredabliu.github.io/radar-black-friday/";
+
+/* ---------- dados ---------- */
+const eff = o => { const p = [o.preco_pix, o.preco].filter(v => typeof v === "number" && v > 0); return p.length ? Math.min(...p) : null; };
+const usable = o => o.verificado !== false && o.disponivel !== false && eff(o) != null;
+function best(p) { let b = null; for (const o of p.ofertas || []) if (usable(o)) { const v = eff(o); if (!b || v < b.v) b = {v, o}; } return b; }
+const hist = p => (p.historico || []).filter(h => typeof h.menor === "number").sort((a, b) => a.data < b.data ? -1 : 1);
+function vsPrev(p) { const h = hist(p); if (h.length < 2) return null; return h.at(-1).menor - h.at(-2).menor; }
+const hasGoal = p => typeof p.preco_alvo === "number" && p.preco_alvo > 0;
+const prevStore = (p, loja) => { const h = hist(p); if (h.length < 2) return null; const x = h.at(-2).precos; return x && typeof x[loja] === "number" ? x[loja] : null; };
+
+function chgLine(p) {
+  const c = vsPrev(p);
+  if (c == null) return `<div class="chg">1ª checagem</div>`;
+  if (c === 0) return `<div class="chg">igual a ontem</div>`;
+  return `<div class="chg ${c < 0 ? "good" : "bad"}">${signed(c)} vs ontem</div>`;
+}
+function goalCell(p, b) {
+  if (!hasGoal(p)) return `<div class="goal">—</div><div class="sub">sem alvo</div>`;
+  const gap = b ? b.v - p.preco_alvo : null;
+  if (gap != null && gap <= 0) return `<div class="goal"><span class="pill pos">No alvo</span></div><div class="sub num">alvo ${brl0(p.preco_alvo)}</div>`;
+  return `<div class="goal num">${brl0(p.preco_alvo)}</div><div class="sub num">${gap == null ? "sem preço hoje" : "faltam " + brl(gap)}</div>`;
+}
+
+/* ---------- reputação da loja (Reclame Aqui) ---------- */
+function rep(loja) {
+  if (!loja) return null; const keys = Object.keys(lojas).sort((a, b) => b.length - a.length);
+  const k = keys.find(k => loja === k || loja.startsWith(k + " ") || loja.startsWith(k + "(") ); return k ? {nome: k, ...lojas[k]} : null;
+}
+function repKind(r) { const s = (r?.ra_selo || "").toLowerCase();
+  if (!r || r.ra_nota == null) return ""; if (/ra1000|ótimo|otimo|bom/.test(s)) return "pos"; if (/regular/.test(s)) return "warn"; if (/ruim|não recomendada|nao recomendada/.test(s)) return "neg"; return ""; }
+function repPill(loja, short = false) { const r = rep(loja);
+  if (!r) return `<span class="pill" title="Sem avaliação levantada">RA —</span>`;
+  if (r.ra_nota == null) return `<span class="pill" title="${esc(r.cuidado || "")}">RA ${esc(r.ra_selo || "sem índice")}</span>`;
+  const n = r.ra_nota.toLocaleString("pt-BR", {minimumFractionDigits: 1, maximumFractionDigits: 1});
+  return `<span class="pill ${repKind(r)}" title="Reclame Aqui: ${esc(r.ra_selo || "")} ${n}${r.ra_periodo ? " (" + esc(r.ra_periodo) + ")" : ""}">RA ${n}${short ? "" : " · " + esc(r.ra_selo || "")}</span>`; }
+
+/* ---------- a régua: todas as lojas num eixo, o alvo marcado ---------- */
+function ruler(p, {h = 44, labels = true} = {}) {
+  const offers = (p.ofertas || []).filter(o => eff(o) != null && o.disponivel !== false);
+  const b = best(p);
+  if (!offers.length) return "";
+  const vals = offers.map(eff).concat(hasGoal(p) ? [p.preco_alvo] : []);
+  let lo = Math.min(...vals), hi = Math.max(...vals); const pad = (hi - lo) * .06 || hi * .05; lo -= pad; hi += pad;
+  const W = 300, X = v => 6 + (v - lo) / (hi - lo) * (W - 12), y = 18;
+  let s = `<svg class="ruler" viewBox="0 0 ${W} ${h}" preserveAspectRatio="none" role="img" aria-label="Preço em ${offers.length} lojas, de ${brl(Math.min(...offers.map(eff)))} a ${brl(Math.max(...offers.map(eff)))}${hasGoal(p) ? ", alvo " + brl0(p.preco_alvo) : ""}">`;
+  s += `<line x1="6" x2="${W - 6}" y1="${y}" y2="${y}" stroke="var(--chart-track)" stroke-width="2" vector-effect="non-scaling-stroke"/>`;
+  if (hasGoal(p)) { const gx = X(p.preco_alvo); s += `<line x1="${gx}" x2="${gx}" y1="${y - 11}" y2="${y + 11}" stroke="var(--positive)" stroke-width="1.5" stroke-dasharray="3 2" vector-effect="non-scaling-stroke"/>`; }
+  if (b && hasGoal(p) && b.v > p.preco_alvo) s += `<line x1="${X(p.preco_alvo)}" x2="${X(b.v)}" y1="${y}" y2="${y}" stroke="var(--accent)" stroke-width="4" stroke-linecap="round" vector-effect="non-scaling-stroke"><title>Faltam ${brl(b.v - p.preco_alvo)} para o alvo</title></line>`;
+  for (const o of offers) { if (b && o === b.o) continue; const cx = X(eff(o)); const ok = o.verificado !== false;
+    s += `<ellipse cx="${cx}" cy="${y}" rx="3.6" ry="3.6" fill="${ok ? "var(--chart-muted)" : "var(--ground)"}" stroke="var(--chart-muted)" stroke-width="1.2" vector-effect="non-scaling-stroke"><title>${esc(o.loja)}: ${brl(eff(o))}${ok ? "" : " (não confirmado)"}</title></ellipse>`; }
+  if (b) s += `<ellipse cx="${X(b.v)}" cy="${y}" rx="5.5" ry="5.5" fill="var(--accent)"><title>${esc(b.o.loja)}: ${brl(b.v)}</title></ellipse>`;
+  s += `</svg>`;
+  if (!labels) return s;
+  const mn = Math.min(...offers.map(eff)), mx = Math.max(...offers.map(eff));
+  const g = hasGoal(p) ? p.preco_alvo : null;
+  const left = g != null && g < mn ? `<span style="color:var(--positive)">alvo ${brl0(g)}</span>` : `<span>${brl0(mn)}</span>`;
+  const right = g != null && g > mx ? `<span style="color:var(--positive)">alvo ${brl0(g)}</span>` : `<span>${brl0(mx)}</span>`;
+  const mid = g != null && g >= mn && g <= mx ? `<span style="color:var(--positive)">alvo ${brl0(g)}</span>` : "";
+  return s + `<div class="sub num" style="display:flex;justify-content:space-between;gap:8px;margin-top:-14px">${left}${mid}${right}</div>`;
+}
+
+/* ---------- gráfico do histórico ---------- */
+function drawHistory(el, p) {
+  const h = hist(p);
+  el.innerHTML = "";
+  if (h.length < 2) {
+    el.innerHTML = `<div class="chart-note">O histórico de <b>${esc(p.nome)}</b> começou em ${day(h[0]?.data)} com <b class="num">${brl(h[0]?.menor)}</b> (${esc(h[0]?.loja || "")}). A linha aparece a partir da segunda checagem diária, às 8h.</div>`;
+    return;
+  }
+  Charts.line(el, {
+    labels: h.map(x => day(x.data)),
+    series: [{ name: "Menor preço", values: h.map(x => x.menor) }],
+    format: v => brl(v), tickFormat: v => brl0(v), height: 200,
+    reference: hasGoal(p) ? { value: p.preco_alvo, label: "Alvo " + brl0(p.preco_alvo) } : undefined,
+    endLabel: true
+  });
+}
+
+/* ---------- navegação ---------- */
+function route() { const id = (location.hash || "").replace(/^#p-/, ""); return location.hash.startsWith("#p-") ? id : null; }
+const onStores = () => location.hash === "#lojas";
+const onTrips = () => location.hash === "#viagens";
+const tripId = () => location.hash.startsWith("#v-") ? location.hash.slice(3) : null;
+function renderNav() {
+  const cur = route();
+  const sorted = [...products].sort((a, b) => (a.ordem ?? 99) - (b.ordem ?? 99));
+  $("#nav").innerHTML = `<a href="#" ${cur || onStores() || onTrips() || tripId() ? "" : 'aria-current="page"'}><span class="l">Lista de desejos</span><span class="r num">${products.length}</span></a>
+    <a href="#viagens" ${onTrips() || tripId() ? 'aria-current="page"' : ""}><span class="l">Viagens · set/2027</span><span class="r num">${viagens.length || ""}</span></a>
+    <a href="#lojas" ${onStores() ? 'aria-current="page"' : ""}><span class="l">Lojas e reputação</span><span class="r num">${Object.keys(lojas).length || ""}</span></a>
+    <div class="group">Produtos</div>` + sorted.map(p => { const b = best(p);
+      return `<a href="#p-${esc(p.id)}" ${cur === p.id ? 'aria-current="page"' : ""}><span class="l">${esc(p.curto || p.nome)}</span><span class="r num">${b ? brl0(b.v) : "—"}</span></a>`; }).join("")
+    + (viagens.length ? `<div class="group">Destinos · 3 pessoas</div>` + [...viagens].sort((a, b) => (a.ordem ?? 99) - (b.ordem ?? 99)).map(v => { const b = vbest(v);
+      return `<a href="#v-${esc(v.id)}" ${tripId() === v.id ? 'aria-current="page"' : ""}><span class="l">${esc(v.curto || v.destino)}</span><span class="r num">${b ? brl0(b.total) : "—"}</span></a>`; }).join("") : "");
+  $("#foot").innerHTML = (SAMPLE ? `<a href="https://claude.ai/artifact/Ne3kz5uEwCoLWENHSqoaMf" target="_blank" rel="noopener noreferrer"><span class="l">Editar alvos no Claude</span><span class="r">↗</span></a>` : (PUBLIC_URL.startsWith("https://") ? `<a href="${esc(PUBLIC_URL)}" target="_blank" rel="noopener noreferrer"><span class="l">Versão pública</span><span class="r">↗</span></a>` : ""))
+    + (REPO.startsWith("https://") ? `<a href="${esc(REPO)}" target="_blank" rel="noopener noreferrer"><span class="l">Histórico no GitHub</span><span class="r">↗</span></a>` : "");
+}
+
+/* ---------- visão geral ---------- */
+function overview() {
+  const list = [...products].sort((a, b) => (a.ordem ?? 99) - (b.ordem ?? 99));
+  const bests = list.map(best);
+  const hits = list.filter((p, i) => hasGoal(p) && bests[i] && bests[i].v <= p.preco_alvo);
+  const total = bests.reduce((s, b) => s + (b ? b.v : 0), 0);
+  const goals = list.filter(hasGoal);
+  const goalTotal = goals.reduce((s, p) => s + p.preco_alvo, 0);
+  // o achado: quem está mais perto do alvo
+  let finding;
+  if (hits.length) finding = `<b>${esc(hits.map(p => p.curto || p.nome).join(", "))}</b> ${hits.length > 1 ? "chegaram" : "chegou"} ao preço-alvo. Hora de comprar.`;
+  else {
+    const near = list.map((p, i) => ({p, b: bests[i]})).filter(x => hasGoal(x.p) && x.b).map(x => ({...x, gap: x.b.v - x.p.preco_alvo, pct: (x.b.v - x.p.preco_alvo) / x.p.preco_alvo})).sort((a, b) => a.pct - b.pct)[0];
+    finding = near ? `Nenhum item no alvo ainda. O mais perto é o <b>${esc(near.p.curto || near.p.nome)}</b>: faltam <b class="num">${brl(near.gap)}</b> (${(near.pct * 100).toLocaleString("pt-BR", {maximumFractionDigits:0})}% acima do alvo).` : "Defina um preço-alvo em cada produto para receber alertas.";
+  }
+  if (!chartPick || !products.some(p => p.id === chartPick)) chartPick = list[0]?.id;
+  const rows = list.map((p, i) => { const b = bests[i]; const n = (p.ofertas || []).length;
+    return `<div class="row" data-go="${esc(p.id)}" role="link" tabindex="0" aria-label="Abrir ${esc(p.nome)}">
+      <div class="c-thumb"><div class="thumb">${p.imagem ? `<img src="${esc(p.imagem)}" alt="" loading="lazy">` : `<span>${esc(p.marca || "")}</span>`}</div></div>
+      <div class="c-info"><p class="name">${esc(p.nome)}</p><div class="sub">${b ? `Melhor em ${esc(b.o.loja)}${b.o.preco_pix && b.v === b.o.preco_pix ? " no Pix" : ""} · ${n} lojas` : `${n} lojas · sem preço confirmado`}</div>${b ? `<div class="rp">${repPill(b.o.loja)}</div>` : ""}</div>
+      <div class="c-ruler">${ruler(p)}</div>
+      <div class="c-price n"><div class="price num">${b ? brl(b.v) : "—"}</div>${chgLine(p)}</div>
+      <div class="c-goal n">${goalCell(p, b)}</div>
+      <div class="act">${b && safe(b.o.url) ? `<a class="ghost" href="${esc(b.o.url)}" target="_blank" rel="noopener noreferrer" data-stop>Ver oferta ↗</a>` : ""}</div>
+    </div>`; }).join("");
+  const al = alerts();
+  const pick = products.find(p => p.id === chartPick);
+  $("#view").innerHTML = `
+    <div class="title"><div><h1>Lista de desejos</h1><p>${finding}</p></div><span class="stamp">Checado ${stamp(meta?.ultima_atualizacao)} · próxima amanhã, 8h</span></div>
+    <section class="card kpis" aria-label="Resumo">
+      <div><div class="k">No preço-alvo</div><div class="v lead num">${hits.length} <small>de ${goals.length}</small></div><div class="s">${goals.length < list.length ? `${list.length - goals.length} sem alvo` : "todos com alvo definido"}</div></div>
+      <div><div class="k">Produtos na lista</div><div class="v num">${list.length}</div><div class="s num">${list.reduce((s, p) => s + (p.ofertas || []).length, 0)} ofertas acompanhadas</div></div>
+      <div><div class="k">Lista no menor preço</div><div class="v num">${brl0(total)}</div><div class="s">soma do melhor de cada item</div></div>
+      <div><div class="k">Lista nos seus alvos</div><div class="v num">${goals.length ? brl0(goalTotal) : "—"}</div><div class="s num">${goals.length ? `faltam ${brl0(Math.max(0, goals.reduce((s, p) => { const b = best(p); return s + (b ? Math.max(0, b.v - p.preco_alvo) : 0); }, 0)))} para chegar` : "sem alvos"}</div></div>
+    </section>
+    <section class="card wl" aria-label="Produtos">
+      <div class="wl-head"><span></span><span>Produto</span><span class="c-ruler">Preço em cada loja</span><span class="n">Menor preço</span><span class="n">Seu alvo</span><span></span></div>
+      ${rows || `<div class="state">Nenhum produto na lista. Mande no chat o que você quer acompanhar.</div>`}
+    </section>
+    <div class="lower">
+      <section class="card"><div class="card-h"><h2>Menor preço por dia</h2>
+        <div class="seg" role="group" aria-label="Escolher produto">${list.map(p => `<button data-pick="${esc(p.id)}" aria-pressed="${p.id === chartPick}">${esc(p.curto || p.nome)}</button>`).join("")}</div></div>
+        <div class="chart" id="chart"></div></section>
+      <section class="card"><div class="card-h"><h2>Alertas de hoje</h2><span class="meta num">${al.length}</span></div>
+        <div class="alerts">${al.length ? al.map(a => `<div class="alert"><span class="pill ${a.k}">${a.tag}</span><span>${esc(a.t)}</span></div>`).join("") : `<div class="alert-empty">Nada caiu nem chegou ao alvo desde a última checagem.</div>`}</div>
+        <div class="ref"><h3>Como você é avisado</h3>
+          <div class="kv"><span>Chegou no alvo</span><span>notificação no Mac</span></div>
+          <div class="kv"><span>Caiu 5% ou mais num dia</span><span>notificação no Mac</span></div>
+          <div class="kv"><span>Loja esgotou ou sumiu</span><span>aviso aqui</span></div>
+        </div></section>
+    </div>`;
+  if (pick) drawHistory($("#chart"), pick);
+}
+
+function alerts() {
+  const out = [];
+  for (const p of products) { const b = best(p); if (!b) continue;
+    if (hasGoal(p) && b.v <= p.preco_alvo) out.push({k: "pos", tag: "No alvo", t: `${p.curto || p.nome} a ${brl(b.v)} em ${b.o.loja}.`});
+    const h = hist(p); if (h.length >= 2) { const pct = (h.at(-1).menor - h.at(-2).menor) / h.at(-2).menor; if (pct <= -0.05) out.push({k: "pos", tag: "Caiu", t: `${p.curto || p.nome} caiu ${(Math.abs(pct) * 100).toLocaleString("pt-BR", {maximumFractionDigits:1})}%, para ${brl(b.v)}.`}); }
+  }
+  for (const a of meta?.alertas || []) if (a && a.texto && a.tipo === "aviso") out.push({k: "warn", tag: "Aviso", t: a.texto});
+  return out;
+}
+
+/* ---------- viagens ---------- */
+const JAN = j => vmeta?.janelas?.[j] ? `${day(vmeta.janelas[j].ida)} a ${day(vmeta.janelas[j].volta)}` : j;
+const rTotal = r => typeof r.total === "number" && r.total > 0 ? r.total : null;
+function vbest(v) { let b = null; for (const r of v.rotas || []) { const t = rTotal(r); if (t != null && r.erro == null && (!b || t < b.total)) b = {...r, total: t}; } return b; }
+const vhist = v => (v.historico || []).filter(h => typeof h.menor === "number").sort((a, b) => a.data < b.data ? -1 : 1);
+const vAsP = v => ({ preco_alvo: v.preco_alvo, ofertas: (v.rotas || []).filter(r => rTotal(r) != null).map(r => ({loja: `${r.origem} · ${JAN(r.janela)} · ${r.fonte || ""}`, preco: rTotal(r), verificado: true})) });
+const INS = {low: ["pos", "preço baixo"], typical: ["", "preço normal"], high: ["neg", "preço alto"]};
+function insightPill(r) { const k = (r?.insight || "").toLowerCase(); const m = k.includes("low") ? INS.low : k.includes("high") ? INS.high : k.includes("typical") ? INS.typical : null;
+  return m ? `<span class="pill ${m[0]}" title="Avaliação do Google Flights${r.faixa ? ": normalmente " + esc(r.faixa) : ""}">${m[1]}</span>` : ""; }
+function vchg(v) { const h = vhist(v); if (h.length < 2) return `<div class="chg">1ª checagem</div>`; const c = h.at(-1).menor - h.at(-2).menor;
+  return c === 0 ? `<div class="chg">igual a ontem</div>` : `<div class="chg ${c < 0 ? "good" : "bad"}">${signed(c)} vs ontem</div>`; }
+function tripsView() {
+  const list = [...viagens].sort((a, b) => (a.ordem ?? 99) - (b.ordem ?? 99));
+  const withB = list.map(v => ({v, b: vbest(v)})).filter(x => x.b);
+  const cheap = [...withB].sort((a, b) => a.b.total - b.b.total)[0];
+  const hits = withB.filter(x => typeof x.v.preco_alvo === "number" && x.b.total <= x.v.preco_alvo);
+  const rows = list.map(v => { const b = vbest(v); const n = (v.rotas || []).filter(r => rTotal(r) != null).length; const pv = vAsP(v);
+    return `<div class="row" data-trip="${esc(v.id)}" role="link" tabindex="0" aria-label="Abrir ${esc(v.destino)}">
+      <div class="c-thumb"><div class="thumb code">${esc((v.aeroportos || "").split(/[ ,/]/)[0])}</div></div>
+      <div class="c-info"><p class="name">${esc(v.destino)}</p><div class="sub">${esc(v.pais || "")}${b ? ` · melhor saindo de ${esc(b.origem)}, ${JAN(b.janela)}` : ""} · ${n} cotações</div>${b ? `<div class="rp">${insightPill(b)}</div>` : ""}</div>
+      <div class="c-ruler">${ruler(pv)}</div>
+      <div class="c-price n"><div class="price num">${b ? brl(b.total) : "—"}</div>${vchg(v)}</div>
+      <div class="c-goal n">${typeof v.preco_alvo === "number" ? (b && b.total <= v.preco_alvo ? `<div class="goal"><span class="pill pos">No alvo</span></div><div class="sub num">alvo ${brl0(v.preco_alvo)}</div>` : `<div class="goal num">${brl0(v.preco_alvo)}</div><div class="sub num">${b ? "faltam " + brl(b.total - v.preco_alvo) : ""}</div>`) : `<div class="goal">—</div><div class="sub">sem alvo</div>`}</div>
+      <div class="act">${b && safe(b.link) ? `<a class="ghost" href="${esc(b.link)}" target="_blank" rel="noopener noreferrer" data-stop>Ver voo ↗</a>` : ""}</div></div>`; }).join("");
+  const minas = list.find(v => (v.cidades || []).length);
+  $("#view").innerHTML = `
+    <div class="title"><div><h1>Viagens em setembro de 2027</h1><p>${cheap ? `O destino mais barato hoje é <b>${esc(cheap.v.destino)}</b>: <b class="num">${brl(cheap.b.total)}</b> para os três, ida e volta, saindo de ${esc(cheap.b.origem)} (${JAN(cheap.b.janela)}).` : "Carregando cotações…"}${hits.length ? ` <b>${esc(hits.map(x => x.v.destino).join(", "))}</b> já ${hits.length > 1 ? "estão" : "está"} no seu alvo.` : ""}</p></div>
+      <span class="stamp">Checado ${stamp(vmeta?.atualizado)} · Google Flights, em reais</span></div>
+    <section class="card kpis" aria-label="Resumo das viagens">
+      <div><div class="k">Mais barata, 3 pessoas</div><div class="v lead num">${cheap ? brl0(cheap.b.total) : "—"}</div><div class="s">${cheap ? esc(cheap.v.destino) : ""}</div></div>
+      <div><div class="k">Por pessoa</div><div class="v num">${cheap ? brl0(cheap.b.total / 3) : "—"}</div><div class="s">criança de 3 anos paga assento</div></div>
+      <div><div class="k">Datas cotadas</div><div class="v num" style="font-size:18px;line-height:30px">${JAN("A")} · ${JAN("B")}</div><div class="s">7 noites, ida e volta no sábado</div></div>
+      <div><div class="k">Saindo de</div><div class="v">FLN · NVT</div><div class="s">Florianópolis e Navegantes</div></div>
+    </section>
+    <section class="card wl" aria-label="Destinos">
+      <div class="wl-head"><span></span><span>Destino</span><span class="c-ruler">Todas as cotações</span><span class="n">Menor total</span><span class="n">Seu alvo</span><span></span></div>
+      ${rows || `<div class="state">Nenhum destino cotado ainda.</div>`}
+    </section>
+    ${minas ? `<section class="card"><div class="card-h"><h2>Minas Gerais: onde ir chegando em ${esc(minas.aeroportos)}</h2><span class="meta">setembro é seca e céu aberto</span></div>
+      <div class="tbl-wrap"><table><thead><tr><th>Cidade</th><th>Do aeroporto, de carro</th><th>Por que ir com criança</th></tr></thead><tbody>${minas.cidades.map(c => `<tr><td class="store"><b>${esc(c.cidade)}</b></td><td class="num" style="white-space:nowrap">${esc(c.carro || "")}</td><td>${esc(c.porque || "")}</td></tr>`).join("")}</tbody></table></div></section>` : ""}`;
+}
+function tripView(v) {
+  const b = vbest(v); const h = vhist(v);
+  const rows = [...(v.rotas || [])].sort((x, y) => (rTotal(x) ?? 1e12) - (rTotal(y) ?? 1e12)).map(r => { const t = rTotal(r);
+    return `<tr class="${b && t === b.total && r.origem === b.origem && r.janela === b.janela ? "best" : ""}">
+      <td class="store"><span class="l"><b>${esc(r.origem)} → ${esc(r.destino_aero || (v.aeroportos || "").split(/[ ,/]/)[0])}</b><span class="pill">${esc(r.fonte || "")}</span>${insightPill(r)}</span>
+        <div class="sub">${JAN(r.janela)} · ${esc([r.cia, r.saida && r.chegada ? `${r.saida}–${r.chegada}` : "", r.duracao, r.paradas].filter(Boolean).join(" · "))}${r.tipo ? " · " + esc(r.tipo) : ""}</div></td>
+      <td class="n">${t != null ? brl(t) : `<span class="chg">${esc(r.erro || "sem preço")}</span>`}</td><td class="n">${t != null ? brl(t / 3) : "—"}</td>
+      <td class="n">${safe(r.link) ? `<a class="ghost" href="${esc(r.link)}" target="_blank" rel="noopener noreferrer">Abrir ↗</a>` : ""}</td></tr>`; }).join("");
+  const gap = b && typeof v.preco_alvo === "number" ? b.total - v.preco_alvo : null;
+  $("#view").innerHTML = `
+    <div class="title"><div><a class="back" href="#viagens">← Viagens</a><h1>${esc(v.destino)}${v.pais ? `, ${esc(v.pais)}` : ""}</h1><p>${esc(v.setembro || "")}</p></div>
+      ${b && safe(b.link) ? `<a class="primary" href="${esc(b.link)}" target="_blank" rel="noopener noreferrer">Ver voo mais barato ↗</a>` : ""}</div>
+    <div class="pv">
+      <div class="stack">
+        <section class="card"><div class="answer"><div><div style="color:var(--muted);font-size:13px">Menor total hoje · 2 adultos + criança</div><div class="price big num">${b ? brl(b.total) : "—"}</div>
+          <div class="where">${b ? `saindo de <b>${esc(b.origem)}</b>, ${JAN(b.janela)} ${insightPill(b)}` : ""}</div>${vchg(v)}</div>
+          <div style="text-align:right"><div style="color:var(--muted);font-size:13px">Por pessoa</div><div class="price num">${b ? brl(b.total / 3) : "—"}</div></div></div>
+          <div style="margin-top:18px">${ruler(vAsP(v))}</div>
+          ${SAMPLE ? `<div class="target"><span class="msg">Alvo: <b class="num" style="color:var(--text)">${typeof v.preco_alvo === "number" ? brl0(v.preco_alvo) : "não definido"}</b>${gap != null ? (gap <= 0 ? " · já está no alvo" : ` · faltam ${brl(gap)}`) : ""}</span></div>` :
+          `<div class="target"><label for="alvo">Seu alvo para os 3</label><input id="alvo" inputmode="decimal" autocomplete="off" value="${typeof v.preco_alvo === "number" ? v.preco_alvo.toLocaleString("pt-BR") : ""}" placeholder="ex. 7.000" aria-describedby="alvo-msg"><button class="ghost" id="save" type="button">Salvar</button><span class="msg ${gap != null && gap <= 0 ? "good" : ""}" id="alvo-msg">${gap == null ? "Avisamos quando chegar nesse valor." : gap <= 0 ? "Já está no alvo." : `Faltam ${brl(gap)} para o alvo.`}</span></div>`}
+        </section>
+        <section class="card"><div class="card-h"><h2>Com criança de 3 anos</h2></div><p class="note" style="margin:0;color:var(--text)">${esc(v.crianca || "")}</p>
+          ${(v.cidades || []).length ? `<ul class="specs" style="margin-top:14px">${v.cidades.map(c => `<li><b>${esc(c.cidade)}</b> · ${esc(c.carro || "")}<div class="sub">${esc(c.porque || "")}</div></li>`).join("")}</ul>` : ""}</section>
+      </div>
+      <div class="stack">
+        <section class="card"><div class="card-h"><h2>Menor total por dia</h2><span class="meta">${h.length} ${h.length === 1 ? "checagem" : "checagens"}</span></div><div class="chart" id="chart"></div></section>
+        <section class="card"><div class="card-h"><h2>Cotações</h2><span class="meta">total para 3 pessoas, ida e volta</span></div>
+          <div class="tbl-wrap"><table><thead><tr><th>Trecho</th><th class="n">Total</th><th class="n">Por pessoa</th><th class="n"><span hidden>Link</span></th></tr></thead><tbody>${rows}</tbody></table></div></section>
+      </div>
+    </div>`;
+  drawHistory($("#chart"), {nome: v.destino, preco_alvo: v.preco_alvo, historico: h.map(x => ({data: x.data, menor: x.menor, loja: `${x.origem || ""} ${x.janela ? JAN(x.janela) : ""}`.trim()}))});
+  if (!SAMPLE) { const save = async () => { const raw = $("#alvo").value.trim().replace(/[R$\s]/g, "").replace(/\./g, "").replace(",", "."); const val = raw === "" ? null : Number(raw);
+      if (raw !== "" && (!isFinite(val) || val <= 0)) { $("#alvo-msg").textContent = "Digite um valor em reais, por exemplo 7.000."; return; }
+      if (!db) { toast("Abra a página logado no Claude para salvar."); return; }
+      try { await db.doc("viagens/" + v.id).update({preco_alvo: val}); toast(val == null ? "Alvo removido" : "Alvo salvo: " + brl0(val)); } catch (e) { toast("Não deu para salvar (" + (e.code || "erro") + ")."); } };
+    $("#save").addEventListener("click", save); $("#alvo").addEventListener("keydown", e => { if (e.key === "Enter") save(); }); }
+}
+
+/* ---------- lojas ---------- */
+function storesView() {
+  const used = new Set(); for (const p of products) for (const o of p.ofertas || []) { const r = rep(o.loja); used.add(r ? r.nome : o.loja); }
+  const names = [...used].sort((a, b) => ((lojas[b]?.ra_nota ?? -1) - (lojas[a]?.ra_nota ?? -1)) || a.localeCompare(b));
+  const pct = v => v == null ? "—" : v.toLocaleString("pt-BR", {maximumFractionDigits: 1}) + "%";
+  const rows = names.map(n => { const r = lojas[n] || {}; const cnt = products.reduce((s, p) => s + (p.ofertas || []).filter(o => { const x = rep(o.loja); return (x ? x.nome : o.loja) === n; }).length, 0);
+    return `<tr><td class="store"><span class="l"><b>${esc(n)}</b></span><div class="sub">${esc(r.cuidado || "")}${r.outras ? " · " + esc(r.outras) : ""}</div></td>
+      <td class="n">${r.ra_nota != null ? repPill(n, true) : "—"}</td><td>${esc(r.ra_selo || "—")}</td>
+      <td class="n">${pct(r.respondidas_pct)}</td><td class="n">${pct(r.solucao_pct)}</td><td class="n">${pct(r.voltariam_pct)}</td>
+      <td class="n num">${cnt}</td><td class="n">${safe(r.ra_url) ? `<a class="ghost" href="${esc(r.ra_url)}" target="_blank" rel="noopener noreferrer">Reclame Aqui ↗</a>` : ""}</td></tr>`; }).join("");
+  const bad = names.filter(n => ["warn", "neg"].includes(repKind(lojas[n] ? {nome: n, ...lojas[n]} : null)));
+  $("#view").innerHTML = `<div class="title"><div><h1>Lojas</h1><p>${bad.length ? `<b>${esc(bad.join(", "))}</b> ${bad.length > 1 ? "têm" : "tem"} reputação fraca no Reclame Aqui: prefira outra loja se o preço for parecido.` : "Todas as lojas da lista têm reputação boa ou ótima no Reclame Aqui."} Em marketplace a nota é da plataforma: confira também o vendedor do anúncio. As notas vêm de resumos públicos do Reclame Aqui; abra o link para ver a nota do dia.</p></div>
+    <span class="stamp">Reclame Aqui, últimos 6 meses · levantado ${stamp(lojasAt)}</span></div>
+    <section class="card"><div class="tbl-wrap"><table><thead><tr><th>Loja</th><th class="n">Nota</th><th>Selo</th><th class="n">Respondidas</th><th class="n">Resolvidas</th><th class="n">Voltariam</th><th class="n">Ofertas</th><th class="n"><span hidden>Link</span></th></tr></thead><tbody>${rows}</tbody></table></div></section>`;
+}
+
+/* ---------- produto ---------- */
+function productView(p) {
+  const b = best(p);
+  const offers = [...(p.ofertas || [])].sort((x, y) => (usable(y) - usable(x)) || ((eff(x) ?? 1e12) - (eff(y) ?? 1e12)));
+  const h = hist(p);
+  const low = h.length ? Math.min(...h.map(x => x.menor)) : null;
+  const gap = b && hasGoal(p) ? b.v - p.preco_alvo : null;
+  const rows = offers.map(o => { const prev = prevStore(p, o.loja), v = eff(o); const ch = prev != null && v != null ? v - prev : null;
+    const tags = (o.verificado === false ? `<span class="pill warn">não confirmado</span>` : "") + (o.disponivel === false ? `<span class="pill neg">esgotado</span>` : "");
+    return `<tr class="${b && o === b.o ? "best" : ""}">
+      <td class="store"><span class="l"><b>${esc(o.loja)}</b>${repPill(o.loja, true)}${tags}</span><div class="sub">${esc([o.parcelas, o.obs].filter(Boolean).join(" · "))}</div></td>
+      <td class="n">${brl(o.preco)}</td><td class="n">${o.preco_pix ? brl(o.preco_pix) : "—"}</td>
+      <td class="n">${ch == null ? `<span class="chg">—</span>` : ch === 0 ? `<span class="chg">igual</span>` : `<span class="chg ${ch < 0 ? "good" : "bad"}">${signed(ch)}</span>`}</td>
+      <td class="n">${safe(o.url) ? `<a class="ghost" href="${esc(o.url)}" target="_blank" rel="noopener noreferrer">Abrir ↗</a>` : ""}</td></tr>`; }).join("");
+  $("#view").innerHTML = `
+    <div class="title"><div><a class="back" href="#">← Lista de desejos</a><h1>${esc(p.nome)}</h1><p>${esc(p.resumo || "")}</p></div>
+      ${b && safe(b.o.url) ? `<a class="primary" href="${esc(b.o.url)}" target="_blank" rel="noopener noreferrer">Comprar na ${esc(b.o.loja)} ↗</a>` : ""}</div>
+    <div class="pv">
+      <div class="stack">
+        <div class="photo">${p.imagem ? `<img src="${esc(p.imagem)}" alt="${esc(p.nome)}">` : ""}</div>
+        <section class="card"><div class="card-h"><h2>Ficha técnica</h2></div><ul class="specs">${(p.specs || []).map(s => `<li>${esc(s)}</li>`).join("")}</ul>${p.nota ? `<p class="note">${esc(p.nota)}</p>` : ""}</section>
+      </div>
+      <div class="stack">
+        <section class="card">
+          <div class="answer"><div><div class="k" style="color:var(--muted);font-size:13px">Menor preço hoje</div><div class="price big num">${b ? brl(b.v) : "—"}</div>
+            <div class="where">${b ? `em <b>${esc(b.o.loja)}</b>${b.o.preco_pix && b.v === b.o.preco_pix ? " no Pix" : ""} ${repPill(b.o.loja)}` : "nenhuma loja com preço confirmado"}</div>${chgLine(p)}</div>
+            <div style="text-align:right"><div class="k" style="color:var(--muted);font-size:13px">Menor já visto</div><div class="price num">${brl(low)}</div><div class="sub">desde ${day(h[0]?.data)}</div></div></div>
+          <div style="margin-top:18px">${ruler(p, {h: 44})}</div>
+          ${SAMPLE ? `<div class="target"><span class="msg">Alvo: <b class="num" style="color:var(--text)">${hasGoal(p) ? brl0(p.preco_alvo) : "não definido"}</b>${gap != null ? (gap <= 0 ? " · já está no alvo" : ` · faltam ${brl(gap)}`) : ""}</span></div>` : `<div class="target"><label for="alvo">Seu preço-alvo</label><input id="alvo" inputmode="decimal" autocomplete="off" value="${hasGoal(p) ? p.preco_alvo.toLocaleString("pt-BR") : ""}" placeholder="ex. 2.300" aria-describedby="alvo-msg">
+            <button class="ghost" id="save" type="button">Salvar</button>
+            <span class="msg ${gap != null && gap <= 0 ? "good" : ""}" id="alvo-msg">${gap == null ? "Avisamos quando alguma loja chegar nesse valor." : gap <= 0 ? "Já está no alvo." : `Faltam ${brl(gap)} para o alvo.`}</span></div>`}
+        </section>
+        <section class="card"><div class="card-h"><h2>Menor preço por dia</h2><span class="meta">${h.length} ${h.length === 1 ? "checagem" : "checagens"}</span></div><div class="chart" id="chart"></div></section>
+        <section class="card"><div class="card-h"><h2>Preço em cada loja</h2><span class="meta">Pix quando a loja informa · variação vs a checagem anterior</span></div>
+          <div class="tbl-wrap"><table><thead><tr><th>Loja</th><th class="n">Preço</th><th class="n">Pix</th><th class="n">Vs ontem</th><th class="n"><span hidden>Link</span></th></tr></thead><tbody>${rows}</tbody></table></div></section>
+      </div>
+    </div>`;
+  drawHistory($("#chart"), p);
+  if (!SAMPLE) { $("#save").addEventListener("click", () => saveGoal(p));
+  $("#alvo").addEventListener("keydown", e => { if (e.key === "Enter") saveGoal(p); }); }
+}
+
+async function saveGoal(p) {
+  const raw = $("#alvo").value.trim().replace(/[R$\s]/g, "").replace(/\./g, "").replace(",", ".");
+  const v = raw === "" ? null : Number(raw);
+  if (raw !== "" && (!isFinite(v) || v <= 0)) { $("#alvo-msg").textContent = "Digite um valor em reais, por exemplo 2.300."; return; }
+  if (!db) { toast("Abra a página logado no Claude para salvar."); return; }
+  try { await db.doc("produtos/" + p.id).update({preco_alvo: v}); toast(v == null ? "Alvo removido" : "Alvo salvo: " + brl0(v)); }
+  catch (e) { toast("Não deu para salvar (" + (e.code || "erro") + ")."); }
+}
+
+function toast(t) { const el = $("#toast"); el.textContent = t; el.classList.add("on"); clearTimeout(toast.h); toast.h = setTimeout(() => el.classList.remove("on"), 2200); }
+
+function render() {
+  const d = Math.ceil((BF - Date.now()) / 864e5);
+  $("#days").textContent = d > 0 ? d : d > -4 ? "hoje" : "—";
+  if (!loaded) return;
+  renderNav();
+  const id = route(); const p = id && products.find(x => x.id === id);
+  $("#crumb").innerHTML = p ? `<a href="#">Lista de desejos</a><span class="sep">/</span><b>${esc(p.curto || p.nome)}</b>` : onStores() ? `<b>Lojas e reputação</b>` : `<b>Lista de desejos</b>`;
+  const tv = tripId() && viagens.find(x => x.id === tripId());
+  if (tv) $("#crumb").innerHTML = `<a href="#viagens">Viagens</a><span class="sep">/</span><b>${esc(tv.curto || tv.destino)}</b>`;
+  else if (onTrips()) $("#crumb").innerHTML = `<b>Viagens</b>`;
+  if (p) productView(p); else if (tv) tripView(tv); else if (onTrips()) tripsView(); else if (onStores()) storesView(); else overview();
+}
+
+document.addEventListener("click", e => {
+  if (e.target.closest("[data-stop]")) return;
+  const pk = e.target.closest("[data-pick]"); if (pk) { chartPick = pk.dataset.pick; overview(); return; }
+  const r = e.target.closest("[data-go]"); if (r) { location.hash = "p-" + r.dataset.go; return; }
+  const tr = e.target.closest("[data-trip]"); if (tr) { location.hash = "v-" + tr.dataset.trip; return; }
+  if (e.target.closest(".side a")) closeMenu();
+});
+document.addEventListener("keydown", e => { const r = e.target.closest?.("[data-go]"); if (r && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); location.hash = "p-" + r.dataset.go; }
+  const tr = e.target.closest?.("[data-trip]"); if (tr && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); location.hash = "v-" + tr.dataset.trip; } if (e.key === "Escape") closeMenu(); });
+addEventListener("hashchange", () => { render(); scrollTo(0, 0); });
+const openMenu = () => { $("#side").classList.add("open"); $("#menu").setAttribute("aria-expanded", "true"); };
+const closeMenu = () => { $("#side").classList.remove("open"); $("#menu").setAttribute("aria-expanded", "false"); };
+$("#menu").addEventListener("click", openMenu); $("#close").addEventListener("click", closeMenu);
+let rz; addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(() => { const el = $("#chart"); if (!el || !loaded) return; const id = route(); const p = id ? products.find(x => x.id === id) : products.find(x => x.id === chartPick); if (p) drawHistory(el, p); }, 150); });
+
+const SAMPLE = {"produtos": [{"atualizado": "2026-11-21T13:58:00-03:00", "categoria": "Drone", "curto": "DJI Neo 2 + RC-N3", "historico": [{"data": "2026-11-21", "loja": "Amazon (DJI071)", "menor": 3229.9, "precos": {"Amazon (DJI071)": 3229.9, "Amazon (combo RC-N3)": 3324.9, "Detonashop": 3999.14, "Drone Place": 4590, "Fast Shop": 3923.01, "FlyPro": 4360.5, "KaBuM!": 4269.9, "Loja DJI oficial": 3990, "Tecno Drones": 4850}}], "imagem": "dados/imagens/dji-neo-2-fly-more-rc.jpg", "marca": "DJI", "nome": "DJI Neo 2 Fly More Combo com controle RC-N3", "nota": "Confira o código DJI071 e o RC-N3 na caixa: a versão DJI070 é sem controle (Loja DJI R$ 2.990; Detonashop R$ 2.899,83 no Pix). Os anúncios da Amazon são de vendedor terceiro (LBAK) e não citam Anatel.", "ofertas": [{"disponivel": true, "loja": "Amazon (DJI071)", "obs": "Vendedor LBAK · 10 em estoque · RC-N3 incluso · página bloqueada às 13h58; preço conferido às 13h20", "parcelas": "12x R$ 283,38 sem juros", "preco": 3399.9, "preco_pix": 3229.9, "url": "https://www.amazon.com.br/DJI-Neo-More-Combo-tela/dp/B0G5S8KTFG", "verificado": true}, {"disponivel": true, "loja": "Amazon (combo RC-N3)", "obs": "Vendedor LBAK · 4 em estoque · pode ser importado · página bloqueada às 13h58; preço conferido às 13h20", "parcelas": "12x R$ 291,75 sem juros", "preco": 3499.9, "preco_pix": 3324.9, "url": "https://www.amazon.com.br/DJI-controle-transmiss%C3%A3o-transceptor-iniciantes/dp/B0FJ1STVP4", "verificado": true}, {"disponivel": true, "loja": "Fast Shop", "obs": "Marketplace Loja Multi Oficial · Anatel · confirme o RC-N3", "parcelas": null, "preco": 4790, "preco_pix": 3923.01, "url": "https://site.fastshop.com.br/drone-dji-neo-2-fly-more-combo--sem-tela----dji071-189480/p", "verificado": true}, {"disponivel": true, "loja": "Loja DJI oficial", "obs": "Oficial, Anatel · de R$ 4.790 · 10 em estoque", "parcelas": "até 12x sem juros", "preco": 3990, "preco_pix": null, "url": "https://www.lojadji.com.br/drone-dji-neo-2-fly-more-combo-sem-tela-dji071/p", "verificado": true}, {"disponivel": true, "loja": "Detonashop", "obs": "Anatel · pronta entrega · página bloqueada às 13h58; preço conferido às 13h20", "parcelas": "12x R$ 370,29 sem juros", "preco": 4443.49, "preco_pix": 3999.14, "url": "https://www.detonashop.com.br/drone-dji-neo-2-fly-more-combo-com-rc-n3-anatel.html", "verificado": true}, {"disponivel": true, "loja": "KaBuM!", "obs": "Marketplace GIGANTEC", "parcelas": "10x R$ 426,98 sem juros", "preco": 4269.9, "preco_pix": 4269.9, "url": "https://www.kabum.com.br/produto/993104/drone-dji-neo-2-fly-more-kit-controle-remoto-sem-tela", "verificado": true}, {"disponivel": true, "loja": "Tecno Drones", "obs": "Anatel · R$ 4.365 no boleto", "parcelas": "12x R$ 404,16 sem juros", "preco": 4850, "preco_pix": null, "url": "https://www.tecnodrones.com.br/drone-dji-neo-2-fly-more-combo-br-dji071", "verificado": true}, {"disponivel": true, "loja": "FlyPro", "obs": "Anatel · valor menor no depósito · envio em 5 dias úteis", "parcelas": "12x R$ 382,50 sem juros", "preco": 4590, "preco_pix": 4360.5, "url": "https://www.flypro.com.br/drone-dji-neo-2-fly-more-combo-com-controle-br", "verificado": true}, {"disponivel": true, "loja": "Drone Place", "obs": "Anatel", "parcelas": "12x com juros", "preco": 4831.58, "preco_pix": 4590, "url": "https://droneplace.net.br/produto/drone-dji-neo-2/", "verificado": true}, {"disponivel": true, "loja": "Magazine Luiza", "obs": "Busca: anúncios de R$ 4.500 a R$ 6.000", "parcelas": null, "preco": 5399.9, "preco_pix": null, "url": "https://www.magazineluiza.com.br/busca/dji+neo+2+fly+more+combo+com+controle/", "verificado": false}, {"disponivel": true, "loja": "Mercado Livre", "obs": "Vendedores de ~R$ 3.199 a R$ 4.590", "parcelas": null, "preco": null, "preco_pix": null, "url": "https://www.mercadolivre.com.br/drone-dji-neo-2-fly-more-combo-3-baterias-transceiver-dji071/up/MLBU3524704055", "verificado": false}], "ordem": 3, "preco_alvo": 3000, "resumo": "Versão DJI071 (\"sem tela\"): vem com o controle RC-N3, 3 baterias e hub de carga.", "specs": ["151 g, categoria C0, protetores de hélice", "Câmera 12 MP 1/2\", gimbal de 2 eixos", "4K/60 fps, câmera lenta 4K/100 fps, vertical 2,7K", "Até 19 min de voo por bateria", "Até 10 km de transmissão com RC-N3 + transceptor", "Obstáculos omnidirecional, ActiveTrack, gestos e voz", "49 GB internos · combo: 3 baterias, hub, RC-N3, transceptor"], "id": "dji-neo-2-fly-more-rc"}, {"atualizado": "2026-11-21T13:58:00-03:00", "categoria": "Casa", "curto": "Xiaomi H50", "historico": [{"data": "2026-11-21", "loja": "Horizon Play", "menor": 2653.5, "precos": {"Amazon": 2745, "Horizon Play": 2653.5, "KaBuM!": 3588.9}}], "imagem": "dados/imagens/xiaomi-h50.jpg", "marca": "Xiaomi", "nome": "Xiaomi Robot Vacuum H50", "nota": "Atenção à voltagem: há anúncios 110V/127V e 220V. Não confundir com o H50 Pro (15.000 Pa, a partir de R$ 4.998). Casas Bahia, Fast Shop, Americanas e Carrefour não vendem o H50 comum hoje.", "ofertas": [{"disponivel": true, "loja": "Horizon Play", "obs": "220V · venda da própria loja, 93 em estoque", "parcelas": "12x R$ 251,28 sem juros", "preco": 3015.36, "preco_pix": 2653.5, "url": "https://www.horizonplay.com.br/produto/robo-xiaomi-aspirador-vacuum-h50-220v-branco-244149", "verificado": true}, {"disponivel": true, "loja": "Amazon", "obs": "Versão EU importada · vendedor BRASIL-VENDAS · frete R$ 226,72 · página bloqueada às 13h58; preço conferido às 13h20", "parcelas": null, "preco": 2745, "preco_pix": null, "url": "https://www.amazon.com.br/Xiaomi-Robot-Vacuum-H50-EU/dp/B0GHM34LVQ", "verificado": true}, {"disponivel": true, "loja": "Magazine Luiza", "obs": "220V · marketplace", "parcelas": "10x R$ 309,99 sem juros", "preco": 3099.9, "preco_pix": 2665.91, "url": "https://www.magazineluiza.com.br/robo-aspirador-xiaomi-h50-branco-navegacao-inteligente-220v/p/dej3c5j3cc/ep/eprb/", "verificado": false}, {"disponivel": true, "loja": "Mercado Livre", "obs": "127V · outros anúncios de R$ 2.700 a R$ 2.918 · Promobit cita R$ 2.069 no Meli+ (não verificado)", "parcelas": "12x R$ 277,78", "preco": 2890, "preco_pix": null, "url": "https://www.mercadolivre.com.br/rob-aspirador-xiaomi-h50-10000pa-2026-127v-branco/p/MLB69227149", "verificado": false}, {"disponivel": true, "loja": "KaBuM!", "obs": "220V · marketplace GSM Varejo · descrição cita H50 Pro, confirme o modelo", "parcelas": "10x R$ 369,99 sem juros", "preco": 3699.9, "preco_pix": 3588.9, "url": "https://www.kabum.com.br/produto/1060995/robo-aspirador-xiaomi-h50-10000pa-lancamento-2026-220v-branco", "verificado": true}], "ordem": 1, "preco_alvo": 2300, "resumo": "Linha 2026: 10.000 Pa, navegação a laser e base que esvazia o reservatório sozinha.", "specs": ["Sucção de até 10.000 Pa", "Navegação a laser LDS, mapa no app Xiaomi Home", "Base all-in-one: recarga, autoesvaziamento e secagem", "Aspira e passa pano", "Bateria 5.200 mAh, até ~3 h", "Alexa e Google Assistente", "3,7 kg · 35,5 × 35,4 × 9,3 cm"], "id": "xiaomi-h50"}, {"atualizado": "2026-11-21T13:58:00-03:00", "categoria": "Casa", "curto": "Xiaomi S40", "historico": [{"data": "2026-11-21", "loja": "Magazine Luiza", "menor": 1259.1, "precos": {"Amazon": 1350, "Carrefour": 2586.47, "Casas Bahia": 2789.11, "KaBuM!": 1498.89, "KaBuM! · Xiaomi Oficial": 2969.99, "Magazine Luiza": 1259.1}}], "imagem": "dados/imagens/xiaomi-s40.jpg", "marca": "Xiaomi", "nome": "Xiaomi Robot Vacuum S40", "nota": "Menor preço noticiado: R$ 1.163,75 no Pix na Amazon (Canaltech, 30/09/2026). O Canaltech sugere R$ 850 como bom preço de Black Friday. O S40 Pro e o S40c são outros modelos.", "ofertas": [{"disponivel": true, "loja": "Magazine Luiza", "obs": "Bivolt · lojista safyra2, entrega Magalu · pode ser versão global · página bloqueada às 13h58; preço conferido às 13h20", "parcelas": "10x R$ 139,90 sem juros", "preco": 1399, "preco_pix": 1259.1, "url": "https://www.magazineluiza.com.br/robo-aspirador-xiaomi-mi-xiaomi-robot-vacuum-s40/p/ddkg7kef88/ep/eprb/?seller_id=safyra2", "verificado": true}, {"disponivel": true, "loja": "Amazon", "obs": "XM878BRA · vendedor Fortech2, envio Amazon · 4 em estoque · página bloqueada às 13h58; preço conferido às 13h20", "parcelas": "12x R$ 125,00 sem juros", "preco": 1500, "preco_pix": 1350, "url": "https://www.amazon.com.br/ASPIRADOR-INTELIGENTE-XIAOMI-BRANCO-XM878BRA/dp/B0FKC1QB1J", "verificado": true}, {"disponivel": true, "loja": "Mercado Livre", "obs": "Anúncios entre R$ 1.195 e R$ 1.299", "parcelas": null, "preco": 1200, "preco_pix": null, "url": "https://www.mercadolivre.com.br/rob-aspirador-xiaomi-s40-lds-10000pa-3-em-1-alexa-wi-fi-branco/p/MLB54775758", "verificado": false}, {"disponivel": true, "loja": "KaBuM!", "obs": "Bivolt · marketplace CELCOMERCE · ficha diz S40 OV81, não XM878BRA", "parcelas": "10x R$ 164,71 sem juros", "preco": 1647.13, "preco_pix": 1498.89, "url": "https://www.kabum.com.br/produto/1047130/robo-aspirador-xiaomi-robot-vacuum-s40-ov81-520-ml-com-70-watts-bivolt-branco", "verificado": true}, {"disponivel": true, "loja": "Carrefour", "obs": "Marketplace marin brasil · página bloqueada às 13h58; preço conferido às 13h20", "parcelas": "12x R$ 239,48 (cartão Carrefour)", "preco": 2873.85, "preco_pix": 2586.47, "url": "https://www.carrefour.com.br/produto/robo-aspirador-de-po-inteligente-s40-xiaomi-branco-340539964", "verificado": true}, {"disponivel": true, "loja": "Casas Bahia", "obs": "Bivolt · vendido pela Casas Bahia · página bloqueada às 13h58; preço conferido às 13h20", "parcelas": null, "preco": null, "preco_pix": 2789.11, "url": "https://www.casasbahia.com.br/aspirador-robo-xiaomi-s40-3-em-1-70w-filtro-hepa-controle-por-app-bivolt-branco/p/55071828", "verificado": true}, {"disponivel": true, "loja": "KaBuM! · Xiaomi Oficial", "obs": "Loja oficial Xiaomi dentro da KaBuM!", "parcelas": "10x R$ 299,99 sem juros", "preco": 2999.99, "preco_pix": 2969.99, "url": "https://www.kabum.com.br/produto/986528/robo-aspirador-de-po-inteligente-s40-xiaomi-mapeamento-lds", "verificado": true}, {"disponivel": false, "loja": "Fast Shop", "obs": "XM878BRA indisponível", "parcelas": null, "preco": null, "preco_pix": null, "url": "https://site.fastshop.com.br/aspirador-de-po-robo-inteligente-s40-xiaomi-com-mapeamento-e-controle-por-app---xm878bra-xaxm878brabco_prd/p", "verificado": true}], "ordem": 2, "preco_alvo": 1000, "resumo": "3 em 1 com 10.000 Pa e laser LDS; base só carrega (sem autoesvaziamento).", "specs": ["Sucção de até 10.000 Pa, 4 modos", "Navegação a laser LDS, app Xiaomi Home", "Varre, aspira e passa pano (3 níveis de água)", "Bateria 5.200 mAh, até 180 min", "Reservatório 520 ml (pó) e 270 ml (água), filtro HEPA", "Escova em V antiemaranhamento", "Base de carregamento 70 W, bivolt · modelo BR XM878BRA"], "id": "xiaomi-s40"}], "meta": {"ultima_atualizacao": "2026-11-21T13:58:00-03:00", "alertas": [{"texto": "Xiaomi S40: Fast Shop segue indisponível", "tipo": "aviso"}]}, "lojas": {"Amazon": {"ra_nota": 8.1, "ra_selo": "Ótimo", "ra_periodo": "6 meses", "respondidas_pct": 87.1, "solucao_pct": 87.0, "voltariam_pct": 78.3, "ra_url": "https://www.reclameaqui.com.br/empresa/amazon/", "outras": "Resposta média de 19 dias; liderou as reclamações na Black Friday 2025", "cuidado": "Marketplace: prefira itens vendidos e entregues pela Amazon; vendedor terceiro tem outra reputação e outro prazo.", "verificado": false}, "Mercado Livre": {"ra_nota": 7.6, "ra_selo": "Bom", "ra_periodo": "6 meses", "respondidas_pct": 98.7, "solucao_pct": 75.6, "voltariam_pct": 74.2, "ra_url": "https://www.reclameaqui.com.br/empresa/mercado-livre/", "outras": "Prêmio Reclame Aqui 2026", "cuidado": "A nota é da plataforma: veja o termômetro do vendedor e prefira Loja Oficial ou envio Full.", "verificado": false}, "Magazine Luiza": {"ra_nota": 8.2, "ra_selo": "Ótimo", "ra_periodo": "6 meses", "respondidas_pct": null, "solucao_pct": 89.7, "voltariam_pct": null, "ra_url": "https://www.reclameaqui.com.br/empresa/magazine-luiza-loja-online/", "outras": "Resposta média de 11 dias", "cuidado": "Muitas reclamações são de lojistas parceiros: prefira itens vendidos e entregues pelo próprio Magalu.", "verificado": false}, "KaBuM!": {"ra_nota": 8.0, "ra_selo": "Ótimo", "ra_periodo": "6 meses", "respondidas_pct": 83.6, "solucao_pct": 89.3, "voltariam_pct": 72.9, "ra_url": "https://www.reclameaqui.com.br/empresa/kabum/", "outras": "Resposta média de 10 dias", "cuidado": "Também é marketplace; há queixas de validação de compra e cancelamentos em datas de pico.", "verificado": false}, "Casas Bahia": {"ra_nota": 5.8, "ra_selo": "Ruim", "ra_periodo": "6 meses", "respondidas_pct": 89.6, "solucao_pct": 67.9, "voltariam_pct": 39.3, "ra_url": "https://www.reclameaqui.com.br/empresa/casas-bahia-loja-online/", "outras": "Grupo em recuperação judicial; queixas no Procon-SP subiram 65% em 2026", "cuidado": "Muitas queixas de atraso e estorno: risco maior em compra de valor alto.", "verificado": false}, "Carrefour": {"ra_nota": 7.7, "ra_selo": "Bom", "ra_periodo": "6 meses", "respondidas_pct": 99.1, "solucao_pct": 87.3, "voltariam_pct": 63.8, "ra_url": "https://www.reclameaqui.com.br/empresa/carrefour-loja-online/", "outras": "Resposta média de 9 dias", "cuidado": "Mistura venda própria e lojistas parceiros: confira quem vende e entrega.", "verificado": false}, "Fast Shop": {"ra_nota": 8.0, "ra_selo": "Ótimo", "ra_periodo": "6 meses", "respondidas_pct": 96.5, "solucao_pct": 90.5, "voltariam_pct": 63.6, "ra_url": "https://www.reclameaqui.com.br/empresa/fast-shop/", "outras": "Tem lojas físicas", "cuidado": "Relatos de pedidos no Pix cancelados com estorno demorado: prefira cartão.", "verificado": false}, "Horizon Play": {"ra_nota": 8.4, "ra_selo": "Ótimo", "ra_periodo": "6 meses", "respondidas_pct": null, "solucao_pct": 97.1, "voltariam_pct": 79.4, "ra_url": "https://www.reclameaqui.com.br/empresa/horizon-play/", "outras": "Cerca de 4 anos de site; CNPJ 47.637.404/0001-54", "cuidado": "Loja nova, resposta lenta no RA e queixas de atraso: confira que está em horizonplay.com.br.", "verificado": false}, "Loja DJI oficial": {"ra_nota": 5.4, "ra_selo": "Ruim", "ra_periodo": "6 meses", "respondidas_pct": null, "solucao_pct": null, "voltariam_pct": null, "ra_url": "https://www.reclameaqui.com.br/empresa/dji/", "outras": "Nota da marca DJI no RA; a lojadji.com.br é operada pela Multilaser", "cuidado": "Queixas de garantia e troca; há golpes com lojas DJI falsas: compre só em lojadji.com.br.", "verificado": false}, "Detonashop": {"ra_nota": 8.5, "ra_selo": "Ótimo", "ra_periodo": "6 meses", "respondidas_pct": 100.0, "solucao_pct": 81.8, "voltariam_pct": 81.8, "ra_url": "https://www.reclameaqui.com.br/empresa/detona-shop/", "outras": "Só 15 reclamações; site com mais de 17 anos", "cuidado": "Poucas reclamações fazem a nota oscilar; há queixas de falta de nota fiscal e cancelamento.", "verificado": false}, "FlyPro": {"ra_nota": null, "ra_selo": "Sem índice", "ra_periodo": null, "respondidas_pct": null, "solucao_pct": null, "voltariam_pct": null, "ra_url": null, "outras": "Site com 13 anos; CNPJ 14.309.044/0001-02", "cuidado": "Sem histórico no Reclame Aqui: confira avaliações no Google e pague com cartão.", "verificado": false}, "Tecno Drones": {"ra_nota": null, "ra_selo": "Sem índice", "ra_periodo": null, "respondidas_pct": null, "solucao_pct": null, "voltariam_pct": null, "ra_url": null, "outras": "Site com quase 10 anos; CNPJ 10.680.997/0001-21", "cuidado": "Sem reputação medida no Reclame Aqui: prefira cartão de crédito.", "verificado": false}, "Drone Place": {"ra_nota": null, "ra_selo": "Sem índice", "ra_periodo": null, "respondidas_pct": null, "solucao_pct": null, "voltariam_pct": null, "ra_url": null, "outras": "Site com mais de 7 anos; não mostra CNPJ", "cuidado": "A loja menos verificável da lista: confirme o CNPJ e pague com proteção do cartão.", "verificado": false}}, "lojasAt": "2026-11-21T14:10:00-03:00", "viagens": [], "vmeta": null};
+(async () => {
+  render();
+  if (SAMPLE) { products = SAMPLE.produtos; meta = SAMPLE.meta; viagens = SAMPLE.viagens || []; vmeta = SAMPLE.vmeta || null; lojas = SAMPLE.lojas || {}; lojasAt = SAMPLE.lojasAt || null; loaded = true; render(); return; }
+  const timer = setTimeout(() => { if (!loaded) $("#view").innerHTML = `<div class="title"><div><h1>Lista de desejos</h1><p>Os preços não carregaram. Recarregue a página logado no Claude.</p></div></div>`; }, 10000);
+  db = await window.claude?.use?.("db");
+  if (!db) { clearTimeout(timer); $("#view").innerHTML = `<div class="title"><div><h1>Lista de desejos</h1><p>Abra esta página logado no Claude para ver seus preços.</p></div></div>`; return; }
+  db.collection("produtos").onSnapshot(s => { clearTimeout(timer); loaded = true; products = s.docs.map(d => ({id: d.id, ...d.data()})); render(); },
+    e => { clearTimeout(timer); $("#view").innerHTML = `<div class="title"><div><h1>Lista de desejos</h1><p>Não consegui carregar os preços (${esc(e.code)}). Recarregue a página.</p></div></div>`; });
+  db.doc("meta/status").onSnapshot(s => { meta = s.exists ? s.data() : null; if (loaded) render(); }, () => {});
+  db.collection("viagens").onSnapshot(s => { viagens = s.docs.map(d => ({id: d.id, ...d.data()})); if (loaded) render(); }, () => {});
+  db.doc("meta/viagens").onSnapshot(s => { vmeta = s.exists ? s.data() : null; if (loaded) render(); }, () => {});
+  db.doc("meta/lojas").onSnapshot(s => { lojas = s.exists ? (s.data().lojas || {}) : {}; lojasAt = s.exists ? s.data().atualizado : null; if (loaded) render(); }, () => {});
+})();
+</script>
+</body></html>

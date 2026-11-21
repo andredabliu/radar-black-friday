@@ -92,6 +92,7 @@ button{font:inherit;color:inherit}
 .row:hover .name{text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--control)}
 .thumb{width:72px;height:72px;border-radius:var(--radius-inner);background:var(--tile);display:grid;place-items:center;overflow:hidden;flex:none}
 .thumb img{width:100%;height:100%;object-fit:contain;padding:6px}
+.thumb.code{background:var(--raised);color:var(--text);font-weight:600;font-size:15px;letter-spacing:.02em}
 .thumb span{color:#555;font-weight:600;font-size:12px}
 .name{font-weight:500;font-size:15px;line-height:20px;margin:0}
 .sub{font-size:12px;color:var(--faint);margin-top:3px;line-height:16px}
@@ -128,6 +129,8 @@ button{font:inherit;color:inherit}
 .alerts{display:flex;flex-direction:column;gap:10px}
 .alert{display:flex;gap:10px;align-items:flex-start;font-size:14px;line-height:20px}
 .alert .pill{margin-top:0}
+.rp{margin-top:6px}
+.where .pill{margin-left:6px;vertical-align:1px}
 .alert-empty{color:var(--muted);font-size:13px}
 .ref{margin-top:16px;padding-top:14px;border-top:1px solid var(--raised);display:flex;flex-direction:column;gap:8px}
 .ref h3{font-size:13px;font-weight:500;color:var(--muted);margin:0}
@@ -159,7 +162,7 @@ th:first-child,td:first-child{padding-left:0} th:last-child,td:last-child{paddin
 td.n,th.n{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
 tr.best td.store b{color:var(--accent)}
 td.store b{font-weight:500}
-td.store .sub{max-width:46ch}
+td.store .sub{max-width:46ch;font-size:13px;line-height:18px}
 td .l{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap}
 .note{color:var(--muted);font-size:13px;line-height:20px;margin-top:14px}
 .state{padding:32px;color:var(--muted);text-align:center;border:1px dashed var(--control);border-radius:var(--radius-card)}
@@ -255,7 +258,9 @@ const stamp = iso => { if (!iso) return "—"; const d = new Date(iso); if (isNa
   const t = d.toLocaleTimeString("pt-BR", {hour:"2-digit", minute:"2-digit"});
   return same ? `hoje, ${t}` : `${d.toLocaleDateString("pt-BR", {day:"2-digit", month:"2-digit"})}, ${t}`; };
 
-let loaded = false, products = [], meta = null, db = null, chartPick = null;
+let viagens = [], vmeta = null;
+let loaded = false, products = [], meta = null, lojas = {}, lojasAt = null, db = null, chartPick = null;
+const PUBLIC_URL = "/*PUBLIC*/";
 
 /* ---------- dados ---------- */
 const eff = o => { const p = [o.preco_pix, o.preco].filter(v => typeof v === "number" && v > 0); return p.length ? Math.min(...p) : null; };
@@ -278,6 +283,19 @@ function goalCell(p, b) {
   if (gap != null && gap <= 0) return `<div class="goal"><span class="pill pos">No alvo</span></div><div class="sub num">alvo ${brl0(p.preco_alvo)}</div>`;
   return `<div class="goal num">${brl0(p.preco_alvo)}</div><div class="sub num">${gap == null ? "sem preço hoje" : "faltam " + brl(gap)}</div>`;
 }
+
+/* ---------- reputação da loja (Reclame Aqui) ---------- */
+function rep(loja) {
+  if (!loja) return null; const keys = Object.keys(lojas).sort((a, b) => b.length - a.length);
+  const k = keys.find(k => loja === k || loja.startsWith(k + " ") || loja.startsWith(k + "(") ); return k ? {nome: k, ...lojas[k]} : null;
+}
+function repKind(r) { const s = (r?.ra_selo || "").toLowerCase();
+  if (!r || r.ra_nota == null) return ""; if (/ra1000|ótimo|otimo|bom/.test(s)) return "pos"; if (/regular/.test(s)) return "warn"; if (/ruim|não recomendada|nao recomendada/.test(s)) return "neg"; return ""; }
+function repPill(loja, short = false) { const r = rep(loja);
+  if (!r) return `<span class="pill" title="Sem avaliação levantada">RA —</span>`;
+  if (r.ra_nota == null) return `<span class="pill" title="${esc(r.cuidado || "")}">RA ${esc(r.ra_selo || "sem índice")}</span>`;
+  const n = r.ra_nota.toLocaleString("pt-BR", {minimumFractionDigits: 1, maximumFractionDigits: 1});
+  return `<span class="pill ${repKind(r)}" title="Reclame Aqui: ${esc(r.ra_selo || "")} ${n}${r.ra_periodo ? " (" + esc(r.ra_periodo) + ")" : ""}">RA ${n}${short ? "" : " · " + esc(r.ra_selo || "")}</span>`; }
 
 /* ---------- a régua: todas as lojas num eixo, o alvo marcado ---------- */
 function ruler(p, {h = 44, labels = true} = {}) {
@@ -323,13 +341,21 @@ function drawHistory(el, p) {
 
 /* ---------- navegação ---------- */
 function route() { const id = (location.hash || "").replace(/^#p-/, ""); return location.hash.startsWith("#p-") ? id : null; }
+const onStores = () => location.hash === "#lojas";
+const onTrips = () => location.hash === "#viagens";
+const tripId = () => location.hash.startsWith("#v-") ? location.hash.slice(3) : null;
 function renderNav() {
   const cur = route();
   const sorted = [...products].sort((a, b) => (a.ordem ?? 99) - (b.ordem ?? 99));
-  $("#nav").innerHTML = `<a href="#" ${cur ? "" : 'aria-current="page"'}><span class="l">Lista de desejos</span><span class="r num">${products.length}</span></a>
+  $("#nav").innerHTML = `<a href="#" ${cur || onStores() || onTrips() || tripId() ? "" : 'aria-current="page"'}><span class="l">Lista de desejos</span><span class="r num">${products.length}</span></a>
+    <a href="#viagens" ${onTrips() || tripId() ? 'aria-current="page"' : ""}><span class="l">Viagens · set/2027</span><span class="r num">${viagens.length || ""}</span></a>
+    <a href="#lojas" ${onStores() ? 'aria-current="page"' : ""}><span class="l">Lojas e reputação</span><span class="r num">${Object.keys(lojas).length || ""}</span></a>
     <div class="group">Produtos</div>` + sorted.map(p => { const b = best(p);
-      return `<a href="#p-${esc(p.id)}" ${cur === p.id ? 'aria-current="page"' : ""}><span class="l">${esc(p.curto || p.nome)}</span><span class="r num">${b ? brl0(b.v) : "—"}</span></a>`; }).join("");
-  $("#foot").innerHTML = (REPO.startsWith("https://") ? `<a href="${esc(REPO)}" target="_blank" rel="noopener noreferrer"><span class="l">Histórico no GitHub</span><span class="r">↗</span></a>` : "");
+      return `<a href="#p-${esc(p.id)}" ${cur === p.id ? 'aria-current="page"' : ""}><span class="l">${esc(p.curto || p.nome)}</span><span class="r num">${b ? brl0(b.v) : "—"}</span></a>`; }).join("")
+    + (viagens.length ? `<div class="group">Destinos · 3 pessoas</div>` + [...viagens].sort((a, b) => (a.ordem ?? 99) - (b.ordem ?? 99)).map(v => { const b = vbest(v);
+      return `<a href="#v-${esc(v.id)}" ${tripId() === v.id ? 'aria-current="page"' : ""}><span class="l">${esc(v.curto || v.destino)}</span><span class="r num">${b ? brl0(b.total) : "—"}</span></a>`; }).join("") : "");
+  $("#foot").innerHTML = (SAMPLE ? `<a href="https://claude.ai/artifact/Ne3kz5uEwCoLWENHSqoaMf" target="_blank" rel="noopener noreferrer"><span class="l">Editar alvos no Claude</span><span class="r">↗</span></a>` : (PUBLIC_URL.startsWith("https://") ? `<a href="${esc(PUBLIC_URL)}" target="_blank" rel="noopener noreferrer"><span class="l">Versão pública</span><span class="r">↗</span></a>` : ""))
+    + (REPO.startsWith("https://") ? `<a href="${esc(REPO)}" target="_blank" rel="noopener noreferrer"><span class="l">Histórico no GitHub</span><span class="r">↗</span></a>` : "");
 }
 
 /* ---------- visão geral ---------- */
@@ -351,7 +377,7 @@ function overview() {
   const rows = list.map((p, i) => { const b = bests[i]; const n = (p.ofertas || []).length;
     return `<div class="row" data-go="${esc(p.id)}" role="link" tabindex="0" aria-label="Abrir ${esc(p.nome)}">
       <div class="c-thumb"><div class="thumb">${p.imagem ? `<img src="${esc(p.imagem)}" alt="" loading="lazy">` : `<span>${esc(p.marca || "")}</span>`}</div></div>
-      <div class="c-info"><p class="name">${esc(p.nome)}</p><div class="sub">${b ? `Melhor em ${esc(b.o.loja)}${b.o.preco_pix && b.v === b.o.preco_pix ? " no Pix" : ""} · ${n} lojas` : `${n} lojas · sem preço confirmado`}</div></div>
+      <div class="c-info"><p class="name">${esc(p.nome)}</p><div class="sub">${b ? `Melhor em ${esc(b.o.loja)}${b.o.preco_pix && b.v === b.o.preco_pix ? " no Pix" : ""} · ${n} lojas` : `${n} lojas · sem preço confirmado`}</div>${b ? `<div class="rp">${repPill(b.o.loja)}</div>` : ""}</div>
       <div class="c-ruler">${ruler(p)}</div>
       <div class="c-price n"><div class="price num">${b ? brl(b.v) : "—"}</div>${chgLine(p)}</div>
       <div class="c-goal n">${goalCell(p, b)}</div>
@@ -396,6 +422,101 @@ function alerts() {
   return out;
 }
 
+/* ---------- viagens ---------- */
+const JAN = j => vmeta?.janelas?.[j] ? `${day(vmeta.janelas[j].ida)} a ${day(vmeta.janelas[j].volta)}` : j;
+const rTotal = r => typeof r.total === "number" && r.total > 0 ? r.total : null;
+function vbest(v) { let b = null; for (const r of v.rotas || []) { const t = rTotal(r); if (t != null && r.erro == null && (!b || t < b.total)) b = {...r, total: t}; } return b; }
+const vhist = v => (v.historico || []).filter(h => typeof h.menor === "number").sort((a, b) => a.data < b.data ? -1 : 1);
+const vAsP = v => ({ preco_alvo: v.preco_alvo, ofertas: (v.rotas || []).filter(r => rTotal(r) != null).map(r => ({loja: `${r.origem} · ${JAN(r.janela)} · ${r.fonte || ""}`, preco: rTotal(r), verificado: true})) });
+const INS = {low: ["pos", "preço baixo"], typical: ["", "preço normal"], high: ["neg", "preço alto"]};
+function insightPill(r) { const k = (r?.insight || "").toLowerCase(); const m = k.includes("low") ? INS.low : k.includes("high") ? INS.high : k.includes("typical") ? INS.typical : null;
+  return m ? `<span class="pill ${m[0]}" title="Avaliação do Google Flights${r.faixa ? ": normalmente " + esc(r.faixa) : ""}">${m[1]}</span>` : ""; }
+function vchg(v) { const h = vhist(v); if (h.length < 2) return `<div class="chg">1ª checagem</div>`; const c = h.at(-1).menor - h.at(-2).menor;
+  return c === 0 ? `<div class="chg">igual a ontem</div>` : `<div class="chg ${c < 0 ? "good" : "bad"}">${signed(c)} vs ontem</div>`; }
+function tripsView() {
+  const list = [...viagens].sort((a, b) => (a.ordem ?? 99) - (b.ordem ?? 99));
+  const withB = list.map(v => ({v, b: vbest(v)})).filter(x => x.b);
+  const cheap = [...withB].sort((a, b) => a.b.total - b.b.total)[0];
+  const hits = withB.filter(x => typeof x.v.preco_alvo === "number" && x.b.total <= x.v.preco_alvo);
+  const rows = list.map(v => { const b = vbest(v); const n = (v.rotas || []).filter(r => rTotal(r) != null).length; const pv = vAsP(v);
+    return `<div class="row" data-trip="${esc(v.id)}" role="link" tabindex="0" aria-label="Abrir ${esc(v.destino)}">
+      <div class="c-thumb"><div class="thumb code">${esc((v.aeroportos || "").split(/[ ,/]/)[0])}</div></div>
+      <div class="c-info"><p class="name">${esc(v.destino)}</p><div class="sub">${esc(v.pais || "")}${b ? ` · melhor saindo de ${esc(b.origem)}, ${JAN(b.janela)}` : ""} · ${n} cotações</div>${b ? `<div class="rp">${insightPill(b)}</div>` : ""}</div>
+      <div class="c-ruler">${ruler(pv)}</div>
+      <div class="c-price n"><div class="price num">${b ? brl(b.total) : "—"}</div>${vchg(v)}</div>
+      <div class="c-goal n">${typeof v.preco_alvo === "number" ? (b && b.total <= v.preco_alvo ? `<div class="goal"><span class="pill pos">No alvo</span></div><div class="sub num">alvo ${brl0(v.preco_alvo)}</div>` : `<div class="goal num">${brl0(v.preco_alvo)}</div><div class="sub num">${b ? "faltam " + brl(b.total - v.preco_alvo) : ""}</div>`) : `<div class="goal">—</div><div class="sub">sem alvo</div>`}</div>
+      <div class="act">${b && safe(b.link) ? `<a class="ghost" href="${esc(b.link)}" target="_blank" rel="noopener noreferrer" data-stop>Ver voo ↗</a>` : ""}</div></div>`; }).join("");
+  const minas = list.find(v => (v.cidades || []).length);
+  $("#view").innerHTML = `
+    <div class="title"><div><h1>Viagens em setembro de 2027</h1><p>${cheap ? `O destino mais barato hoje é <b>${esc(cheap.v.destino)}</b>: <b class="num">${brl(cheap.b.total)}</b> para os três, ida e volta, saindo de ${esc(cheap.b.origem)} (${JAN(cheap.b.janela)}).` : "Carregando cotações…"}${hits.length ? ` <b>${esc(hits.map(x => x.v.destino).join(", "))}</b> já ${hits.length > 1 ? "estão" : "está"} no seu alvo.` : ""}</p></div>
+      <span class="stamp">Checado ${stamp(vmeta?.atualizado)} · Google Flights, em reais</span></div>
+    <section class="card kpis" aria-label="Resumo das viagens">
+      <div><div class="k">Mais barata, 3 pessoas</div><div class="v lead num">${cheap ? brl0(cheap.b.total) : "—"}</div><div class="s">${cheap ? esc(cheap.v.destino) : ""}</div></div>
+      <div><div class="k">Por pessoa</div><div class="v num">${cheap ? brl0(cheap.b.total / 3) : "—"}</div><div class="s">criança de 3 anos paga assento</div></div>
+      <div><div class="k">Datas cotadas</div><div class="v num" style="font-size:18px;line-height:30px">${JAN("A")} · ${JAN("B")}</div><div class="s">7 noites, ida e volta no sábado</div></div>
+      <div><div class="k">Saindo de</div><div class="v">FLN · NVT</div><div class="s">Florianópolis e Navegantes</div></div>
+    </section>
+    <section class="card wl" aria-label="Destinos">
+      <div class="wl-head"><span></span><span>Destino</span><span class="c-ruler">Todas as cotações</span><span class="n">Menor total</span><span class="n">Seu alvo</span><span></span></div>
+      ${rows || `<div class="state">Nenhum destino cotado ainda.</div>`}
+    </section>
+    ${minas ? `<section class="card"><div class="card-h"><h2>Minas Gerais: onde ir chegando em ${esc(minas.aeroportos)}</h2><span class="meta">setembro é seca e céu aberto</span></div>
+      <div class="tbl-wrap"><table><thead><tr><th>Cidade</th><th>Do aeroporto, de carro</th><th>Por que ir com criança</th></tr></thead><tbody>${minas.cidades.map(c => `<tr><td class="store"><b>${esc(c.cidade)}</b></td><td class="num" style="white-space:nowrap">${esc(c.carro || "")}</td><td>${esc(c.porque || "")}</td></tr>`).join("")}</tbody></table></div></section>` : ""}`;
+}
+function tripView(v) {
+  const b = vbest(v); const h = vhist(v);
+  const rows = [...(v.rotas || [])].sort((x, y) => (rTotal(x) ?? 1e12) - (rTotal(y) ?? 1e12)).map(r => { const t = rTotal(r);
+    return `<tr class="${b && t === b.total && r.origem === b.origem && r.janela === b.janela ? "best" : ""}">
+      <td class="store"><span class="l"><b>${esc(r.origem)} → ${esc(r.destino_aero || (v.aeroportos || "").split(/[ ,/]/)[0])}</b><span class="pill">${esc(r.fonte || "")}</span>${insightPill(r)}</span>
+        <div class="sub">${JAN(r.janela)} · ${esc([r.cia, r.saida && r.chegada ? `${r.saida}–${r.chegada}` : "", r.duracao, r.paradas].filter(Boolean).join(" · "))}${r.tipo ? " · " + esc(r.tipo) : ""}</div></td>
+      <td class="n">${t != null ? brl(t) : `<span class="chg">${esc(r.erro || "sem preço")}</span>`}</td><td class="n">${t != null ? brl(t / 3) : "—"}</td>
+      <td class="n">${safe(r.link) ? `<a class="ghost" href="${esc(r.link)}" target="_blank" rel="noopener noreferrer">Abrir ↗</a>` : ""}</td></tr>`; }).join("");
+  const gap = b && typeof v.preco_alvo === "number" ? b.total - v.preco_alvo : null;
+  $("#view").innerHTML = `
+    <div class="title"><div><a class="back" href="#viagens">← Viagens</a><h1>${esc(v.destino)}${v.pais ? `, ${esc(v.pais)}` : ""}</h1><p>${esc(v.setembro || "")}</p></div>
+      ${b && safe(b.link) ? `<a class="primary" href="${esc(b.link)}" target="_blank" rel="noopener noreferrer">Ver voo mais barato ↗</a>` : ""}</div>
+    <div class="pv">
+      <div class="stack">
+        <section class="card"><div class="answer"><div><div style="color:var(--muted);font-size:13px">Menor total hoje · 2 adultos + criança</div><div class="price big num">${b ? brl(b.total) : "—"}</div>
+          <div class="where">${b ? `saindo de <b>${esc(b.origem)}</b>, ${JAN(b.janela)} ${insightPill(b)}` : ""}</div>${vchg(v)}</div>
+          <div style="text-align:right"><div style="color:var(--muted);font-size:13px">Por pessoa</div><div class="price num">${b ? brl(b.total / 3) : "—"}</div></div></div>
+          <div style="margin-top:18px">${ruler(vAsP(v))}</div>
+          ${SAMPLE ? `<div class="target"><span class="msg">Alvo: <b class="num" style="color:var(--text)">${typeof v.preco_alvo === "number" ? brl0(v.preco_alvo) : "não definido"}</b>${gap != null ? (gap <= 0 ? " · já está no alvo" : ` · faltam ${brl(gap)}`) : ""}</span></div>` :
+          `<div class="target"><label for="alvo">Seu alvo para os 3</label><input id="alvo" inputmode="decimal" autocomplete="off" value="${typeof v.preco_alvo === "number" ? v.preco_alvo.toLocaleString("pt-BR") : ""}" placeholder="ex. 7.000" aria-describedby="alvo-msg"><button class="ghost" id="save" type="button">Salvar</button><span class="msg ${gap != null && gap <= 0 ? "good" : ""}" id="alvo-msg">${gap == null ? "Avisamos quando chegar nesse valor." : gap <= 0 ? "Já está no alvo." : `Faltam ${brl(gap)} para o alvo.`}</span></div>`}
+        </section>
+        <section class="card"><div class="card-h"><h2>Com criança de 3 anos</h2></div><p class="note" style="margin:0;color:var(--text)">${esc(v.crianca || "")}</p>
+          ${(v.cidades || []).length ? `<ul class="specs" style="margin-top:14px">${v.cidades.map(c => `<li><b>${esc(c.cidade)}</b> · ${esc(c.carro || "")}<div class="sub">${esc(c.porque || "")}</div></li>`).join("")}</ul>` : ""}</section>
+      </div>
+      <div class="stack">
+        <section class="card"><div class="card-h"><h2>Menor total por dia</h2><span class="meta">${h.length} ${h.length === 1 ? "checagem" : "checagens"}</span></div><div class="chart" id="chart"></div></section>
+        <section class="card"><div class="card-h"><h2>Cotações</h2><span class="meta">total para 3 pessoas, ida e volta</span></div>
+          <div class="tbl-wrap"><table><thead><tr><th>Trecho</th><th class="n">Total</th><th class="n">Por pessoa</th><th class="n"><span hidden>Link</span></th></tr></thead><tbody>${rows}</tbody></table></div></section>
+      </div>
+    </div>`;
+  drawHistory($("#chart"), {nome: v.destino, preco_alvo: v.preco_alvo, historico: h.map(x => ({data: x.data, menor: x.menor, loja: `${x.origem || ""} ${x.janela ? JAN(x.janela) : ""}`.trim()}))});
+  if (!SAMPLE) { const save = async () => { const raw = $("#alvo").value.trim().replace(/[R$\s]/g, "").replace(/\./g, "").replace(",", "."); const val = raw === "" ? null : Number(raw);
+      if (raw !== "" && (!isFinite(val) || val <= 0)) { $("#alvo-msg").textContent = "Digite um valor em reais, por exemplo 7.000."; return; }
+      if (!db) { toast("Abra a página logado no Claude para salvar."); return; }
+      try { await db.doc("viagens/" + v.id).update({preco_alvo: val}); toast(val == null ? "Alvo removido" : "Alvo salvo: " + brl0(val)); } catch (e) { toast("Não deu para salvar (" + (e.code || "erro") + ")."); } };
+    $("#save").addEventListener("click", save); $("#alvo").addEventListener("keydown", e => { if (e.key === "Enter") save(); }); }
+}
+
+/* ---------- lojas ---------- */
+function storesView() {
+  const used = new Set(); for (const p of products) for (const o of p.ofertas || []) { const r = rep(o.loja); used.add(r ? r.nome : o.loja); }
+  const names = [...used].sort((a, b) => ((lojas[b]?.ra_nota ?? -1) - (lojas[a]?.ra_nota ?? -1)) || a.localeCompare(b));
+  const pct = v => v == null ? "—" : v.toLocaleString("pt-BR", {maximumFractionDigits: 1}) + "%";
+  const rows = names.map(n => { const r = lojas[n] || {}; const cnt = products.reduce((s, p) => s + (p.ofertas || []).filter(o => { const x = rep(o.loja); return (x ? x.nome : o.loja) === n; }).length, 0);
+    return `<tr><td class="store"><span class="l"><b>${esc(n)}</b></span><div class="sub">${esc(r.cuidado || "")}${r.outras ? " · " + esc(r.outras) : ""}</div></td>
+      <td class="n">${r.ra_nota != null ? repPill(n, true) : "—"}</td><td>${esc(r.ra_selo || "—")}</td>
+      <td class="n">${pct(r.respondidas_pct)}</td><td class="n">${pct(r.solucao_pct)}</td><td class="n">${pct(r.voltariam_pct)}</td>
+      <td class="n num">${cnt}</td><td class="n">${safe(r.ra_url) ? `<a class="ghost" href="${esc(r.ra_url)}" target="_blank" rel="noopener noreferrer">Reclame Aqui ↗</a>` : ""}</td></tr>`; }).join("");
+  const bad = names.filter(n => ["warn", "neg"].includes(repKind(lojas[n] ? {nome: n, ...lojas[n]} : null)));
+  $("#view").innerHTML = `<div class="title"><div><h1>Lojas</h1><p>${bad.length ? `<b>${esc(bad.join(", "))}</b> ${bad.length > 1 ? "têm" : "tem"} reputação fraca no Reclame Aqui: prefira outra loja se o preço for parecido.` : "Todas as lojas da lista têm reputação boa ou ótima no Reclame Aqui."} Em marketplace a nota é da plataforma: confira também o vendedor do anúncio. As notas vêm de resumos públicos do Reclame Aqui; abra o link para ver a nota do dia.</p></div>
+    <span class="stamp">Reclame Aqui, últimos 6 meses · levantado ${stamp(lojasAt)}</span></div>
+    <section class="card"><div class="tbl-wrap"><table><thead><tr><th>Loja</th><th class="n">Nota</th><th>Selo</th><th class="n">Respondidas</th><th class="n">Resolvidas</th><th class="n">Voltariam</th><th class="n">Ofertas</th><th class="n"><span hidden>Link</span></th></tr></thead><tbody>${rows}</tbody></table></div></section>`;
+}
+
 /* ---------- produto ---------- */
 function productView(p) {
   const b = best(p);
@@ -406,7 +527,7 @@ function productView(p) {
   const rows = offers.map(o => { const prev = prevStore(p, o.loja), v = eff(o); const ch = prev != null && v != null ? v - prev : null;
     const tags = (o.verificado === false ? `<span class="pill warn">não confirmado</span>` : "") + (o.disponivel === false ? `<span class="pill neg">esgotado</span>` : "");
     return `<tr class="${b && o === b.o ? "best" : ""}">
-      <td class="store"><span class="l"><b>${esc(o.loja)}</b>${tags}</span><div class="sub">${esc([o.parcelas, o.obs].filter(Boolean).join(" · "))}</div></td>
+      <td class="store"><span class="l"><b>${esc(o.loja)}</b>${repPill(o.loja, true)}${tags}</span><div class="sub">${esc([o.parcelas, o.obs].filter(Boolean).join(" · "))}</div></td>
       <td class="n">${brl(o.preco)}</td><td class="n">${o.preco_pix ? brl(o.preco_pix) : "—"}</td>
       <td class="n">${ch == null ? `<span class="chg">—</span>` : ch === 0 ? `<span class="chg">igual</span>` : `<span class="chg ${ch < 0 ? "good" : "bad"}">${signed(ch)}</span>`}</td>
       <td class="n">${safe(o.url) ? `<a class="ghost" href="${esc(o.url)}" target="_blank" rel="noopener noreferrer">Abrir ↗</a>` : ""}</td></tr>`; }).join("");
@@ -421,12 +542,12 @@ function productView(p) {
       <div class="stack">
         <section class="card">
           <div class="answer"><div><div class="k" style="color:var(--muted);font-size:13px">Menor preço hoje</div><div class="price big num">${b ? brl(b.v) : "—"}</div>
-            <div class="where">${b ? `em <b>${esc(b.o.loja)}</b>${b.o.preco_pix && b.v === b.o.preco_pix ? " no Pix" : ""}` : "nenhuma loja com preço confirmado"}</div>${chgLine(p)}</div>
+            <div class="where">${b ? `em <b>${esc(b.o.loja)}</b>${b.o.preco_pix && b.v === b.o.preco_pix ? " no Pix" : ""} ${repPill(b.o.loja)}` : "nenhuma loja com preço confirmado"}</div>${chgLine(p)}</div>
             <div style="text-align:right"><div class="k" style="color:var(--muted);font-size:13px">Menor já visto</div><div class="price num">${brl(low)}</div><div class="sub">desde ${day(h[0]?.data)}</div></div></div>
           <div style="margin-top:18px">${ruler(p, {h: 44})}</div>
-          <div class="target"><label for="alvo">Seu preço-alvo</label><input id="alvo" inputmode="decimal" autocomplete="off" value="${hasGoal(p) ? p.preco_alvo.toLocaleString("pt-BR") : ""}" placeholder="ex. 2.300" aria-describedby="alvo-msg">
+          ${SAMPLE ? `<div class="target"><span class="msg">Alvo: <b class="num" style="color:var(--text)">${hasGoal(p) ? brl0(p.preco_alvo) : "não definido"}</b>${gap != null ? (gap <= 0 ? " · já está no alvo" : ` · faltam ${brl(gap)}`) : ""}</span></div>` : `<div class="target"><label for="alvo">Seu preço-alvo</label><input id="alvo" inputmode="decimal" autocomplete="off" value="${hasGoal(p) ? p.preco_alvo.toLocaleString("pt-BR") : ""}" placeholder="ex. 2.300" aria-describedby="alvo-msg">
             <button class="ghost" id="save" type="button">Salvar</button>
-            <span class="msg ${gap != null && gap <= 0 ? "good" : ""}" id="alvo-msg">${gap == null ? "Avisamos quando alguma loja chegar nesse valor." : gap <= 0 ? "Já está no alvo." : `Faltam ${brl(gap)} para o alvo.`}</span></div>
+            <span class="msg ${gap != null && gap <= 0 ? "good" : ""}" id="alvo-msg">${gap == null ? "Avisamos quando alguma loja chegar nesse valor." : gap <= 0 ? "Já está no alvo." : `Faltam ${brl(gap)} para o alvo.`}</span></div>`}
         </section>
         <section class="card"><div class="card-h"><h2>Menor preço por dia</h2><span class="meta">${h.length} ${h.length === 1 ? "checagem" : "checagens"}</span></div><div class="chart" id="chart"></div></section>
         <section class="card"><div class="card-h"><h2>Preço em cada loja</h2><span class="meta">Pix quando a loja informa · variação vs a checagem anterior</span></div>
@@ -434,8 +555,8 @@ function productView(p) {
       </div>
     </div>`;
   drawHistory($("#chart"), p);
-  $("#save").addEventListener("click", () => saveGoal(p));
-  $("#alvo").addEventListener("keydown", e => { if (e.key === "Enter") saveGoal(p); });
+  if (!SAMPLE) { $("#save").addEventListener("click", () => saveGoal(p));
+  $("#alvo").addEventListener("keydown", e => { if (e.key === "Enter") saveGoal(p); }); }
 }
 
 async function saveGoal(p) {
@@ -455,17 +576,22 @@ function render() {
   if (!loaded) return;
   renderNav();
   const id = route(); const p = id && products.find(x => x.id === id);
-  $("#crumb").innerHTML = p ? `<a href="#">Lista de desejos</a><span class="sep">/</span><b>${esc(p.curto || p.nome)}</b>` : `<b>Lista de desejos</b>`;
-  if (p) productView(p); else overview();
+  $("#crumb").innerHTML = p ? `<a href="#">Lista de desejos</a><span class="sep">/</span><b>${esc(p.curto || p.nome)}</b>` : onStores() ? `<b>Lojas e reputação</b>` : `<b>Lista de desejos</b>`;
+  const tv = tripId() && viagens.find(x => x.id === tripId());
+  if (tv) $("#crumb").innerHTML = `<a href="#viagens">Viagens</a><span class="sep">/</span><b>${esc(tv.curto || tv.destino)}</b>`;
+  else if (onTrips()) $("#crumb").innerHTML = `<b>Viagens</b>`;
+  if (p) productView(p); else if (tv) tripView(tv); else if (onTrips()) tripsView(); else if (onStores()) storesView(); else overview();
 }
 
 document.addEventListener("click", e => {
   if (e.target.closest("[data-stop]")) return;
   const pk = e.target.closest("[data-pick]"); if (pk) { chartPick = pk.dataset.pick; overview(); return; }
   const r = e.target.closest("[data-go]"); if (r) { location.hash = "p-" + r.dataset.go; return; }
+  const tr = e.target.closest("[data-trip]"); if (tr) { location.hash = "v-" + tr.dataset.trip; return; }
   if (e.target.closest(".side a")) closeMenu();
 });
-document.addEventListener("keydown", e => { const r = e.target.closest?.("[data-go]"); if (r && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); location.hash = "p-" + r.dataset.go; } if (e.key === "Escape") closeMenu(); });
+document.addEventListener("keydown", e => { const r = e.target.closest?.("[data-go]"); if (r && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); location.hash = "p-" + r.dataset.go; }
+  const tr = e.target.closest?.("[data-trip]"); if (tr && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); location.hash = "v-" + tr.dataset.trip; } if (e.key === "Escape") closeMenu(); });
 addEventListener("hashchange", () => { render(); scrollTo(0, 0); });
 const openMenu = () => { $("#side").classList.add("open"); $("#menu").setAttribute("aria-expanded", "true"); };
 const closeMenu = () => { $("#side").classList.remove("open"); $("#menu").setAttribute("aria-expanded", "false"); };
@@ -475,12 +601,15 @@ let rz; addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(() 
 const SAMPLE = /*SAMPLE*/null;
 (async () => {
   render();
-  if (SAMPLE) { products = SAMPLE.produtos; meta = SAMPLE.meta; loaded = true; render(); return; }
+  if (SAMPLE) { products = SAMPLE.produtos; meta = SAMPLE.meta; viagens = SAMPLE.viagens || []; vmeta = SAMPLE.vmeta || null; lojas = SAMPLE.lojas || {}; lojasAt = SAMPLE.lojasAt || null; loaded = true; render(); return; }
   const timer = setTimeout(() => { if (!loaded) $("#view").innerHTML = `<div class="title"><div><h1>Lista de desejos</h1><p>Os preços não carregaram. Recarregue a página logado no Claude.</p></div></div>`; }, 10000);
   db = await window.claude?.use?.("db");
   if (!db) { clearTimeout(timer); $("#view").innerHTML = `<div class="title"><div><h1>Lista de desejos</h1><p>Abra esta página logado no Claude para ver seus preços.</p></div></div>`; return; }
   db.collection("produtos").onSnapshot(s => { clearTimeout(timer); loaded = true; products = s.docs.map(d => ({id: d.id, ...d.data()})); render(); },
     e => { clearTimeout(timer); $("#view").innerHTML = `<div class="title"><div><h1>Lista de desejos</h1><p>Não consegui carregar os preços (${esc(e.code)}). Recarregue a página.</p></div></div>`; });
   db.doc("meta/status").onSnapshot(s => { meta = s.exists ? s.data() : null; if (loaded) render(); }, () => {});
+  db.collection("viagens").onSnapshot(s => { viagens = s.docs.map(d => ({id: d.id, ...d.data()})); if (loaded) render(); }, () => {});
+  db.doc("meta/viagens").onSnapshot(s => { vmeta = s.exists ? s.data() : null; if (loaded) render(); }, () => {});
+  db.doc("meta/lojas").onSnapshot(s => { lojas = s.exists ? (s.data().lojas || {}) : {}; lojasAt = s.exists ? s.data().atualizado : null; if (loaded) render(); }, () => {});
 })();
 </script>

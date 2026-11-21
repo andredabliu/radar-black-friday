@@ -1,0 +1,162 @@
+{
+  "atualizado": "2026-11-21T14:10:00-03:00",
+  "fonte": "Reclame Aqui (resumos públicos, últimos 6 meses) e SiteConfiável",
+  "lojas": {
+    "Amazon": {
+      "ra_nota": 8.1,
+      "ra_selo": "Ótimo",
+      "ra_periodo": "6 meses",
+      "respondidas_pct": 87.1,
+      "solucao_pct": 87.0,
+      "voltariam_pct": 78.3,
+      "ra_url": "https://www.reclameaqui.com.br/empresa/amazon/",
+      "outras": "Resposta média de 19 dias; liderou as reclamações na Black Friday 2025",
+      "cuidado": "Marketplace: prefira itens vendidos e entregues pela Amazon; vendedor terceiro tem outra reputação e outro prazo.",
+      "verificado": false
+    },
+    "Mercado Livre": {
+      "ra_nota": 7.6,
+      "ra_selo": "Bom",
+      "ra_periodo": "6 meses",
+      "respondidas_pct": 98.7,
+      "solucao_pct": 75.6,
+      "voltariam_pct": 74.2,
+      "ra_url": "https://www.reclameaqui.com.br/empresa/mercado-livre/",
+      "outras": "Prêmio Reclame Aqui 2026",
+      "cuidado": "A nota é da plataforma: veja o termômetro do vendedor e prefira Loja Oficial ou envio Full.",
+      "verificado": false
+    },
+    "Magazine Luiza": {
+      "ra_nota": 8.2,
+      "ra_selo": "Ótimo",
+      "ra_periodo": "6 meses",
+      "respondidas_pct": null,
+      "solucao_pct": 89.7,
+      "voltariam_pct": null,
+      "ra_url": "https://www.reclameaqui.com.br/empresa/magazine-luiza-loja-online/",
+      "outras": "Resposta média de 11 dias",
+      "cuidado": "Muitas reclamações são de lojistas parceiros: prefira itens vendidos e entregues pelo próprio Magalu.",
+      "verificado": false
+    },
+    "KaBuM!": {
+      "ra_nota": 8.0,
+      "ra_selo": "Ótimo",
+      "ra_periodo": "6 meses",
+      "respondidas_pct": 83.6,
+      "solucao_pct": 89.3,
+      "voltariam_pct": 72.9,
+      "ra_url": "https://www.reclameaqui.com.br/empresa/kabum/",
+      "outras": "Resposta média de 10 dias",
+      "cuidado": "Também é marketplace; há queixas de validação de compra e cancelamentos em datas de pico.",
+      "verificado": false
+    },
+    "Casas Bahia": {
+      "ra_nota": 5.8,
+      "ra_selo": "Ruim",
+      "ra_periodo": "6 meses",
+      "respondidas_pct": 89.6,
+      "solucao_pct": 67.9,
+      "voltariam_pct": 39.3,
+      "ra_url": "https://www.reclameaqui.com.br/empresa/casas-bahia-loja-online/",
+      "outras": "Grupo em recuperação judicial; queixas no Procon-SP subiram 65% em 2026",
+      "cuidado": "Muitas queixas de atraso e estorno: risco maior em compra de valor alto.",
+      "verificado": false
+    },
+    "Carrefour": {
+      "ra_nota": 7.7,
+      "ra_selo": "Bom",
+      "ra_periodo": "6 meses",
+      "respondidas_pct": 99.1,
+      "solucao_pct": 87.3,
+      "voltariam_pct": 63.8,
+      "ra_url": "https://www.reclameaqui.com.br/empresa/carrefour-loja-online/",
+      "outras": "Resposta média de 9 dias",
+      "cuidado": "Mistura venda própria e lojistas parceiros: confira quem vende e entrega.",
+      "verificado": false
+    },
+    "Fast Shop": {
+      "ra_nota": 8.0,
+      "ra_selo": "Ótimo",
+      "ra_periodo": "6 meses",
+      "respondidas_pct": 96.5,
+      "solucao_pct": 90.5,
+      "voltariam_pct": 63.6,
+      "ra_url": "https://www.reclameaqui.com.br/empresa/fast-shop/",
+      "outras": "Tem lojas físicas",
+      "cuidado": "Relatos de pedidos no Pix cancelados com estorno demorado: prefira cartão.",
+      "verificado": false
+    },
+    "Horizon Play": {
+      "ra_nota": 8.4,
+      "ra_selo": "Ótimo",
+      "ra_periodo": "6 meses",
+      "respondidas_pct": null,
+      "solucao_pct": 97.1,
+      "voltariam_pct": 79.4,
+      "ra_url": "https://www.reclameaqui.com.br/empresa/horizon-play/",
+      "outras": "Cerca de 4 anos de site; CNPJ 47.637.404/0001-54",
+      "cuidado": "Loja nova, resposta lenta no RA e queixas de atraso: confira que está em horizonplay.com.br.",
+      "verificado": false
+    },
+    "Loja DJI oficial": {
+      "ra_nota": 5.4,
+      "ra_selo": "Ruim",
+      "ra_periodo": "6 meses",
+      "respondidas_pct": null,
+      "solucao_pct": null,
+      "voltariam_pct": null,
+      "ra_url": "https://www.reclameaqui.com.br/empresa/dji/",
+      "outras": "Nota da marca DJI no RA; a lojadji.com.br é operada pela Multilaser",
+      "cuidado": "Queixas de garantia e troca; há golpes com lojas DJI falsas: compre só em lojadji.com.br.",
+      "verificado": false
+    },
+    "Detonashop": {
+      "ra_nota": 8.5,
+      "ra_selo": "Ótimo",
+      "ra_periodo": "6 meses",
+      "respondidas_pct": 100.0,
+      "solucao_pct": 81.8,
+      "voltariam_pct": 81.8,
+      "ra_url": "https://www.reclameaqui.com.br/empresa/detona-shop/",
+      "outras": "Só 15 reclamações; site com mais de 17 anos",
+      "cuidado": "Poucas reclamações fazem a nota oscilar; há queixas de falta de nota fiscal e cancelamento.",
+      "verificado": false
+    },
+    "FlyPro": {
+      "ra_nota": null,
+      "ra_selo": "Sem índice",
+      "ra_periodo": null,
+      "respondidas_pct": null,
+      "solucao_pct": null,
+      "voltariam_pct": null,
+      "ra_url": null,
+      "outras": "Site com 13 anos; CNPJ 14.309.044/0001-02",
+      "cuidado": "Sem histórico no Reclame Aqui: confira avaliações no Google e pague com cartão.",
+      "verificado": false
+    },
+    "Tecno Drones": {
+      "ra_nota": null,
+      "ra_selo": "Sem índice",
+      "ra_periodo": null,
+      "respondidas_pct": null,
+      "solucao_pct": null,
+      "voltariam_pct": null,
+      "ra_url": null,
+      "outras": "Site com quase 10 anos; CNPJ 10.680.997/0001-21",
+      "cuidado": "Sem reputação medida no Reclame Aqui: prefira cartão de crédito.",
+      "verificado": false
+    },
+    "Drone Place": {
+      "ra_nota": null,
+      "ra_selo": "Sem índice",
+      "ra_periodo": null,
+      "respondidas_pct": null,
+      "solucao_pct": null,
+      "voltariam_pct": null,
+      "ra_url": null,
+      "outras": "Site com mais de 7 anos; não mostra CNPJ",
+      "cuidado": "A loja menos verificável da lista: confirme o CNPJ e pague com proteção do cartão.",
+      "verificado": false
+    }
+  }
+}
