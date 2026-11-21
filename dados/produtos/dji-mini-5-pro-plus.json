@@ -1,0 +1,84 @@
+{
+  "ordem": 5,
+  "nome": "DJI Mini 5 Pro Fly More Combo Plus com DJI RC 2",
+  "curto": "Mini 5 Pro · Plus",
+  "marca": "DJI",
+  "categoria": "Drone",
+  "imagem": "/_blob/74224b96509c6b8c6d587a323f8f590c",
+  "resumo": "O mesmo Mini 5 Pro, com 3 Baterias Plus de até 52 min, controle de tela RC 2 e hub (DJI068).",
+  "specs": [
+    "249,9 g, sem necessidade de registro pesado",
+    "Sensor de 1\" de 50 MP, f/1.8",
+    "4K/60 HDR, câmera lenta 4K/120, 10 bits",
+    "Até 52 min de voo com cada Bateria Plus (o drone passa de 250 g com ela)",
+    "Até 20 km de alcance",
+    "LiDAR frontal e visão omnidirecional",
+    "Combo: RC 2 com tela, 3 Baterias Plus, hub de carga e bolsa"
+  ],
+  "preco_alvo": null,
+  "nota": "Diferença para o Combo com RC 2 (DJI067): R$ 600 a mais na Loja DJI pelas baterias de 52 min. Com a Bateria Plus o drone passa de 250 g e precisa de cadastro na ANAC/SISANT.",
+  "ofertas": [
+    {
+      "loja": "Loja DJI oficial",
+      "url": "https://www.lojadji.com.br/drone-dji-mini-5-pro-fly-more-combo-plus-com-tela-br-dji068/p",
+      "preco": 11490.0,
+      "preco_pix": null,
+      "parcelas": "até 12x sem juros",
+      "obs": "DJI068 BR, Anatel · de R$ 13.590 (−15%)",
+      "verificado": true,
+      "disponivel": true
+    },
+    {
+      "loja": "Mercado Livre · Loja Oficial DJI",
+      "url": "https://www.mercadolivre.com.br/loja/dji",
+      "preco": 11490.0,
+      "preco_pix": null,
+      "parcelas": null,
+      "obs": "Repete o preço da Loja DJI (−15%); um selo de R$ 3.190 na vitrine é erro, ignore",
+      "verificado": false,
+      "disponivel": true
+    },
+    {
+      "loja": "Mercado Livre",
+      "url": "https://www.mercadolivre.com.br/drone-dji-mini-5-pro-4k-fly-more-combo-plus-c-tela--dji068/up/MLBU3421891121",
+      "preco": null,
+      "preco_pix": null,
+      "parcelas": null,
+      "obs": "Catálogo DJI068 com vendedores de R$ 8.599 a R$ 13.498; confira se é Plus, Anatel e nota fiscal",
+      "verificado": false,
+      "disponivel": true
+    },
+    {
+      "loja": "Magazine Luiza",
+      "url": "https://www.magazineluiza.com.br/busca/dji+drone+dji+mini+5+pro/",
+      "preco": 11722.05,
+      "preco_pix": null,
+      "parcelas": null,
+      "obs": "Marketplace, vendedor não identificado",
+      "verificado": false,
+      "disponivel": true
+    },
+    {
+      "loja": "FlyPro",
+      "url": "https://www.flypro.com.br/drone-dji-mini-5-pro-fly-more-combo-plus-com-tela-br-dji068",
+      "preco": 12990.0,
+      "preco_pix": null,
+      "parcelas": "12x R$ 1.082,50 sem juros",
+      "obs": "Anatel · R$ 12.340,50 à vista por depósito",
+      "verificado": true,
+      "disponivel": true
+    }
+  ],
+  "historico": [
+    {
+      "data": "2026-11-21",
+      "menor": 11490.0,
+      "loja": "Loja DJI oficial",
+      "precos": {
+        "Loja DJI oficial": 11490.0,
+        "FlyPro": 12990.0
+      }
+    }
+  ],
+  "atualizado": "2026-11-21T16:10:00-03:00"
+}
