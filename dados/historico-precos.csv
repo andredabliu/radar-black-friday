@@ -23,3 +23,9 @@ data,produto,loja,preco,preco_pix,verificado,disponivel,url
 2026-11-21,xiaomi-s40,Casas Bahia,,2789.11,true,true,https://www.casasbahia.com.br/aspirador-robo-xiaomi-s40-3-em-1-70w-filtro-hepa-controle-por-app-bivolt-branco/p/55071828
 2026-11-21,xiaomi-s40,KaBuM! · Xiaomi Oficial,2999.99,2969.99,true,true,https://www.kabum.com.br/produto/986528/robo-aspirador-de-po-inteligente-s40-xiaomi-mapeamento-lds
 2026-11-21,xiaomi-s40,Fast Shop,,,true,false,https://site.fastshop.com.br/aspirador-de-po-robo-inteligente-s40-xiaomi-com-mapeamento-e-controle-por-app---xm878bra-xaxm878brabco_prd/p
+2026-11-21,dji-mini-5-pro,Loja DJI oficial,10890.0,,true,true,https://www.lojadji.com.br/drone-dji-mini-5-pro-fly-more-combo-com-tela-br-dji067/p
+2026-11-21,dji-mini-5-pro,Mercado Livre,9930.0,,false,true,https://lista.mercadolivre.com.br/dji-mini-5-pro
+2026-11-21,dji-mini-5-pro,Mercado Livre · Loja Oficial DJI,10890.0,,false,true,https://www.mercadolivre.com.br/loja/dji
+2026-11-21,dji-mini-5-pro,Magazine Luiza,11999.99,9459.99,false,true,https://www.magazineluiza.com.br/busca/dji+drone+dji+mini+5+pro/
+2026-11-21,dji-mini-5-pro,FlyPro,12290.0,,true,true,https://www.flypro.com.br/drone-dji-mini-5-pro-fly-more-combo-com-tela-br-dji067
+2026-11-21,dji-mini-5-pro,Fast Shop,,13379.0,true,true,https://site.fastshop.com.br/drone-dji-mini-5-pro-fly-more-combo--com-tela--br---dji067-dvdji067cnz_prd/p
