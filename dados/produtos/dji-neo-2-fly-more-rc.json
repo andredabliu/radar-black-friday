@@ -1,0 +1,151 @@
+{
+  "atualizado": "2026-11-21T13:20:00-03:00",
+  "categoria": "Drone",
+  "historico": [
+    {
+      "data": "2026-11-21",
+      "loja": "Amazon (DJI071)",
+      "menor": 3229.9,
+      "precos": {
+        "Amazon (DJI071)": 3229.9,
+        "Amazon (combo RC-N3)": 3324.9,
+        "Fast Shop": 3923.01,
+        "Loja DJI oficial": 3990,
+        "Detonashop": 3999.14,
+        "KaBuM!": 4269.9,
+        "Tecno Drones": 4850,
+        "FlyPro": 4360.5,
+        "Drone Place": 4590
+      }
+    }
+  ],
+  "imagem": "/_blob/f27aaff3a773f7df5107f0fcbac057d7",
+  "marca": "DJI",
+  "nome": "DJI Neo 2 Fly More Combo com controle RC-N3",
+  "nota": "Confira o código DJI071 e o RC-N3 na caixa: a versão DJI070 é sem controle (Loja DJI R$ 2.990; Detonashop R$ 2.899,83 no Pix). Os anúncios da Amazon são de vendedor terceiro (LBAK) e não citam Anatel.",
+  "ofertas": [
+    {
+      "disponivel": true,
+      "loja": "Amazon (DJI071)",
+      "obs": "Vendedor LBAK · 10 em estoque · RC-N3 incluso",
+      "parcelas": "12x R$ 283,38 sem juros",
+      "preco": 3399.9,
+      "preco_pix": 3229.9,
+      "url": "https://www.amazon.com.br/DJI-Neo-More-Combo-tela/dp/B0G5S8KTFG",
+      "verificado": true
+    },
+    {
+      "disponivel": true,
+      "loja": "Amazon (combo RC-N3)",
+      "obs": "Vendedor LBAK · 4 em estoque · pode ser importado",
+      "parcelas": "12x R$ 291,75 sem juros",
+      "preco": 3499.9,
+      "preco_pix": 3324.9,
+      "url": "https://www.amazon.com.br/DJI-controle-transmiss%C3%A3o-transceptor-iniciantes/dp/B0FJ1STVP4",
+      "verificado": true
+    },
+    {
+      "disponivel": true,
+      "loja": "Fast Shop",
+      "obs": "Marketplace Loja Multi Oficial · Anatel · confirme o RC-N3",
+      "parcelas": null,
+      "preco": 4790,
+      "preco_pix": 3923.01,
+      "url": "https://site.fastshop.com.br/drone-dji-neo-2-fly-more-combo--sem-tela----dji071-189480/p",
+      "verificado": true
+    },
+    {
+      "disponivel": true,
+      "loja": "Loja DJI oficial",
+      "obs": "Oficial, Anatel · de R$ 4.790 · 10 em estoque",
+      "parcelas": "até 12x sem juros",
+      "preco": 3990,
+      "preco_pix": null,
+      "url": "https://www.lojadji.com.br/drone-dji-neo-2-fly-more-combo-sem-tela-dji071/p",
+      "verificado": true
+    },
+    {
+      "disponivel": true,
+      "loja": "Detonashop",
+      "obs": "Anatel · pronta entrega",
+      "parcelas": "12x R$ 370,29 sem juros",
+      "preco": 4443.49,
+      "preco_pix": 3999.14,
+      "url": "https://www.detonashop.com.br/drone-dji-neo-2-fly-more-combo-com-rc-n3-anatel.html",
+      "verificado": true
+    },
+    {
+      "disponivel": true,
+      "loja": "KaBuM!",
+      "obs": "Marketplace GIGANTEC",
+      "parcelas": "10x R$ 426,98 sem juros",
+      "preco": 4269.9,
+      "preco_pix": 4269.9,
+      "url": "https://www.kabum.com.br/produto/993104/drone-dji-neo-2-fly-more-kit-controle-remoto-sem-tela",
+      "verificado": true
+    },
+    {
+      "disponivel": true,
+      "loja": "Tecno Drones",
+      "obs": "Anatel · R$ 4.365 no boleto",
+      "parcelas": "12x R$ 404,16 sem juros",
+      "preco": 4850,
+      "preco_pix": null,
+      "url": "https://www.tecnodrones.com.br/drone-dji-neo-2-fly-more-combo-br-dji071",
+      "verificado": true
+    },
+    {
+      "disponivel": true,
+      "loja": "FlyPro",
+      "obs": "Anatel · valor menor no depósito",
+      "parcelas": "12x R$ 382,50 sem juros",
+      "preco": 4590,
+      "preco_pix": 4360.5,
+      "url": "https://www.flypro.com.br/drone-dji-neo-2-fly-more-combo-com-controle-br",
+      "verificado": true
+    },
+    {
+      "disponivel": true,
+      "loja": "Drone Place",
+      "obs": "Anatel",
+      "parcelas": "12x com juros",
+      "preco": 4831.58,
+      "preco_pix": 4590,
+      "url": "https://droneplace.net.br/produto/drone-dji-neo-2/",
+      "verificado": true
+    },
+    {
+      "disponivel": true,
+      "loja": "Magazine Luiza",
+      "obs": "Busca: anúncios de R$ 4.500 a R$ 6.000",
+      "parcelas": null,
+      "preco": 5399.9,
+      "preco_pix": null,
+      "url": "https://www.magazineluiza.com.br/busca/dji+neo+2+fly+more+combo+com+controle/",
+      "verificado": false
+    },
+    {
+      "disponivel": true,
+      "loja": "Mercado Livre",
+      "obs": "Vendedores de ~R$ 3.199 a R$ 4.590",
+      "parcelas": null,
+      "preco": null,
+      "preco_pix": null,
+      "url": "https://www.mercadolivre.com.br/drone-dji-neo-2-fly-more-combo-3-baterias-transceiver-dji071/up/MLBU3524704055",
+      "verificado": false
+    }
+  ],
+  "ordem": 3,
+  "preco_alvo": 3000,
+  "resumo": "Versão DJI071 (\"sem tela\"): vem com o controle RC-N3, 3 baterias e hub de carga.",
+  "specs": [
+    "151 g, categoria C0, protetores de hélice",
+    "Câmera 12 MP 1/2\", gimbal de 2 eixos",
+    "4K/60 fps, câmera lenta 4K/100 fps, vertical 2,7K",
+    "Até 19 min de voo por bateria",
+    "Até 10 km de transmissão com RC-N3 + transceptor",
+    "Obstáculos omnidirecional, ActiveTrack, gestos e voz",
+    "49 GB internos · combo: 3 baterias, hub, RC-N3, transceptor"
+  ],
+  "curto": "DJI Neo 2 + RC-N3"
+}

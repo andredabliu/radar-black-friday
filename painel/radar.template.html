@@ -1,0 +1,486 @@
+<title>Radar Black Friday</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* Style: true-black flat (deliberately single dark theme: it is the Black Friday).
+   Shell: ruled T-frame. Sidebar 220 + 1px rule; canvas gutter 29px each side.
+   Overview grid at 1440: canvas 1440-221-58 = 1161; lower row 2fr/1fr with one 14px gap: 765.3 + 14 + 381.7 = 1161. */
+:root{
+  color-scheme:dark;
+  --ground:#000000; --surface:#111111; --raised:#2a2a2a; --border:#1a1a1a; --rule:#1c1c1c; --control:#444444;
+  --text:#ffffff; --muted:#b4b4b4; --faint:#949494; --nav:#bbbbbb;
+  --accent:#ff6b2c;            /* a cor da etiqueta de preço: só em dados */
+  --positive:#3fc07a; --negative:#e5566f; --warning:#e5a93b;
+  --pill-positive-bg:#172a1d; --pill-positive-ink:#3fc07a;
+  --pill-negative-bg:#2c1a20; --pill-negative-ink:#e5566f;
+  --pill-warning-bg:#2b2414; --pill-warning-ink:#e5a93b;
+  --pill-neutral-bg:#222222; --pill-neutral-ink:#ffffff;
+  --chart-1:#ff6b2c; --chart-2:#e6e6e6; --chart-muted:#6b6b6b; --chart-track:#2a2a2a;
+  --grid:#2b2b2b; --axis-ink:#949494; --ink:#ffffff; --chart-span:.12;
+  --tile:#ffffff;              /* fundo das fotos de produto, que vêm em branco */
+  --radius-card:20px; --radius-inner:12px; --radius-control:999px;
+  --sidebar:220px; --gap:14px; --pad:22px; --gutter:29px; --control-height:36px;
+  --font:"Inter", system-ui, -apple-system, "Segoe UI", sans-serif;
+  --fs-title:20px; --fs-section:16px; --fs-kpi:24px; --fs-lead:32px; --fs-body:14px; --fs-small:12px;
+}
+*{box-sizing:border-box}
+html,body{background:var(--ground);color:var(--text)}
+body{font-family:var(--font);font-size:var(--fs-body);line-height:20px;-webkit-font-smoothing:antialiased}
+body::before{content:"";position:fixed;inset:0 0 auto;height:env(safe-area-inset-top,0px);z-index:10;background:var(--ground)}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit}
+.num{font-variant-numeric:tabular-nums}
+:focus-visible{outline:2px solid var(--text);outline-offset:2px;border-radius:6px}
+
+/* shell */
+.app{display:grid;grid-template-columns:var(--sidebar) 1fr;min-height:100vh}
+.side{border-right:1px solid var(--rule);padding:0 0 24px;display:flex;flex-direction:column;position:sticky;top:0;height:100vh;padding-left:env(safe-area-inset-left,0px)}
+.brand{height:64px;display:flex;align-items:center;gap:10px;padding:0 20px;border-bottom:1px solid var(--rule);font-weight:600;font-size:15px}
+.brand svg{flex:none}
+.nav{display:flex;flex-direction:column;padding:16px 10px 0;gap:0}
+.nav .group{font-size:12px;color:var(--faint);padding:22px 10px 8px}
+.nav a{display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:34px;padding:7px 10px;border-radius:8px;color:var(--nav);transition:color .15s}
+.nav a:hover{color:var(--text)}
+.nav a[aria-current="page"]{color:var(--text)}
+.nav a .r{font-size:12px;color:var(--faint);flex:none}
+.nav a .l{min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.side .foot{margin-top:auto;padding:0 10px;display:flex;flex-direction:column}
+.main{min-width:0;display:flex;flex-direction:column}
+.top{height:64px;border-bottom:1px solid var(--rule);display:flex;align-items:stretch;position:sticky;top:env(safe-area-inset-top,0px);background:var(--ground);z-index:5;padding-right:env(safe-area-inset-right,0px)}
+.crumb{flex:1;min-width:0;display:flex;align-items:center;gap:8px;padding:0 var(--gutter);color:var(--muted);white-space:nowrap;overflow:hidden}
+.crumb b{color:var(--text);font-weight:500;overflow:hidden;text-overflow:ellipsis}
+.crumb .sep{color:var(--control)}
+.bf{display:flex;align-items:center;gap:12px;padding:0 var(--gutter);border-left:1px solid var(--rule);white-space:nowrap}
+.bf .d{font-size:var(--fs-kpi);font-weight:500;line-height:1}
+.bf .t{font-size:12px;color:var(--muted);line-height:16px}
+.menu-btn{display:none}
+.bf .ts{display:none;font-size:12px;color:var(--muted)}
+.canvas{padding:28px var(--gutter) 56px;display:flex;flex-direction:column;gap:var(--gap)}
+
+/* title row */
+.title{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;flex-wrap:wrap;padding-bottom:10px}
+.title h1{font-size:var(--fs-title);font-weight:600;margin:0;line-height:28px}
+.title p{margin:4px 0 0;color:var(--muted);max-width:70ch}
+.title p b{color:var(--text);font-weight:500}
+.stamp{font-size:12px;color:var(--faint);white-space:nowrap}
+.back{color:var(--muted);font-size:13px;display:inline-flex;gap:6px;margin-bottom:6px}
+.back:hover{color:var(--text)}
+
+.card{background:var(--surface);border-radius:var(--radius-card);padding:var(--pad);min-width:0}
+.card-h{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:14px;flex-wrap:wrap}
+.card-h h2{font-size:var(--fs-section);font-weight:500;margin:0}
+.card-h .meta{font-size:12px;color:var(--faint)}
+
+/* KPI strip: one container split by rules */
+.kpis{display:grid;grid-template-columns:1.3fr 1fr 1fr 1fr;padding:0}
+.kpis > div{padding:20px var(--pad);border-left:1px solid var(--raised);min-width:0}
+.kpis > div:first-child{border-left:0}
+.kpis .k{font-size:13px;color:var(--muted)}
+.kpis .v{font-size:var(--fs-kpi);font-weight:500;margin-top:6px;line-height:30px}
+.kpis .v.lead{font-size:var(--fs-lead);line-height:38px}
+.kpis .v small{font-size:14px;color:var(--faint);font-weight:400}
+.kpis .s{font-size:12px;color:var(--faint);margin-top:4px}
+
+/* watchlist */
+.wl{padding:8px var(--pad)}
+.wl-head,.row{display:grid;grid-template-columns:72px minmax(0,1.6fr) minmax(170px,1.2fr) 120px 130px 128px;gap:18px;align-items:center}
+.wl-head{font-size:12px;color:var(--faint);padding:12px 0 10px;border-bottom:1px solid var(--raised)}
+.wl-head .n,.row .n{text-align:right}
+.row{padding:14px 0;border-bottom:1px solid var(--rule);cursor:pointer;position:relative}
+.row:last-child{border-bottom:0}
+.row:hover .name{text-decoration:underline;text-underline-offset:3px;text-decoration-color:var(--control)}
+.thumb{width:72px;height:72px;border-radius:var(--radius-inner);background:var(--tile);display:grid;place-items:center;overflow:hidden;flex:none}
+.thumb img{width:100%;height:100%;object-fit:contain;padding:6px}
+.thumb span{color:#555;font-weight:600;font-size:12px}
+.name{font-weight:500;font-size:15px;line-height:20px;margin:0}
+.sub{font-size:12px;color:var(--faint);margin-top:3px;line-height:16px}
+.price{font-size:18px;font-weight:500;line-height:24px}
+.price.big{font-size:36px;line-height:40px;letter-spacing:-.01em}
+.chg{font-size:12px;line-height:16px;margin-top:2px;color:var(--faint)}
+.chg.good{color:var(--positive)} .chg.bad{color:var(--negative)}
+.goal{font-size:14px}
+.goal .sub{margin-top:2px}
+.act{justify-self:end}
+.ghost{display:inline-flex;align-items:center;gap:6px;height:var(--control-height);padding:0 14px;border-radius:var(--radius-control);border:1px solid var(--control);font-size:13px;white-space:nowrap;transition:border-color .15s,background .15s}
+.ghost:hover{border-color:var(--muted)}
+.ghost:active{background:var(--raised)}
+.primary{display:inline-flex;align-items:center;gap:8px;height:var(--control-height);padding:0 18px;border-radius:var(--radius-control);background:var(--text);color:#000;font-weight:500;font-size:14px;white-space:nowrap;border:0;cursor:pointer;transition:opacity .15s}
+.primary:hover{opacity:.88}
+.primary:active{opacity:.75}
+.pill{display:inline-flex;align-items:center;height:20px;padding:0 8px;border-radius:999px;font-size:11px;font-weight:500;white-space:nowrap;flex:none;background:var(--pill-neutral-bg);color:var(--pill-neutral-ink)}
+.pill.pos{background:var(--pill-positive-bg);color:var(--pill-positive-ink)}
+.pill.warn{background:var(--pill-warning-bg);color:var(--pill-warning-ink)}
+.pill.neg{background:var(--pill-negative-bg);color:var(--pill-negative-ink)}
+
+/* signature: a régua de preços (todas as lojas num eixo, com o alvo) */
+.ruler{width:100%;height:44px;display:block;overflow:visible}
+.ruler text{font-family:var(--font);font-size:11px;fill:var(--faint);font-variant-numeric:tabular-nums}
+
+.lower{display:grid;grid-template-columns:2fr 1fr;gap:var(--gap);align-items:start}
+.seg{display:inline-flex;max-width:100%;overflow-x:auto;scrollbar-width:none;gap:4px;background:var(--ground);border-radius:999px;padding:3px}
+.seg button{border:0;background:transparent;color:var(--nav);height:30px;padding:0 12px;border-radius:999px;cursor:pointer;font-size:13px;white-space:nowrap}
+.seg button:hover{color:var(--text)}
+.seg button[aria-pressed="true"]{background:var(--raised);color:var(--text)}
+.chart{min-height:0}
+.chart-note{border:1px dashed var(--control);border-radius:12px;padding:18px;color:var(--muted);font-size:13px;line-height:20px}
+.chart-note b{color:var(--text);font-weight:500}
+.alerts{display:flex;flex-direction:column;gap:10px}
+.alert{display:flex;gap:10px;align-items:flex-start;font-size:14px;line-height:20px}
+.alert .pill{margin-top:0}
+.alert-empty{color:var(--muted);font-size:13px}
+.ref{margin-top:16px;padding-top:14px;border-top:1px solid var(--raised);display:flex;flex-direction:column;gap:8px}
+.ref h3{font-size:13px;font-weight:500;color:var(--muted);margin:0}
+.kv{display:flex;justify-content:space-between;gap:12px;font-size:13px}
+.kv span:first-child{color:var(--muted);min-width:0}
+
+/* product view */
+.pv{display:grid;grid-template-columns:minmax(0,5fr) minmax(0,7fr);gap:var(--gap);align-items:start}
+.photo{background:var(--tile);border-radius:var(--radius-card);aspect-ratio:1/1;display:grid;place-items:center;overflow:hidden;max-width:100%}
+.photo img{width:100%;height:100%;object-fit:contain;padding:28px}
+.specs{margin:0;padding:0;list-style:none;display:flex;flex-direction:column}
+.specs li{padding:9px 0;border-bottom:1px solid var(--rule);font-size:14px}
+.specs li:last-child{border-bottom:0}
+.stack{display:flex;flex-direction:column;gap:var(--gap);min-width:0}
+.answer{display:flex;flex-wrap:wrap;gap:16px 28px;align-items:flex-end;justify-content:space-between}
+.answer .where{color:var(--muted);margin-top:6px}
+.answer .where b{color:var(--text);font-weight:500}
+.target{display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:18px;padding-top:16px;border-top:1px solid var(--raised)}
+.target label{font-size:13px;color:var(--muted)}
+.target input{width:132px;height:var(--control-height);border-radius:var(--radius-control);border:1px solid var(--control);background:var(--ground);color:var(--text);padding:0 14px;font:inherit;font-variant-numeric:tabular-nums}
+.target input:focus-visible{outline:2px solid var(--text);outline-offset:1px}
+.target .msg{font-size:13px;color:var(--muted)}
+.target .msg.good{color:var(--positive)}
+.tbl-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{font-size:12px;font-weight:400;color:var(--faint);text-align:left;padding:0 10px 10px;white-space:nowrap}
+td{padding:12px 10px;border-top:1px solid var(--rule);vertical-align:top}
+th:first-child,td:first-child{padding-left:0} th:last-child,td:last-child{padding-right:0}
+td.n,th.n{text-align:right;white-space:nowrap;font-variant-numeric:tabular-nums}
+tr.best td.store b{color:var(--accent)}
+td.store b{font-weight:500}
+td.store .sub{max-width:46ch}
+td .l{display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap}
+.note{color:var(--muted);font-size:13px;line-height:20px;margin-top:14px}
+.state{padding:32px;color:var(--muted);text-align:center;border:1px dashed var(--control);border-radius:var(--radius-card)}
+.toast{position:fixed;left:50%;bottom:calc(20px + env(safe-area-inset-bottom,0px));transform:translateX(-50%) translateY(8px);background:var(--text);color:#000;border-radius:999px;padding:8px 16px;font-size:13px;opacity:0;transition:opacity .2s,transform .2s;pointer-events:none;z-index:20}
+.toast.on{opacity:1;transform:translateX(-50%)}
+.chart svg text{font-family:var(--font)}
+
+/* tablet */
+@media (max-width:1100px){
+  .wl-head,.row{grid-template-columns:64px minmax(0,1.5fr) 120px 130px 112px}
+  .wl-head .c-ruler,.row .c-ruler{display:none}
+  .thumb{width:64px;height:64px}
+  .lower{grid-template-columns:1fr}
+  .pv{grid-template-columns:1fr}
+  .photo{aspect-ratio:16/10}
+  .pv > .stack:first-child{order:2}
+}
+/* phone: o menu lateral vira uma folha */
+@media (max-width:860px){
+  .app{grid-template-columns:1fr}
+  .side{position:fixed;inset:0;z-index:30;background:var(--ground);height:auto;border-right:0;display:none;padding-top:env(safe-area-inset-top,0px)}
+  .side.open{display:flex}
+  .menu-btn{display:inline-flex;align-items:center;justify-content:center;width:44px;height:44px;margin-left:max(6px,env(safe-area-inset-left,0px));border:0;background:transparent;cursor:pointer;flex:none;align-self:center}
+  .side .close{display:inline-flex}
+  .top{height:56px}
+  .crumb{padding-left:4px}
+  .bf{padding:0 max(16px,env(safe-area-inset-right,0px)) 0 14px}
+  .bf .t{display:none}
+  .bf .ts{display:inline}
+  .bf{gap:8px}
+  .canvas{padding:20px max(16px,env(safe-area-inset-right,0px)) 48px max(16px,env(safe-area-inset-left,0px))}
+  .kpis{grid-template-columns:1fr 1fr}
+  .kpis > div{border-left:0;border-top:1px solid var(--raised)}
+  .kpis > div:nth-child(-n+2){border-top:0}
+  .kpis > div:nth-child(2n){border-left:1px solid var(--raised)}
+  .kpis > div{padding:16px}
+  .wl{padding:4px 16px}
+  .wl-head{display:none}
+  .row{grid-template-columns:64px minmax(0,1fr) auto;grid-template-areas:"t i p" "t g g" "t r r";gap:6px 14px}
+  .row .c-thumb{grid-area:t;align-self:start}
+  .row .c-info{grid-area:i}
+  .row .c-price{grid-area:p}
+  .row .c-goal{grid-area:g;display:flex;gap:8px;align-items:baseline;flex-wrap:wrap}
+  .row .c-goal .sub{margin:0}
+  .row .act{display:none}
+  .row .c-ruler{display:block;grid-area:r;padding-top:4px}
+  .price.big{font-size:32px;line-height:36px}
+  .card{padding:18px 16px}
+  td.store .sub{max-width:28ch}
+}
+.side .close{display:none;position:absolute;right:max(10px,env(safe-area-inset-right,0px));top:calc(10px + env(safe-area-inset-top,0px));width:44px;height:44px;border:0;background:transparent;cursor:pointer;align-items:center;justify-content:center}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+
+<div class="app">
+  <aside class="side" id="side" aria-label="Navegação">
+    <div class="brand">
+      <svg width="22" height="22" viewBox="0 0 22 22" aria-hidden="true"><path d="M2 4.5A2.5 2.5 0 0 1 4.5 2h7.3c.7 0 1.3.3 1.8.7l6.7 6.7a2.5 2.5 0 0 1 0 3.5l-7.1 7.1a2.5 2.5 0 0 1-3.5 0L2.7 13.4A2.5 2.5 0 0 1 2 11.6z" fill="#ff6b2c"/><circle cx="7" cy="7" r="1.9" fill="#000"/></svg>
+      Radar BF
+    </div>
+    <button class="close" id="close" aria-label="Fechar menu"><svg width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M4 4l10 10M14 4L4 14" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+    <nav class="nav" id="nav"></nav>
+    <div class="foot nav" id="foot"></div>
+  </aside>
+  <div class="main">
+    <header class="top">
+      <button class="menu-btn" id="menu" aria-label="Abrir menu" aria-controls="side" aria-expanded="false"><svg width="20" height="20" viewBox="0 0 20 20" aria-hidden="true"><path d="M3 6h14M3 10h14M3 14h14" stroke="#fff" stroke-width="1.6" stroke-linecap="round"/></svg></button>
+      <div class="crumb" id="crumb"><b>Lista de desejos</b></div>
+      <div class="bf"><span class="d num" id="days">—</span><span class="t">dias até a Black Friday<br>sexta, 27 de novembro</span><span class="ts">dias até a BF</span></div>
+    </header>
+    <main class="canvas" id="view">
+      <div class="title"><div><h1>Lista de desejos</h1><p>Carregando os preços…</p></div></div>
+    </main>
+  </div>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>/*CHARTS*/</script>
+<script>
+document.documentElement.lang = "pt-BR";
+const BF = new Date("2026-11-27T00:00:00-03:00");
+const REPO = "/*REPO*/";
+const $ = (s, r = document) => r.querySelector(s);
+const esc = s => String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const safe = u => /^https:\/\//i.test(u || "") ? u : null;
+const brl = (v, d = 2) => v == null || isNaN(v) ? "—" : v.toLocaleString("pt-BR", {style:"currency", currency:"BRL", minimumFractionDigits:d, maximumFractionDigits:d});
+const brl0 = v => brl(v, 0);
+const MINUS = "−";
+const signed = v => (v > 0 ? "+" : v < 0 ? MINUS : "") + brl(Math.abs(v));
+const day = s => { const [y, m, d] = (s || "").split("-"); return d ? `${d}/${m}` : s; };
+const stamp = iso => { if (!iso) return "—"; const d = new Date(iso); if (isNaN(d)) return "—";
+  const today = new Date(); const same = d.toDateString() === today.toDateString();
+  const t = d.toLocaleTimeString("pt-BR", {hour:"2-digit", minute:"2-digit"});
+  return same ? `hoje, ${t}` : `${d.toLocaleDateString("pt-BR", {day:"2-digit", month:"2-digit"})}, ${t}`; };
+
+let loaded = false, products = [], meta = null, db = null, chartPick = null;
+
+/* ---------- dados ---------- */
+const eff = o => { const p = [o.preco_pix, o.preco].filter(v => typeof v === "number" && v > 0); return p.length ? Math.min(...p) : null; };
+const usable = o => o.verificado !== false && o.disponivel !== false && eff(o) != null;
+function best(p) { let b = null; for (const o of p.ofertas || []) if (usable(o)) { const v = eff(o); if (!b || v < b.v) b = {v, o}; } return b; }
+const hist = p => (p.historico || []).filter(h => typeof h.menor === "number").sort((a, b) => a.data < b.data ? -1 : 1);
+function vsPrev(p) { const h = hist(p); if (h.length < 2) return null; return h.at(-1).menor - h.at(-2).menor; }
+const hasGoal = p => typeof p.preco_alvo === "number" && p.preco_alvo > 0;
+const prevStore = (p, loja) => { const h = hist(p); if (h.length < 2) return null; const x = h.at(-2).precos; return x && typeof x[loja] === "number" ? x[loja] : null; };
+
+function chgLine(p) {
+  const c = vsPrev(p);
+  if (c == null) return `<div class="chg">1ª checagem</div>`;
+  if (c === 0) return `<div class="chg">igual a ontem</div>`;
+  return `<div class="chg ${c < 0 ? "good" : "bad"}">${signed(c)} vs ontem</div>`;
+}
+function goalCell(p, b) {
+  if (!hasGoal(p)) return `<div class="goal">—</div><div class="sub">sem alvo</div>`;
+  const gap = b ? b.v - p.preco_alvo : null;
+  if (gap != null && gap <= 0) return `<div class="goal"><span class="pill pos">No alvo</span></div><div class="sub num">alvo ${brl0(p.preco_alvo)}</div>`;
+  return `<div class="goal num">${brl0(p.preco_alvo)}</div><div class="sub num">${gap == null ? "sem preço hoje" : "faltam " + brl(gap)}</div>`;
+}
+
+/* ---------- a régua: todas as lojas num eixo, o alvo marcado ---------- */
+function ruler(p, {h = 44, labels = true} = {}) {
+  const offers = (p.ofertas || []).filter(o => eff(o) != null && o.disponivel !== false);
+  const b = best(p);
+  if (!offers.length) return "";
+  const vals = offers.map(eff).concat(hasGoal(p) ? [p.preco_alvo] : []);
+  let lo = Math.min(...vals), hi = Math.max(...vals); const pad = (hi - lo) * .06 || hi * .05; lo -= pad; hi += pad;
+  const W = 300, X = v => 6 + (v - lo) / (hi - lo) * (W - 12), y = 18;
+  let s = `<svg class="ruler" viewBox="0 0 ${W} ${h}" preserveAspectRatio="none" role="img" aria-label="Preço em ${offers.length} lojas, de ${brl(Math.min(...offers.map(eff)))} a ${brl(Math.max(...offers.map(eff)))}${hasGoal(p) ? ", alvo " + brl0(p.preco_alvo) : ""}">`;
+  s += `<line x1="6" x2="${W - 6}" y1="${y}" y2="${y}" stroke="var(--chart-track)" stroke-width="2" vector-effect="non-scaling-stroke"/>`;
+  if (hasGoal(p)) { const gx = X(p.preco_alvo); s += `<line x1="${gx}" x2="${gx}" y1="${y - 11}" y2="${y + 11}" stroke="var(--positive)" stroke-width="1.5" stroke-dasharray="3 2" vector-effect="non-scaling-stroke"/>`; }
+  if (b && hasGoal(p) && b.v > p.preco_alvo) s += `<line x1="${X(p.preco_alvo)}" x2="${X(b.v)}" y1="${y}" y2="${y}" stroke="var(--accent)" stroke-width="4" stroke-linecap="round" vector-effect="non-scaling-stroke"><title>Faltam ${brl(b.v - p.preco_alvo)} para o alvo</title></line>`;
+  for (const o of offers) { if (b && o === b.o) continue; const cx = X(eff(o)); const ok = o.verificado !== false;
+    s += `<ellipse cx="${cx}" cy="${y}" rx="3.6" ry="3.6" fill="${ok ? "var(--chart-muted)" : "var(--ground)"}" stroke="var(--chart-muted)" stroke-width="1.2" vector-effect="non-scaling-stroke"><title>${esc(o.loja)}: ${brl(eff(o))}${ok ? "" : " (não confirmado)"}</title></ellipse>`; }
+  if (b) s += `<ellipse cx="${X(b.v)}" cy="${y}" rx="5.5" ry="5.5" fill="var(--accent)"><title>${esc(b.o.loja)}: ${brl(b.v)}</title></ellipse>`;
+  s += `</svg>`;
+  if (!labels) return s;
+  const mn = Math.min(...offers.map(eff)), mx = Math.max(...offers.map(eff));
+  const g = hasGoal(p) ? p.preco_alvo : null;
+  const left = g != null && g < mn ? `<span style="color:var(--positive)">alvo ${brl0(g)}</span>` : `<span>${brl0(mn)}</span>`;
+  const right = g != null && g > mx ? `<span style="color:var(--positive)">alvo ${brl0(g)}</span>` : `<span>${brl0(mx)}</span>`;
+  const mid = g != null && g >= mn && g <= mx ? `<span style="color:var(--positive)">alvo ${brl0(g)}</span>` : "";
+  return s + `<div class="sub num" style="display:flex;justify-content:space-between;gap:8px;margin-top:-14px">${left}${mid}${right}</div>`;
+}
+
+/* ---------- gráfico do histórico ---------- */
+function drawHistory(el, p) {
+  const h = hist(p);
+  el.innerHTML = "";
+  if (h.length < 2) {
+    el.innerHTML = `<div class="chart-note">O histórico de <b>${esc(p.nome)}</b> começou em ${day(h[0]?.data)} com <b class="num">${brl(h[0]?.menor)}</b> (${esc(h[0]?.loja || "")}). A linha aparece a partir da segunda checagem diária, às 8h.</div>`;
+    return;
+  }
+  Charts.line(el, {
+    labels: h.map(x => day(x.data)),
+    series: [{ name: "Menor preço", values: h.map(x => x.menor) }],
+    format: v => brl(v), tickFormat: v => brl0(v), height: 200,
+    reference: hasGoal(p) ? { value: p.preco_alvo, label: "Alvo " + brl0(p.preco_alvo) } : undefined,
+    endLabel: true
+  });
+}
+
+/* ---------- navegação ---------- */
+function route() { const id = (location.hash || "").replace(/^#p-/, ""); return location.hash.startsWith("#p-") ? id : null; }
+function renderNav() {
+  const cur = route();
+  const sorted = [...products].sort((a, b) => (a.ordem ?? 99) - (b.ordem ?? 99));
+  $("#nav").innerHTML = `<a href="#" ${cur ? "" : 'aria-current="page"'}><span class="l">Lista de desejos</span><span class="r num">${products.length}</span></a>
+    <div class="group">Produtos</div>` + sorted.map(p => { const b = best(p);
+      return `<a href="#p-${esc(p.id)}" ${cur === p.id ? 'aria-current="page"' : ""}><span class="l">${esc(p.curto || p.nome)}</span><span class="r num">${b ? brl0(b.v) : "—"}</span></a>`; }).join("");
+  $("#foot").innerHTML = (REPO.startsWith("https://") ? `<a href="${esc(REPO)}" target="_blank" rel="noopener noreferrer"><span class="l">Histórico no GitHub</span><span class="r">↗</span></a>` : "");
+}
+
+/* ---------- visão geral ---------- */
+function overview() {
+  const list = [...products].sort((a, b) => (a.ordem ?? 99) - (b.ordem ?? 99));
+  const bests = list.map(best);
+  const hits = list.filter((p, i) => hasGoal(p) && bests[i] && bests[i].v <= p.preco_alvo);
+  const total = bests.reduce((s, b) => s + (b ? b.v : 0), 0);
+  const goals = list.filter(hasGoal);
+  const goalTotal = goals.reduce((s, p) => s + p.preco_alvo, 0);
+  // o achado: quem está mais perto do alvo
+  let finding;
+  if (hits.length) finding = `<b>${esc(hits.map(p => p.curto || p.nome).join(", "))}</b> ${hits.length > 1 ? "chegaram" : "chegou"} ao preço-alvo. Hora de comprar.`;
+  else {
+    const near = list.map((p, i) => ({p, b: bests[i]})).filter(x => hasGoal(x.p) && x.b).map(x => ({...x, gap: x.b.v - x.p.preco_alvo, pct: (x.b.v - x.p.preco_alvo) / x.p.preco_alvo})).sort((a, b) => a.pct - b.pct)[0];
+    finding = near ? `Nenhum item no alvo ainda. O mais perto é o <b>${esc(near.p.curto || near.p.nome)}</b>: faltam <b class="num">${brl(near.gap)}</b> (${(near.pct * 100).toLocaleString("pt-BR", {maximumFractionDigits:0})}% acima do alvo).` : "Defina um preço-alvo em cada produto para receber alertas.";
+  }
+  if (!chartPick || !products.some(p => p.id === chartPick)) chartPick = list[0]?.id;
+  const rows = list.map((p, i) => { const b = bests[i]; const n = (p.ofertas || []).length;
+    return `<div class="row" data-go="${esc(p.id)}" role="link" tabindex="0" aria-label="Abrir ${esc(p.nome)}">
+      <div class="c-thumb"><div class="thumb">${p.imagem ? `<img src="${esc(p.imagem)}" alt="" loading="lazy">` : `<span>${esc(p.marca || "")}</span>`}</div></div>
+      <div class="c-info"><p class="name">${esc(p.nome)}</p><div class="sub">${b ? `Melhor em ${esc(b.o.loja)}${b.o.preco_pix && b.v === b.o.preco_pix ? " no Pix" : ""} · ${n} lojas` : `${n} lojas · sem preço confirmado`}</div></div>
+      <div class="c-ruler">${ruler(p)}</div>
+      <div class="c-price n"><div class="price num">${b ? brl(b.v) : "—"}</div>${chgLine(p)}</div>
+      <div class="c-goal n">${goalCell(p, b)}</div>
+      <div class="act">${b && safe(b.o.url) ? `<a class="ghost" href="${esc(b.o.url)}" target="_blank" rel="noopener noreferrer" data-stop>Ver oferta ↗</a>` : ""}</div>
+    </div>`; }).join("");
+  const al = alerts();
+  const pick = products.find(p => p.id === chartPick);
+  $("#view").innerHTML = `
+    <div class="title"><div><h1>Lista de desejos</h1><p>${finding}</p></div><span class="stamp">Checado ${stamp(meta?.ultima_atualizacao)} · próxima amanhã, 8h</span></div>
+    <section class="card kpis" aria-label="Resumo">
+      <div><div class="k">No preço-alvo</div><div class="v lead num">${hits.length} <small>de ${goals.length}</small></div><div class="s">${goals.length < list.length ? `${list.length - goals.length} sem alvo` : "todos com alvo definido"}</div></div>
+      <div><div class="k">Produtos na lista</div><div class="v num">${list.length}</div><div class="s num">${list.reduce((s, p) => s + (p.ofertas || []).length, 0)} ofertas acompanhadas</div></div>
+      <div><div class="k">Lista no menor preço</div><div class="v num">${brl0(total)}</div><div class="s">soma do melhor de cada item</div></div>
+      <div><div class="k">Lista nos seus alvos</div><div class="v num">${goals.length ? brl0(goalTotal) : "—"}</div><div class="s num">${goals.length ? `faltam ${brl0(Math.max(0, goals.reduce((s, p) => { const b = best(p); return s + (b ? Math.max(0, b.v - p.preco_alvo) : 0); }, 0)))} para chegar` : "sem alvos"}</div></div>
+    </section>
+    <section class="card wl" aria-label="Produtos">
+      <div class="wl-head"><span></span><span>Produto</span><span class="c-ruler">Preço em cada loja</span><span class="n">Menor preço</span><span class="n">Seu alvo</span><span></span></div>
+      ${rows || `<div class="state">Nenhum produto na lista. Mande no chat o que você quer acompanhar.</div>`}
+    </section>
+    <div class="lower">
+      <section class="card"><div class="card-h"><h2>Menor preço por dia</h2>
+        <div class="seg" role="group" aria-label="Escolher produto">${list.map(p => `<button data-pick="${esc(p.id)}" aria-pressed="${p.id === chartPick}">${esc(p.curto || p.nome)}</button>`).join("")}</div></div>
+        <div class="chart" id="chart"></div></section>
+      <section class="card"><div class="card-h"><h2>Alertas de hoje</h2><span class="meta num">${al.length}</span></div>
+        <div class="alerts">${al.length ? al.map(a => `<div class="alert"><span class="pill ${a.k}">${a.tag}</span><span>${esc(a.t)}</span></div>`).join("") : `<div class="alert-empty">Nada caiu nem chegou ao alvo desde a última checagem.</div>`}</div>
+        <div class="ref"><h3>Como você é avisado</h3>
+          <div class="kv"><span>Chegou no alvo</span><span>notificação no Mac</span></div>
+          <div class="kv"><span>Caiu 5% ou mais num dia</span><span>notificação no Mac</span></div>
+          <div class="kv"><span>Loja esgotou ou sumiu</span><span>aviso aqui</span></div>
+        </div></section>
+    </div>`;
+  if (pick) drawHistory($("#chart"), pick);
+}
+
+function alerts() {
+  const out = [];
+  for (const p of products) { const b = best(p); if (!b) continue;
+    if (hasGoal(p) && b.v <= p.preco_alvo) out.push({k: "pos", tag: "No alvo", t: `${p.curto || p.nome} a ${brl(b.v)} em ${b.o.loja}.`});
+    const h = hist(p); if (h.length >= 2) { const pct = (h.at(-1).menor - h.at(-2).menor) / h.at(-2).menor; if (pct <= -0.05) out.push({k: "pos", tag: "Caiu", t: `${p.curto || p.nome} caiu ${(Math.abs(pct) * 100).toLocaleString("pt-BR", {maximumFractionDigits:1})}%, para ${brl(b.v)}.`}); }
+  }
+  for (const a of meta?.alertas || []) if (a && a.texto && a.tipo === "aviso") out.push({k: "warn", tag: "Aviso", t: a.texto});
+  return out;
+}
+
+/* ---------- produto ---------- */
+function productView(p) {
+  const b = best(p);
+  const offers = [...(p.ofertas || [])].sort((x, y) => (usable(y) - usable(x)) || ((eff(x) ?? 1e12) - (eff(y) ?? 1e12)));
+  const h = hist(p);
+  const low = h.length ? Math.min(...h.map(x => x.menor)) : null;
+  const gap = b && hasGoal(p) ? b.v - p.preco_alvo : null;
+  const rows = offers.map(o => { const prev = prevStore(p, o.loja), v = eff(o); const ch = prev != null && v != null ? v - prev : null;
+    const tags = (o.verificado === false ? `<span class="pill warn">não confirmado</span>` : "") + (o.disponivel === false ? `<span class="pill neg">esgotado</span>` : "");
+    return `<tr class="${b && o === b.o ? "best" : ""}">
+      <td class="store"><span class="l"><b>${esc(o.loja)}</b>${tags}</span><div class="sub">${esc([o.parcelas, o.obs].filter(Boolean).join(" · "))}</div></td>
+      <td class="n">${brl(o.preco)}</td><td class="n">${o.preco_pix ? brl(o.preco_pix) : "—"}</td>
+      <td class="n">${ch == null ? `<span class="chg">—</span>` : ch === 0 ? `<span class="chg">igual</span>` : `<span class="chg ${ch < 0 ? "good" : "bad"}">${signed(ch)}</span>`}</td>
+      <td class="n">${safe(o.url) ? `<a class="ghost" href="${esc(o.url)}" target="_blank" rel="noopener noreferrer">Abrir ↗</a>` : ""}</td></tr>`; }).join("");
+  $("#view").innerHTML = `
+    <div class="title"><div><a class="back" href="#">← Lista de desejos</a><h1>${esc(p.nome)}</h1><p>${esc(p.resumo || "")}</p></div>
+      ${b && safe(b.o.url) ? `<a class="primary" href="${esc(b.o.url)}" target="_blank" rel="noopener noreferrer">Comprar na ${esc(b.o.loja)} ↗</a>` : ""}</div>
+    <div class="pv">
+      <div class="stack">
+        <div class="photo">${p.imagem ? `<img src="${esc(p.imagem)}" alt="${esc(p.nome)}">` : ""}</div>
+        <section class="card"><div class="card-h"><h2>Ficha técnica</h2></div><ul class="specs">${(p.specs || []).map(s => `<li>${esc(s)}</li>`).join("")}</ul>${p.nota ? `<p class="note">${esc(p.nota)}</p>` : ""}</section>
+      </div>
+      <div class="stack">
+        <section class="card">
+          <div class="answer"><div><div class="k" style="color:var(--muted);font-size:13px">Menor preço hoje</div><div class="price big num">${b ? brl(b.v) : "—"}</div>
+            <div class="where">${b ? `em <b>${esc(b.o.loja)}</b>${b.o.preco_pix && b.v === b.o.preco_pix ? " no Pix" : ""}` : "nenhuma loja com preço confirmado"}</div>${chgLine(p)}</div>
+            <div style="text-align:right"><div class="k" style="color:var(--muted);font-size:13px">Menor já visto</div><div class="price num">${brl(low)}</div><div class="sub">desde ${day(h[0]?.data)}</div></div></div>
+          <div style="margin-top:18px">${ruler(p, {h: 44})}</div>
+          <div class="target"><label for="alvo">Seu preço-alvo</label><input id="alvo" inputmode="decimal" autocomplete="off" value="${hasGoal(p) ? p.preco_alvo.toLocaleString("pt-BR") : ""}" placeholder="ex. 2.300" aria-describedby="alvo-msg">
+            <button class="ghost" id="save" type="button">Salvar</button>
+            <span class="msg ${gap != null && gap <= 0 ? "good" : ""}" id="alvo-msg">${gap == null ? "Avisamos quando alguma loja chegar nesse valor." : gap <= 0 ? "Já está no alvo." : `Faltam ${brl(gap)} para o alvo.`}</span></div>
+        </section>
+        <section class="card"><div class="card-h"><h2>Menor preço por dia</h2><span class="meta">${h.length} ${h.length === 1 ? "checagem" : "checagens"}</span></div><div class="chart" id="chart"></div></section>
+        <section class="card"><div class="card-h"><h2>Preço em cada loja</h2><span class="meta">Pix quando a loja informa · variação vs a checagem anterior</span></div>
+          <div class="tbl-wrap"><table><thead><tr><th>Loja</th><th class="n">Preço</th><th class="n">Pix</th><th class="n">Vs ontem</th><th class="n"><span hidden>Link</span></th></tr></thead><tbody>${rows}</tbody></table></div></section>
+      </div>
+    </div>`;
+  drawHistory($("#chart"), p);
+  $("#save").addEventListener("click", () => saveGoal(p));
+  $("#alvo").addEventListener("keydown", e => { if (e.key === "Enter") saveGoal(p); });
+}
+
+async function saveGoal(p) {
+  const raw = $("#alvo").value.trim().replace(/[R$\s]/g, "").replace(/\./g, "").replace(",", ".");
+  const v = raw === "" ? null : Number(raw);
+  if (raw !== "" && (!isFinite(v) || v <= 0)) { $("#alvo-msg").textContent = "Digite um valor em reais, por exemplo 2.300."; return; }
+  if (!db) { toast("Abra a página logado no Claude para salvar."); return; }
+  try { await db.doc("produtos/" + p.id).update({preco_alvo: v}); toast(v == null ? "Alvo removido" : "Alvo salvo: " + brl0(v)); }
+  catch (e) { toast("Não deu para salvar (" + (e.code || "erro") + ")."); }
+}
+
+function toast(t) { const el = $("#toast"); el.textContent = t; el.classList.add("on"); clearTimeout(toast.h); toast.h = setTimeout(() => el.classList.remove("on"), 2200); }
+
+function render() {
+  const d = Math.ceil((BF - Date.now()) / 864e5);
+  $("#days").textContent = d > 0 ? d : d > -4 ? "hoje" : "—";
+  if (!loaded) return;
+  renderNav();
+  const id = route(); const p = id && products.find(x => x.id === id);
+  $("#crumb").innerHTML = p ? `<a href="#">Lista de desejos</a><span class="sep">/</span><b>${esc(p.curto || p.nome)}</b>` : `<b>Lista de desejos</b>`;
+  if (p) productView(p); else overview();
+}
+
+document.addEventListener("click", e => {
+  if (e.target.closest("[data-stop]")) return;
+  const pk = e.target.closest("[data-pick]"); if (pk) { chartPick = pk.dataset.pick; overview(); return; }
+  const r = e.target.closest("[data-go]"); if (r) { location.hash = "p-" + r.dataset.go; return; }
+  if (e.target.closest(".side a")) closeMenu();
+});
+document.addEventListener("keydown", e => { const r = e.target.closest?.("[data-go]"); if (r && (e.key === "Enter" || e.key === " ")) { e.preventDefault(); location.hash = "p-" + r.dataset.go; } if (e.key === "Escape") closeMenu(); });
+addEventListener("hashchange", () => { render(); scrollTo(0, 0); });
+const openMenu = () => { $("#side").classList.add("open"); $("#menu").setAttribute("aria-expanded", "true"); };
+const closeMenu = () => { $("#side").classList.remove("open"); $("#menu").setAttribute("aria-expanded", "false"); };
+$("#menu").addEventListener("click", openMenu); $("#close").addEventListener("click", closeMenu);
+let rz; addEventListener("resize", () => { clearTimeout(rz); rz = setTimeout(() => { const el = $("#chart"); if (!el || !loaded) return; const id = route(); const p = id ? products.find(x => x.id === id) : products.find(x => x.id === chartPick); if (p) drawHistory(el, p); }, 150); });
+
+const SAMPLE = /*SAMPLE*/null;
+(async () => {
+  render();
+  if (SAMPLE) { products = SAMPLE.produtos; meta = SAMPLE.meta; loaded = true; render(); return; }
+  const timer = setTimeout(() => { if (!loaded) $("#view").innerHTML = `<div class="title"><div><h1>Lista de desejos</h1><p>Os preços não carregaram. Recarregue a página logado no Claude.</p></div></div>`; }, 10000);
+  db = await window.claude?.use?.("db");
+  if (!db) { clearTimeout(timer); $("#view").innerHTML = `<div class="title"><div><h1>Lista de desejos</h1><p>Abra esta página logado no Claude para ver seus preços.</p></div></div>`; return; }
+  db.collection("produtos").onSnapshot(s => { clearTimeout(timer); loaded = true; products = s.docs.map(d => ({id: d.id, ...d.data()})); render(); },
+    e => { clearTimeout(timer); $("#view").innerHTML = `<div class="title"><div><h1>Lista de desejos</h1><p>Não consegui carregar os preços (${esc(e.code)}). Recarregue a página.</p></div></div>`; });
+  db.doc("meta/status").onSnapshot(s => { meta = s.exists ? s.data() : null; if (loaded) render(); }, () => {});
+})();
+</script>

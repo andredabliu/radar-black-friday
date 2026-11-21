@@ -1,0 +1,85 @@
+{
+  "atualizado": "2026-11-21T13:20:00-03:00",
+  "categoria": "Casa",
+  "historico": [
+    {
+      "data": "2026-11-21",
+      "loja": "Horizon Play",
+      "menor": 2653.5,
+      "precos": {
+        "Horizon Play": 2653.5,
+        "Amazon": 2745,
+        "KaBuM!": 3588.9
+      }
+    }
+  ],
+  "imagem": "/_blob/38ec8f0e9ca0e0ec832f9786e946dfc3",
+  "marca": "Xiaomi",
+  "nome": "Xiaomi Robot Vacuum H50",
+  "nota": "Atenção à voltagem: há anúncios 110V/127V e 220V. Não confundir com o H50 Pro (15.000 Pa, a partir de R$ 4.998). Casas Bahia, Fast Shop, Americanas e Carrefour não vendem o H50 comum hoje.",
+  "ofertas": [
+    {
+      "disponivel": true,
+      "loja": "Horizon Play",
+      "obs": "220V · venda da própria loja, 93 em estoque",
+      "parcelas": "12x R$ 251,28 sem juros",
+      "preco": 3015.36,
+      "preco_pix": 2653.5,
+      "url": "https://www.horizonplay.com.br/produto/robo-xiaomi-aspirador-vacuum-h50-220v-branco-244149",
+      "verificado": true
+    },
+    {
+      "disponivel": true,
+      "loja": "Amazon",
+      "obs": "Versão EU importada · vendedor BRASIL-VENDAS · frete R$ 226,72",
+      "parcelas": null,
+      "preco": 2745,
+      "preco_pix": null,
+      "url": "https://www.amazon.com.br/Xiaomi-Robot-Vacuum-H50-EU/dp/B0GHM34LVQ",
+      "verificado": true
+    },
+    {
+      "disponivel": true,
+      "loja": "Magazine Luiza",
+      "obs": "220V · marketplace",
+      "parcelas": "10x R$ 309,99 sem juros",
+      "preco": 3099.9,
+      "preco_pix": 2665.91,
+      "url": "https://www.magazineluiza.com.br/robo-aspirador-xiaomi-h50-branco-navegacao-inteligente-220v/p/dej3c5j3cc/ep/eprb/",
+      "verificado": false
+    },
+    {
+      "disponivel": true,
+      "loja": "Mercado Livre",
+      "obs": "127V · outros anúncios de R$ 2.700 a R$ 2.918",
+      "parcelas": "12x R$ 277,78",
+      "preco": 2890,
+      "preco_pix": null,
+      "url": "https://www.mercadolivre.com.br/rob-aspirador-xiaomi-h50-10000pa-2026-127v-branco/p/MLB69227149",
+      "verificado": false
+    },
+    {
+      "disponivel": true,
+      "loja": "KaBuM!",
+      "obs": "220V · marketplace GSM Varejo",
+      "parcelas": "10x R$ 369,99 sem juros",
+      "preco": 3699.9,
+      "preco_pix": 3588.9,
+      "url": "https://www.kabum.com.br/produto/1060995/robo-aspirador-xiaomi-h50-10000pa-lancamento-2026-220v-branco",
+      "verificado": true
+    }
+  ],
+  "ordem": 1,
+  "preco_alvo": 2300,
+  "resumo": "Linha 2026: 10.000 Pa, navegação a laser e base que esvazia o reservatório sozinha.",
+  "specs": [
+    "Sucção de até 10.000 Pa",
+    "Navegação a laser LDS, mapa no app Xiaomi Home",
+    "Base all-in-one: recarga, autoesvaziamento e secagem",
+    "Aspira e passa pano",
+    "Bateria 5.200 mAh, até ~3 h",
+    "Alexa e Google Assistente",
+    "3,7 kg · 35,5 × 35,4 × 9,3 cm"
+  ],
+  "curto": "Xiaomi H50"
+}
