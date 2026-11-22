@@ -1,5 +1,5 @@
 {
-  "atualizado": "2026-11-21T13:58:00-03:00",
+  "atualizado": "2026-11-22T17:50:00-03:00",
   "categoria": "Casa",
   "curto": "Xiaomi S40",
   "historico": [
@@ -15,6 +15,15 @@
         "KaBuM! · Xiaomi Oficial": 2969.99,
         "Magazine Luiza": 1259.1
       }
+    },
+    {
+      "data": "2026-11-22",
+      "menor": 1498.89,
+      "loja": "KaBuM!",
+      "precos": {
+        "KaBuM!": 1498.89,
+        "KaBuM! · Xiaomi Oficial": 2969.99
+      }
     }
   ],
   "imagem": "/_blob/7747a3a65c5ff8f6a30a9560bf5f4ca6",
@@ -25,27 +34,27 @@
     {
       "disponivel": true,
       "loja": "Magazine Luiza",
-      "obs": "Bivolt · lojista safyra2, entrega Magalu · pode ser versão global · página bloqueada às 13h58; preço conferido às 13h20",
+      "obs": "não conferido hoje (página bloqueada) · Bivolt · lojista safyra2, entrega Magalu · pode ser versão global · página bloqueada às 13h58; preço conferido às 13h20",
       "parcelas": "10x R$ 139,90 sem juros",
       "preco": 1399,
       "preco_pix": 1259.1,
       "url": "https://www.magazineluiza.com.br/robo-aspirador-xiaomi-mi-xiaomi-robot-vacuum-s40/p/ddkg7kef88/ep/eprb/?seller_id=safyra2",
-      "verificado": true
+      "verificado": false
     },
     {
       "disponivel": true,
       "loja": "Amazon",
-      "obs": "XM878BRA · vendedor Fortech2, envio Amazon · 4 em estoque · página bloqueada às 13h58; preço conferido às 13h20",
+      "obs": "não conferido hoje (página bloqueada) · XM878BRA · vendedor Fortech2, envio Amazon · 4 em estoque · página bloqueada às 13h58; preço conferido às 13h20",
       "parcelas": "12x R$ 125,00 sem juros",
       "preco": 1500,
       "preco_pix": 1350,
       "url": "https://www.amazon.com.br/ASPIRADOR-INTELIGENTE-XIAOMI-BRANCO-XM878BRA/dp/B0FKC1QB1J",
-      "verificado": true
+      "verificado": false
     },
     {
       "disponivel": true,
       "loja": "Mercado Livre",
-      "obs": "Anúncios entre R$ 1.195 e R$ 1.299",
+      "obs": "não conferido hoje (página bloqueada) · Anúncios entre R$ 1.195 e R$ 1.299",
       "parcelas": null,
       "preco": 1200,
       "preco_pix": null,
@@ -55,7 +64,7 @@
     {
       "disponivel": true,
       "loja": "KaBuM!",
-      "obs": "Bivolt · marketplace CELCOMERCE · ficha diz S40 OV81, não XM878BRA",
+      "obs": "Bivolt · marketplace CELCOMERCE · ficha diz S40 OV81, sem o código XM878BRA; confirme a versão",
       "parcelas": "10x R$ 164,71 sem juros",
       "preco": 1647.13,
       "preco_pix": 1498.89,
@@ -65,27 +74,27 @@
     {
       "disponivel": true,
       "loja": "Carrefour",
-      "obs": "Marketplace marin brasil · página bloqueada às 13h58; preço conferido às 13h20",
+      "obs": "não conferido hoje (página bloqueada) · Marketplace marin brasil · página bloqueada às 13h58; preço conferido às 13h20",
       "parcelas": "12x R$ 239,48 (cartão Carrefour)",
       "preco": 2873.85,
       "preco_pix": 2586.47,
       "url": "https://www.carrefour.com.br/produto/robo-aspirador-de-po-inteligente-s40-xiaomi-branco-340539964",
-      "verificado": true
+      "verificado": false
     },
     {
       "disponivel": true,
       "loja": "Casas Bahia",
-      "obs": "Bivolt · vendido pela Casas Bahia · página bloqueada às 13h58; preço conferido às 13h20",
+      "obs": "não conferido hoje (página bloqueada) · Bivolt · vendido pela Casas Bahia · página bloqueada às 13h58; preço conferido às 13h20",
       "parcelas": null,
       "preco": null,
       "preco_pix": 2789.11,
       "url": "https://www.casasbahia.com.br/aspirador-robo-xiaomi-s40-3-em-1-70w-filtro-hepa-controle-por-app-bivolt-branco/p/55071828",
-      "verificado": true
+      "verificado": false
     },
     {
       "disponivel": true,
       "loja": "KaBuM! · Xiaomi Oficial",
-      "obs": "Loja oficial Xiaomi dentro da KaBuM!",
+      "obs": "Vendido e entregue pela Xiaomi Oficial",
       "parcelas": "10x R$ 299,99 sem juros",
       "preco": 2999.99,
       "preco_pix": 2969.99,

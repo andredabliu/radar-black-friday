@@ -1,5 +1,5 @@
 {
-  "atualizado": "2026-11-21T13:58:00-03:00",
+  "atualizado": "2026-11-22T17:50:00-03:00",
   "categoria": "Casa",
   "curto": "Xiaomi H50",
   "historico": [
@@ -9,6 +9,15 @@
       "menor": 2653.5,
       "precos": {
         "Amazon": 2745,
+        "Horizon Play": 2653.5,
+        "KaBuM!": 3588.9
+      }
+    },
+    {
+      "data": "2026-11-22",
+      "menor": 2653.5,
+      "loja": "Horizon Play",
+      "precos": {
         "Horizon Play": 2653.5,
         "KaBuM!": 3588.9
       }
@@ -32,17 +41,17 @@
     {
       "disponivel": true,
       "loja": "Amazon",
-      "obs": "Versão EU importada · vendedor BRASIL-VENDAS · frete R$ 226,72 · página bloqueada às 13h58; preço conferido às 13h20",
+      "obs": "não conferido hoje (página bloqueada) · Versão EU importada · vendedor BRASIL-VENDAS · frete R$ 226,72 · página bloqueada às 13h58; preço conferido às 13h20",
       "parcelas": null,
       "preco": 2745,
       "preco_pix": null,
       "url": "https://www.amazon.com.br/Xiaomi-Robot-Vacuum-H50-EU/dp/B0GHM34LVQ",
-      "verificado": true
+      "verificado": false
     },
     {
       "disponivel": true,
       "loja": "Magazine Luiza",
-      "obs": "220V · marketplace",
+      "obs": "220V · marketplace · preço do snippet da busca (página bloqueada)",
       "parcelas": "10x R$ 309,99 sem juros",
       "preco": 3099.9,
       "preco_pix": 2665.91,
@@ -52,8 +61,8 @@
     {
       "disponivel": true,
       "loja": "Mercado Livre",
-      "obs": "127V · outros anúncios de R$ 2.700 a R$ 2.918 · Promobit cita R$ 2.069 no Meli+ (não verificado)",
-      "parcelas": "12x R$ 277,78",
+      "obs": "127V · preço do snippet da busca (página bloqueada)",
+      "parcelas": "12x",
       "preco": 2890,
       "preco_pix": null,
       "url": "https://www.mercadolivre.com.br/rob-aspirador-xiaomi-h50-10000pa-2026-127v-branco/p/MLB69227149",
@@ -62,7 +71,7 @@
     {
       "disponivel": true,
       "loja": "KaBuM!",
-      "obs": "220V · marketplace GSM Varejo · descrição cita H50 Pro, confirme o modelo",
+      "obs": "220V · marketplace GSM Varejo · H50 comum (o Pro aparece só como comparação)",
       "parcelas": "10x R$ 369,99 sem juros",
       "preco": 3699.9,
       "preco_pix": 3588.9,
