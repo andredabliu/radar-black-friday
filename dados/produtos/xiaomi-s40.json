@@ -1,5 +1,5 @@
 {
-  "atualizado": "2026-11-22T17:50:00-03:00",
+  "atualizado": "2026-11-24T15:18:00-03:00",
   "categoria": "Casa",
   "curto": "Xiaomi S40",
   "historico": [
@@ -18,8 +18,17 @@
     },
     {
       "data": "2026-11-22",
-      "menor": 1498.89,
       "loja": "KaBuM!",
+      "menor": 1498.89,
+      "precos": {
+        "KaBuM!": 1498.89,
+        "KaBuM! · Xiaomi Oficial": 2969.99
+      }
+    },
+    {
+      "data": "2026-11-24",
+      "loja": "KaBuM!",
+      "menor": 1498.89,
       "precos": {
         "KaBuM!": 1498.89,
         "KaBuM! · Xiaomi Oficial": 2969.99
@@ -34,7 +43,7 @@
     {
       "disponivel": true,
       "loja": "Magazine Luiza",
-      "obs": "não conferido hoje (página bloqueada) · Bivolt · lojista safyra2, entrega Magalu · pode ser versão global · página bloqueada às 13h58; preço conferido às 13h20",
+      "obs": "não conferido hoje (página bloqueada) · Bivolt · lojista safyra2, entrega Magalu · pode ser versão global · último preço conferido em 21/11",
       "parcelas": "10x R$ 139,90 sem juros",
       "preco": 1399,
       "preco_pix": 1259.1,
@@ -44,7 +53,7 @@
     {
       "disponivel": true,
       "loja": "Amazon",
-      "obs": "não conferido hoje (página bloqueada) · XM878BRA · vendedor Fortech2, envio Amazon · 4 em estoque · página bloqueada às 13h58; preço conferido às 13h20",
+      "obs": "não conferido hoje (página bloqueada) · XM878BRA · vendedor Fortech2, envio Amazon · 4 em estoque · último preço conferido em 21/11",
       "parcelas": "12x R$ 125,00 sem juros",
       "preco": 1500,
       "preco_pix": 1350,
@@ -74,7 +83,7 @@
     {
       "disponivel": true,
       "loja": "Carrefour",
-      "obs": "não conferido hoje (página bloqueada) · Marketplace marin brasil · página bloqueada às 13h58; preço conferido às 13h20",
+      "obs": "não conferido hoje (página bloqueada) · Marketplace marin brasil · último preço conferido em 21/11",
       "parcelas": "12x R$ 239,48 (cartão Carrefour)",
       "preco": 2873.85,
       "preco_pix": 2586.47,
@@ -84,7 +93,7 @@
     {
       "disponivel": true,
       "loja": "Casas Bahia",
-      "obs": "não conferido hoje (página bloqueada) · Bivolt · vendido pela Casas Bahia · página bloqueada às 13h58; preço conferido às 13h20",
+      "obs": "não conferido hoje (página bloqueada) · Bivolt · vendido pela Casas Bahia · último preço conferido em 21/11",
       "parcelas": null,
       "preco": null,
       "preco_pix": 2789.11,

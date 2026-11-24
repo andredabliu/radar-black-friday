@@ -1,5 +1,5 @@
 {
-  "atualizado": "2026-11-22T17:50:00-03:00",
+  "atualizado": "2026-11-24T15:18:00-03:00",
   "categoria": "Drone",
   "curto": "Mini 5 Pro · Plus",
   "historico": [
@@ -14,11 +14,20 @@
     },
     {
       "data": "2026-11-22",
-      "menor": 11490,
       "loja": "Loja DJI oficial",
+      "menor": 11490,
       "precos": {
-        "Loja DJI oficial": 11490,
-        "FlyPro": 12340.5
+        "FlyPro": 12340.5,
+        "Loja DJI oficial": 11490
+      }
+    },
+    {
+      "data": "2026-11-24",
+      "loja": "FlyPro",
+      "menor": 12340.5,
+      "precos": {
+        "FlyPro": 12340.5,
+        "Loja DJI oficial": 13590
       }
     }
   ],
@@ -30,9 +39,9 @@
     {
       "disponivel": true,
       "loja": "Loja DJI oficial",
-      "obs": "DJI068 BR, Anatel · de R$ 13.590 (−15%)",
-      "parcelas": "até 12x sem juros",
-      "preco": 11490,
+      "obs": "DJI068 BR, Anatel · frete grátis · a promoção de −15% acabou (era R$ 11.490 até 22/11)",
+      "parcelas": "15x R$ 906,00",
+      "preco": 13590,
       "preco_pix": null,
       "url": "https://www.lojadji.com.br/drone-dji-mini-5-pro-fly-more-combo-plus-com-tela-br-dji068/p",
       "verificado": true

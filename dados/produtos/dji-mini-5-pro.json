@@ -1,5 +1,5 @@
 {
-  "atualizado": "2026-11-22T17:50:00-03:00",
+  "atualizado": "2026-11-24T15:18:00-03:00",
   "categoria": "Drone",
   "curto": "Mini 5 Pro · RC 2",
   "historico": [
@@ -15,13 +15,24 @@
     },
     {
       "data": "2026-11-22",
-      "menor": 10556.91,
       "loja": "Fast Shop · Loja Multi Oficial",
+      "menor": 10556.91,
       "precos": {
-        "Loja DJI oficial": 10890,
-        "FlyPro": 11675.5,
         "Fast Shop": 13379,
-        "Fast Shop · Loja Multi Oficial": 10556.91
+        "Fast Shop · Loja Multi Oficial": 10556.91,
+        "FlyPro": 11675.5,
+        "Loja DJI oficial": 10890
+      }
+    },
+    {
+      "data": "2026-11-24",
+      "loja": "Fast Shop · Loja Multi Oficial",
+      "menor": 9970.42,
+      "precos": {
+        "Fast Shop": 13379,
+        "Fast Shop · Loja Multi Oficial": 9970.42,
+        "FlyPro": 11675.5,
+        "Loja DJI oficial": 12890
       }
     }
   ],
@@ -33,9 +44,9 @@
     {
       "disponivel": true,
       "loja": "Loja DJI oficial",
-      "obs": "DJI067 BR, Anatel · de R$ 12.890 (−15%)",
-      "parcelas": "até 12x sem juros",
-      "preco": 10890,
+      "obs": "DJI067 BR, Anatel · frete grátis · a promoção de −15% acabou (era R$ 10.890 até 22/11)",
+      "parcelas": "15x R$ 859,33",
+      "preco": 12890,
       "preco_pix": null,
       "url": "https://www.lojadji.com.br/drone-dji-mini-5-pro-fly-more-combo-com-tela-br-dji067/p",
       "verificado": true
@@ -83,7 +94,7 @@
     {
       "disponivel": true,
       "loja": "Fast Shop",
-      "obs": "Vendido e entregue pela Fast Shop · DJI067 BR",
+      "obs": "Vendido e entregue pela Fast Shop · DJI067 BR · de R$ 18.499",
       "parcelas": null,
       "preco": null,
       "preco_pix": 13379,
@@ -91,14 +102,14 @@
       "verificado": true
     },
     {
+      "disponivel": true,
       "loja": "Fast Shop · Loja Multi Oficial",
-      "url": "https://site.fastshop.com.br/drone-dji-mini-5-pro-fly-more-combo--com-tela--br---dji067-dji067-147739/p",
-      "preco": 12890,
-      "preco_pix": 10556.91,
+      "obs": "Marketplace dentro da Fast Shop · DJI067 com tela · Pix caiu de R$ 10.556,91 para R$ 9.970,42",
       "parcelas": null,
-      "obs": "Marketplace dentro da Fast Shop · DJI067 com tela",
-      "verificado": true,
-      "disponivel": true
+      "preco": 12890,
+      "preco_pix": 9970.42,
+      "url": "https://site.fastshop.com.br/drone-dji-mini-5-pro-fly-more-combo--com-tela--br---dji067-dji067-147739/p",
+      "verificado": true
     }
   ],
   "ordem": 4,

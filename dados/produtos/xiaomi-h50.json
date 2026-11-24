@@ -1,5 +1,5 @@
 {
-  "atualizado": "2026-11-22T17:50:00-03:00",
+  "atualizado": "2026-11-24T15:18:00-03:00",
   "categoria": "Casa",
   "curto": "Xiaomi H50",
   "historico": [
@@ -15,10 +15,19 @@
     },
     {
       "data": "2026-11-22",
-      "menor": 2653.5,
       "loja": "Horizon Play",
+      "menor": 2653.5,
       "precos": {
         "Horizon Play": 2653.5,
+        "KaBuM!": 3588.9
+      }
+    },
+    {
+      "data": "2026-11-24",
+      "loja": "Horizon Play",
+      "menor": 2607.75,
+      "precos": {
+        "Horizon Play": 2607.75,
         "KaBuM!": 3588.9
       }
     }
@@ -31,17 +40,17 @@
     {
       "disponivel": true,
       "loja": "Horizon Play",
-      "obs": "220V · venda da própria loja, 93 em estoque",
-      "parcelas": "12x R$ 251,28 sem juros",
-      "preco": 3015.36,
-      "preco_pix": 2653.5,
+      "obs": "220V, versão global · venda da própria loja, 93 em estoque · Pix com 12% de desconto",
+      "parcelas": "12x R$ 246,95 sem juros",
+      "preco": 2963.4,
+      "preco_pix": 2607.75,
       "url": "https://www.horizonplay.com.br/produto/robo-xiaomi-aspirador-vacuum-h50-220v-branco-244149",
       "verificado": true
     },
     {
       "disponivel": true,
       "loja": "Amazon",
-      "obs": "não conferido hoje (página bloqueada) · Versão EU importada · vendedor BRASIL-VENDAS · frete R$ 226,72 · página bloqueada às 13h58; preço conferido às 13h20",
+      "obs": "não conferido hoje (página bloqueada) · Versão EU importada · vendedor BRASIL-VENDAS · frete R$ 226,72 · último preço conferido em 21/11",
       "parcelas": null,
       "preco": 2745,
       "preco_pix": null,

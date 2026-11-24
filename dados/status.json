@@ -1,1 +1,33 @@
-{"ultima_atualizacao":"2026-11-22T17:50:00-03:00","alertas":[{"texto":"DJI Neo 2 + RC-N3: não conferido hoje em Amazon (DJI071), Amazon (combo RC-N3), Detonashop, Magazine Luiza, Mercado Livre (página bloqueada)","tipo":"aviso"},{"texto":"Xiaomi S40: não conferido hoje em Magazine Luiza, Amazon, Mercado Livre, Carrefour, Casas Bahia (página bloqueada)","tipo":"aviso"},{"texto":"Xiaomi H50: não conferido hoje em Amazon (página bloqueada)","tipo":"aviso"},{"texto":"Mini 5 Pro · RC 2: não conferido hoje em Mercado Livre, Mercado Livre · Loja Oficial DJI, Magazine Luiza (página bloqueada)","tipo":"aviso"},{"texto":"Mini 5 Pro · Plus: não conferido hoje em Mercado Livre · Loja Oficial DJI, Mercado Livre, Magazine Luiza (página bloqueada)","tipo":"aviso"},{"texto":"Xiaomi S40: Fast Shop segue indisponível","tipo":"aviso"}]}
+{
+  "alertas": [
+    {
+      "texto": "Mini 5 Pro · RC 2: caiu 5,6% para R$ 9.970,42 no Pix (Fast Shop · Loja Multi Oficial)",
+      "tipo": "alerta"
+    },
+    {
+      "texto": "DJI Neo 2 + RC-N3: caiu 5,6% para R$ 3.705,06 no Pix (Fast Shop)",
+      "tipo": "alerta"
+    },
+    {
+      "texto": "Loja DJI encerrou a promoção de −15%: Mini 5 Pro RC 2 voltou a R$ 12.890, Combo Plus a R$ 13.590 e Neo 2 + RC-N3 a R$ 4.790",
+      "tipo": "aviso"
+    },
+    {
+      "texto": "Mini 5 Pro · Plus: com o fim da promoção da Loja DJI, o menor preço subiu para R$ 12.340,50 (FlyPro, depósito)",
+      "tipo": "aviso"
+    },
+    {
+      "texto": "Não conferidas hoje (página bloqueada): Amazon, Detonashop, Carrefour, Casas Bahia, Magazine Luiza e Mercado Livre; preços mantidos",
+      "tipo": "aviso"
+    },
+    {
+      "texto": "Xiaomi S40: Fast Shop segue indisponível",
+      "tipo": "aviso"
+    },
+    {
+      "texto": "Google Flights não mostrou a faixa de preço (baixo/típico/alto) em 15 das 20 buscas de hoje",
+      "tipo": "aviso"
+    }
+  ],
+  "ultima_atualizacao": "2026-11-24T15:18:00-03:00"
+}

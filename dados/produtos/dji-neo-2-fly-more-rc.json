@@ -1,5 +1,5 @@
 {
-  "atualizado": "2026-11-22T17:50:00-03:00",
+  "atualizado": "2026-11-24T15:18:00-03:00",
   "categoria": "Drone",
   "curto": "DJI Neo 2 + RC-N3",
   "historico": [
@@ -21,15 +21,28 @@
     },
     {
       "data": "2026-11-22",
-      "menor": 3923.01,
       "loja": "Fast Shop",
+      "menor": 3923.01,
       "precos": {
+        "Drone Place": 4590,
         "Fast Shop": 3923.01,
-        "Loja DJI oficial": 3990,
-        "KaBuM!": 4269.9,
-        "Tecno Drones": 4365,
         "FlyPro": 4360.5,
-        "Drone Place": 4590
+        "KaBuM!": 4269.9,
+        "Loja DJI oficial": 3990,
+        "Tecno Drones": 4365
+      }
+    },
+    {
+      "data": "2026-11-24",
+      "loja": "Fast Shop",
+      "menor": 3705.06,
+      "precos": {
+        "Drone Place": 4590,
+        "Fast Shop": 3705.06,
+        "FlyPro": 4360.5,
+        "KaBuM!": 4269.9,
+        "Loja DJI oficial": 4790,
+        "Tecno Drones": 4365
       }
     }
   ],
@@ -41,7 +54,7 @@
     {
       "disponivel": true,
       "loja": "Amazon (DJI071)",
-      "obs": "não conferido hoje (página bloqueada) · Vendedor LBAK · 10 em estoque · RC-N3 incluso · página bloqueada às 13h58; preço conferido às 13h20",
+      "obs": "não conferido hoje (página bloqueada) · Vendedor LBAK · 10 em estoque · RC-N3 incluso · último preço conferido em 21/11",
       "parcelas": "12x R$ 283,38 sem juros",
       "preco": 3399.9,
       "preco_pix": 3229.9,
@@ -51,7 +64,7 @@
     {
       "disponivel": true,
       "loja": "Amazon (combo RC-N3)",
-      "obs": "não conferido hoje (página bloqueada) · Vendedor LBAK · 4 em estoque · pode ser importado · página bloqueada às 13h58; preço conferido às 13h20",
+      "obs": "não conferido hoje (página bloqueada) · Vendedor LBAK · 4 em estoque · pode ser importado · último preço conferido em 21/11",
       "parcelas": "12x R$ 291,75 sem juros",
       "preco": 3499.9,
       "preco_pix": 3324.9,
@@ -61,19 +74,19 @@
     {
       "disponivel": true,
       "loja": "Fast Shop",
-      "obs": "Vendido e entregue por Loja Multi Oficial · 'controle remoto incluso', confirme o RC-N3",
+      "obs": "Vendido e entregue por Loja Multi Oficial · 'controle remoto incluso', confirme o RC-N3 · Pix caiu de R$ 3.923,01 para R$ 3.705,06",
       "parcelas": null,
       "preco": 4790,
-      "preco_pix": 3923.01,
+      "preco_pix": 3705.06,
       "url": "https://site.fastshop.com.br/drone-dji-neo-2-fly-more-combo--sem-tela----dji071-189480/p",
       "verificado": true
     },
     {
       "disponivel": true,
       "loja": "Loja DJI oficial",
-      "obs": "Oficial, inclui RC-N3 · de R$ 4.790 (−16%) · frete grátis",
-      "parcelas": "até 12x sem juros",
-      "preco": 3990,
+      "obs": "Oficial, inclui RC-N3 · frete grátis · a promoção de −16% acabou (era R$ 3.990 até 22/11)",
+      "parcelas": "15x R$ 319,33",
+      "preco": 4790,
       "preco_pix": null,
       "url": "https://www.lojadji.com.br/drone-dji-neo-2-fly-more-combo-sem-tela-dji071/p",
       "verificado": true
@@ -81,7 +94,7 @@
     {
       "disponivel": true,
       "loja": "Detonashop",
-      "obs": "não conferido hoje (página bloqueada) · Anatel · pronta entrega · página bloqueada às 13h58; preço conferido às 13h20",
+      "obs": "não conferido hoje (página bloqueada) · Anatel · pronta entrega · último preço conferido em 21/11",
       "parcelas": "12x R$ 370,29 sem juros",
       "preco": 4443.49,
       "preco_pix": 3999.14,
